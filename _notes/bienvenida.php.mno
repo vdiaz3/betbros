@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_torneos" value="name:id_torneo;datatype:int,name:nombre_torneo;datatype:blob,name:fecha_inicio;datatype:blob,name:fecha_fin;datatype:blob,name:estatus_torneo;datatype:blob,name:tipo_torneo;datatype:blob,name:tipo_deporte;datatype:blob,name:url_imagen1;datatype:blob,name:url_imagen2;datatype:blob,name:url_logo;datatype:blob,name:descripcion_larga;datatype:blob,name:ubicacion;datatype:blob" />
+</info>

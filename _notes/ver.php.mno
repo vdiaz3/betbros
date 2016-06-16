@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_ingreso" value="name:id_llamada;datatype:int,name:ci;datatype:blob,name:letra;datatype:blob,name:estado;datatype:blob,name:municipio;datatype:blob,name:parroquia;datatype:blob,name:calle_av;datatype:blob,name:casa_apto;datatype:blob,name:tel1;datatype:blob,name:tel2;datatype:blob,name:med1;datatype:blob,name:estatus1;datatype:blob,name:med2;datatype:blob,name:estatus2;datatype:blob,name:obs1;datatype:blob,name:email;datatype:blob,name:fecha_hora;datatype:blob,name:direccion_adicional;datatype:blob,name:genero;datatype:blob,name:estado_civil;datatype:blob,name:edad;datatype:blob,name:origen;datatype:blob,name:estado2;datatype:blob,name:municipio2;datatype:blob,name:parroquia2;datatype:blob,name:calle_av2;datatype:blob,name:casa_apto2;datatype:blob,name:foto;datatype:blob" />
+</info>

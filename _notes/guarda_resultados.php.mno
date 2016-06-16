@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_juegos_base" value="name:fecha_juego;datatype:blob,name:id_juego;datatype:int,name:resultado_a;datatype:int,name:resultado_b;datatype:int,name:numero_juego;datatype:blob,name:equipo_a;datatype:blob,name:equipo_b;datatype:blob,name:puntaje;datatype:int" />
+	<infoitem key="UD_datos_quiniela" value="name:id_torneo;datatype:int,name:nombre_torneo;datatype:blob,name:fecha_inicio;datatype:blob,name:fecha_fin;datatype:blob,name:estatus_torneo;datatype:blob,name:tipo_torneo;datatype:blob,name:tipo_deporte;datatype:blob,name:id_quiniela;datatype:int,name:id_usuario;datatype:int,name:fecha_creacion;datatype:blob,name:id_torneo;datatype:blob,name:pago;datatype:blob,name:monto;datatype:blob,name:estatus_quiniela;datatype:int,name:alias_quiniela;datatype:blob" />
+	<infoitem key="UD_datos_usuario" value="name:id_usuario;datatype:int,name:ci;datatype:blob,name:nombres_apellidos;datatype:blob,name:telf;datatype:blob,name:email;datatype:blob,name:estatus;datatype:blob,name:twitter;datatype:blob,name:fb;datatype:blob,name:login;datatype:blob,name:pass;datatype:blob,name:estatus_usuario;datatype:int,name:alias;datatype:blob" />
+</info>

@@ -1,0 +1,246 @@
+.bg-quiniela-copa {
+	background: #013D86;
+	background: url('../img/bg-copa.jpg') top center no-repeat !important;
+	background-size: cover !important;
+	background-attachment: fixed !important;
+}
+
+/* ========== HEADER ========== */
+	header, #tabs_menu {
+		background: none !important;
+	}
+
+	header {
+		background: url('../img/bg-copa-white.jpg') bottom center no-repeat !important;
+		background-size: cover;
+		background-attachment: fixed;
+	}
+
+	.mdl-layout-title, .nombre, .btn-salir, #tabs_menu > a, .mdl-layout__drawer-button {
+		color: #004C98 !important;
+	}
+
+	.avatar {
+	    float: left;
+	    margin-top: 1em;
+	    margin-right: 1em;
+	    position: relative;
+
+	    -webkit-border-radius: 50%;
+	    -moz-border-radius: 50%;
+	    border-radius: 50%;
+	    -webkit-box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0,0,0,.2);
+	    -moz-box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0,0,0,.2);
+	    box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0,0,0,.2);
+	}
+/* ========== FIN HEADER ========== */
+
+/* ========== TEXTOS ========== */
+	.txt-quiniela {
+		color: #FFF;
+		padding: 30px 0 10px 0;
+		width: 90%;
+	}
+
+	.txt-quiniela > p, .txt-quiniela > span, .txt-quiniela > h5 {
+		display: block;
+		margin: 0;
+		text-align: center;
+		width: 100%;
+	}
+
+	.txt-quiniela > img {
+		margin: 10px 0;
+	}
+/* ========== FIN TEXTOS ========== */
+
+/* ========== RESULTADOS ========== */
+	.cont-result {
+		padding-bottom: 30px;
+		width: 95%;
+	}
+
+	.box-result {
+		background: url('../img/bg-box-result.jpg') bottom center no-repeat;
+	}
+
+	/* ========== HEADER RESULT ========== */
+		.head-reult {
+			background: rgba(255,255,255,.5);
+			border-bottom: solid 1px rgba(0,0,0,.2);
+			padding: 10px 0 5px 0;
+		}
+
+		.head-reult > h6, .head-reult > p, .head-reult > a {
+			display: inline-block;
+			margin: 0;
+			vertical-align: middle;
+		}
+
+		.head-reult > h6 {
+			font-size: 1em;
+			font-weight: bold;
+			text-align: left;
+			text-transform: uppercase;
+			width: 42%;
+		}
+
+		.head-reult > p {
+			text-align: center;
+			width: 42%;
+		}
+
+	/* ========== EQUIPOS RESULT ========== */
+		.equipos-resultados {
+			padding: 15px;
+		}
+
+		.equipos-resultados > .equipo, .equipos-resultados > span, .equipos-resultados > input, .equipos-resultados > p {
+			display: inline-block;
+			margin: 0 15px;
+			vertical-align: top;
+		}
+
+		.equipos-resultados > span {
+			color: rgba(0,0,0,.5);
+			font-size: 2em;
+			padding: 15px 0 ;
+		}
+
+		.equipos-resultados > p {
+			color: rgba(0,0,0,.75);
+			font-size: 3em;
+			font-weight: bold;
+			margin: 0;
+			padding: 15px 2px;
+		}
+
+		.equipos-resultados > input {
+			border: solid 1px rgba(0,0,0,.3);
+			border-radius: 5px;
+			color: rgba(0,0,0,.8);
+			font-size: 1.8em;
+			height: 40px;
+			margin: 5px 0 0 0;
+			outline: none;
+			padding: 0;
+			text-align: center;
+			width: 40px;
+		}
+
+		.equipos-resultados > .equipo img {
+			height: 50px;
+		}
+
+		.equipos-resultados > .equipo p {
+			color: rgba(0,0,0,.75);
+			font-weight: bold;
+			font-size: 1.25em;
+			margin: 5px 0 0 0;
+		}
+
+	/* ========== TOOLTIPS ========== */
+		.mdl-tooltip {
+			background: #f1c40f;
+			color: #000;
+		}
+
+		.en-curso {
+			background: #3498DB;
+			color: #FFF;
+		}
+
+		.en-espera {
+			background: #D35400	;
+			color: #FFF;
+		}
+
+	/* ========== FOOTER RESULT ========== */
+		.footer-result {
+			background: rgba(255,255,255,.5);
+			border-top: solid 1px rgba(0,0,0,.2);
+			color: rgba(0,0,0,.75);
+			padding: 5px 0;
+		}
+
+		.footer-result > span, .footer-result > a {
+			display: inline-block;
+			text-align: left;
+			vertical-align: middle;
+			width: 38%;
+		}
+
+		.footer-result > span:last-child {
+			text-align: right;
+		}
+
+		.footer-result > span img {
+			margin-left: 10px;
+		}
+
+		.footer-result > a {
+			text-align: right;
+			width: 8%;
+		}
+/* ========== FIN RESULTADOS ========== */
+
+@media screen and (max-width:1024px) {
+	.bg-quiniela-copa {
+		background: #013D86 url('../img/bg-copa.jpg') top center no-repeat !important;
+	}
+
+	.equipos-resultados > .equipo, .equipos-resultados > span, .equipos-resultados > input, .equipos-resultados > p {
+		margin: 0 7px;
+	}
+
+	.equipos-resultados > p {
+		font-size: 2em;
+		padding: 10px 2px;
+	}
+
+	.equipos-resultados > input {
+		font-size: 1.25em;
+		height: 35px;
+		margin: 3px 0 0 0;
+		width: 35px;
+	}
+
+	.equipos-resultados > .equipo img {
+		height: 40px;
+	}
+}
+
+@media screen and (max-width:640px) {
+	#tabs_menu, .mdl-layout__tab-bar-container {
+		display: none;
+	}
+
+	.txt-quiniela > img {
+		width: 125px;
+	}
+
+	.equipos-resultados > .equipo, .equipos-resultados > span, .equipos-resultados > input, .equipos-resultados > p {
+		margin: 0 7px;
+	}
+
+	.equipos-resultados > p {
+		font-size: 2em;
+		padding: 7px 2px;
+	}
+
+	.equipos-resultados > input {
+		font-size: 1.25em;
+		height: 30px;
+		margin: 3px 0 0 0;
+		width: 30px;
+	}
+
+	.equipos-resultados > span {
+		font-size: 1.25em;
+		padding: 10px 0 ;
+	}
+
+	.equipos-resultados > .equipo img {
+		height: 35px;
+	}
+}
