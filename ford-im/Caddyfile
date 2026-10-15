@@ -1,0 +1,23 @@
+# TLS automático (Let's Encrypt) para todos los subdominios. Crear registros DNS A/AAAA de
+# cada uno apuntando al servidor antes de levantar.
+{
+	email {$ACME_EMAIL}
+}
+
+fordim.menteia.com, go.menteia.com, api.menteia.com, kyc.menteia.com, firma.menteia.com, bancos.menteia.com, legal.menteia.com {
+	encode zstd gzip
+	request_body {
+		max_size 30MB
+	}
+	reverse_proxy core:3000
+}
+
+crm.menteia.com {
+	encode zstd gzip
+	reverse_proxy twenty-server:3000
+}
+
+# Sólo si n8n corre en este mismo servidor (perfil "n8n" de docker-compose).
+n8n.menteia.com {
+	reverse_proxy n8n:5678
+}

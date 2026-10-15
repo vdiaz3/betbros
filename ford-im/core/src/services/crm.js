@@ -1,6 +1,6 @@
 // Integración con Twenty CRM (self-hosted en crm.menteia.com) vía su API REST.
 // Crea/actualiza la Persona (por teléfono), la Oportunidad (vehículo + etapa) y notas.
-// Requiere crear en Twenty los campos personalizados indicados en docs/CRM.md.
+// Requiere crear en Twenty los campos personalizados indicados en docs/PENDIENTES.md.
 import { config } from '../config.js';
 import { getVehicle, getDealer } from '../data/catalog.js';
 import { updateSession } from './sessions.js';

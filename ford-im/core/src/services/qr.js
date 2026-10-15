@@ -50,7 +50,7 @@ function inFinder(r, c, n) {
   return (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
 }
 
-export function renderQrSvg(text, { color = '#00095B', logoHref = '/kiosk/assets/ford-logo.svg' } = {}) {
+export function renderQrSvg(text, { color = '#00095B', logoHref = '/kiosk/assets/ford-logo.png' } = {}) {
   const qr = QRCode.create(text, { errorCorrectionLevel: 'H' });
   const n = qr.modules.size;
   const S = 1000;
@@ -60,12 +60,17 @@ export function renderQrSvg(text, { color = '#00095B', logoHref = '/kiosk/assets
   const x0 = c0 - qrSide / 2;
   const y0 = c0 - qrSide / 2;
 
-  // Hueco central para el logo: ~24 % del lado del QR (≈ 6 % de los módulos con ECC H).
-  const logoR = qrSide * 0.13;
+  // Hueco central elíptico para el óvalo de Ford (proporción 2.33:1). Ocupa ~5 % del área del
+  // QR, muy por debajo del 30 % que tolera la corrección de errores H.
+  const LOGO_ASPECT = 600 / 258;
+  const logoW = qrSide * 0.4;
+  const logoH = logoW / LOGO_ASPECT;
+  const padX = logoW / 2 + m * 0.8;
+  const padY = logoH / 2 + m * 0.8;
   const inLogo = (r, c) => {
     const cx = x0 + (c + 0.5) * m - c0;
     const cy = y0 + (r + 0.5) * m - c0;
-    return Math.hypot(cx, cy) < logoR + m * 0.6;
+    return (cx / padX) ** 2 + (cy / padY) ** 2 < 1;
   };
 
   // Patrones de alineación (5×5): se dibujan sólidos, como los de posición. Partidos en
@@ -121,7 +126,7 @@ export function renderQrSvg(text, { color = '#00095B', logoHref = '/kiosk/assets
 <g fill="${color}">${rings.join('')}</g>
 <g fill="${color}">${dots.join('')}</g>
 ${finder(0, 0)}${finder(0, n - 7)}${finder(n - 7, 0)}${aligns.map(align).join('')}
-<circle cx="${c0}" cy="${c0}" r="${f(logoR)}" fill="#fff"/>
-<image href="${logoHref}" x="${f(c0 - logoR * 0.92)}" y="${f(c0 - logoR * 0.92)}" width="${f(logoR * 1.84)}" height="${f(logoR * 1.84)}" preserveAspectRatio="xMidYMid meet"/>
+<ellipse cx="${c0}" cy="${c0}" rx="${f(padX)}" ry="${f(padY)}" fill="#fff"/>
+<image href="${logoHref}" x="${f(c0 - logoW / 2)}" y="${f(c0 - logoH / 2)}" width="${f(logoW)}" height="${f(logoH)}" preserveAspectRatio="xMidYMid meet"/>
 </svg>`;
 }

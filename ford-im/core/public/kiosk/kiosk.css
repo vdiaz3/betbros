@@ -5,7 +5,7 @@
   --muted: #aab3cc;
   --accent: #1f4e8c;
   --wa: #25D366;
-  --qr-size: min(34vw, 46vh);
+  --qr-size: min(38vw, 54vh);
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; height: 100%; overflow: hidden; background: #050817; color: var(--ink); font-family: "Ford Antenna", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; user-select: none; }
@@ -17,7 +17,7 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 
 .top { display: flex; justify-content: space-between; align-items: center; padding: 2.2vh 3vw; }
 .dealer { display: flex; align-items: center; gap: 1vw; font-size: clamp(16px, 1.6vw, 28px); font-weight: 600; letter-spacing: 0.02em; }
-.logo-sm { height: clamp(28px, 4vh, 54px); }
+.logo-sm { height: clamp(28px, 4vh, 54px); border-radius: 8px; }
 .lang { display: flex; background: rgb(255 255 255 / 0.08); border-radius: 999px; padding: 4px; }
 .lang button { padding: 1.2vh 1.6vw; border-radius: 999px; font-weight: 700; font-size: clamp(14px, 1.3vw, 22px); color: var(--muted); }
 .lang button.on { background: #fff; color: var(--ford); }

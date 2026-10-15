@@ -1,6 +1,0 @@
-<!-- PLACEHOLDER: reemplazar por el logotipo oficial (Ford Oval) del kit de marca del distribuidor. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-  <ellipse cx="100" cy="100" rx="96" ry="58" fill="#00095B"/>
-  <ellipse cx="100" cy="100" rx="88" ry="51" fill="none" stroke="#fff" stroke-width="3"/>
-  <text x="100" y="114" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="44" fill="#fff">LOGO</text>
-</svg>

@@ -1,0 +1,81 @@
+# Ford IM – despliegue self-hosted en un VPS (2 vCPU / 4 GB mínimo).
+#   cp .env.example .env && docker compose up -d
+#   (con n8n en el mismo servidor: docker compose --profile n8n up -d)
+services:
+  caddy:
+    image: caddy:2.8
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      ACME_EMAIL: ${ACME_EMAIL}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on: [core]
+
+  core:
+    build: ./core
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - core_data:/data
+
+  # --- CRM: Twenty (crm.menteia.com) ---------------------------------------------------
+  twenty-server:
+    image: twentycrm/twenty:${TWENTY_TAG}
+    restart: unless-stopped
+    environment: &twenty_env
+      NODE_PORT: 3000
+      PG_DATABASE_URL: postgres://twenty:${TWENTY_DB_PASSWORD}@twenty-db:5432/twenty
+      SERVER_URL: https://crm.menteia.com
+      REDIS_URL: redis://twenty-redis:6379
+      APP_SECRET: ${TWENTY_APP_SECRET}
+      STORAGE_TYPE: local
+    volumes:
+      - twenty_storage:/app/packages/twenty-server/.local-storage
+    depends_on: [twenty-db, twenty-redis]
+
+  twenty-worker:
+    image: twentycrm/twenty:${TWENTY_TAG}
+    restart: unless-stopped
+    command: ["yarn", "worker:prod"]
+    environment:
+      <<: *twenty_env
+      DISABLE_DB_MIGRATIONS: "true"
+    volumes:
+      - twenty_storage:/app/packages/twenty-server/.local-storage
+    depends_on: [twenty-server]
+
+  twenty-db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: twenty
+      POSTGRES_PASSWORD: ${TWENTY_DB_PASSWORD}
+      POSTGRES_DB: twenty
+    volumes:
+      - twenty_db:/var/lib/postgresql/data
+
+  twenty-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  # --- Opcional: n8n en el mismo servidor ----------------------------------------------
+  n8n:
+    profiles: ["n8n"]
+    image: n8nio/n8n:${N8N_TAG}
+    restart: unless-stopped
+    environment:
+      N8N_HOST: n8n.menteia.com
+      N8N_PROTOCOL: https
+      WEBHOOK_URL: https://n8n.menteia.com/
+      GENERIC_TIMEZONE: America/Mexico_City
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  caddy_data:
+  core_data:
+  twenty_storage:
+  twenty_db:
+  n8n_data:
