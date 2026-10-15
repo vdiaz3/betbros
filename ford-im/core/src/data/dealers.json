@@ -8,10 +8,32 @@
       "address": "[Dirección del distribuidor]",
       "phone": "+52 55 0000 0000",
       "sales_email": "ventas@dealer-demo.mx",
-      "fi_email": "fi@dealer-demo.mx"
+      "fi_email": "fi@dealer-demo.mx",
+      "test_drive": {
+        "timezone_offset": "-06:00",
+        "days": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "open": "10:00",
+        "close": "18:00",
+        "slot_minutes": 60,
+        "capacity_per_slot": 2,
+        "min_notice_hours": 2,
+        "days_ahead": 10
+      },
+      "maps_url": "https://maps.google.com/?q=Ford+Demo+Distribuidor"
     }
   ],
   "kiosks": [
-    { "id": "K-DEMO-01", "dealer_id": "dealer-demo", "location": "Showroom – entrada" }
+    {
+      "id": "K-DEMO-01",
+      "dealer_id": "dealer-demo",
+      "location": "Showroom – entrada"
+    }
   ]
 }

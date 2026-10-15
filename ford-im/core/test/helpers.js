@@ -15,6 +15,10 @@ Object.assign(process.env, {
   HOST_KIOSK: 'fordim.test', HOST_GO: 'go.test', HOST_API: 'api.test', HOST_KYC: 'kyc.test',
   HOST_FIRMA: 'firma.test', HOST_BANCOS: 'bancos.test', HOST_LEGAL: 'legal.test',
   WA_DISPLAY_NUMBER: '5215511112222',
+  KYC_PROVIDER: 'simulated',
+  SELLER_USERS: 'ana:Ana Pérez:llave-ana',
+  HOST_VENDEDOR: 'vendedor.test',
+  ...globalThis.FIM_TEST_ENV,
 });
 
 export async function startApp() {
@@ -34,8 +38,32 @@ export async function startApp() {
         });
       });
       r.on('error', reject);
-      if (body) r.write(typeof body === 'string' ? body : body.toString());
+      if (body) r.write(typeof body === 'string' || Buffer.isBuffer(body) ? body : body.toString());
       r.end();
     });
   return { server, req };
+}
+
+// Convierte un FormData en cuerpo multipart + cabecera, para el cliente http de arriba.
+export async function multipart(fd) {
+  const r = new Response(fd);
+  return { body: Buffer.from(await r.arrayBuffer()), headers: { 'content-type': r.headers.get('content-type') } };
+}
+
+// Completa el KYC simulado desde la liga que recibe el cliente.
+export async function completeKyc(req, kycUrl, { docType = 'ine', curp = 'HEGG560427MVZRRL04' } = {}) {
+  const u = new URL(kycUrl);
+  const html = await (await req(u.host, u.pathname)).text();
+  const boot = JSON.parse(html.match(/<script id="boot" type="application\/json">(.*?)<\/script>/s)[1]);
+  const fd = new FormData();
+  fd.append('doc_type', docType);
+  fd.append('curp', curp);
+  fd.append('consent', '1');
+  fd.append('challenge_token', boot.challengeToken);
+  const img = () => new Blob([Buffer.alloc(12_000, 7)], { type: 'image/jpeg' });
+  const files = [...(docType === 'ine' ? ['doc_frente', 'doc_reverso'] : ['doc_frente']), 'selfie', 'liveness_0', 'liveness_1', 'liveness_2'];
+  for (const k of files) fd.append(k, img(), `${k}.jpg`);
+  const { body, headers } = await multipart(fd);
+  const res = await req(u.host, u.pathname, { method: 'POST', headers, body });
+  return { status: res.status, json: await res.json(), boot };
 }

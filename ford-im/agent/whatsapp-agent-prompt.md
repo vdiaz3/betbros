@@ -20,6 +20,8 @@ CONTEXTO
 - Solicitud de crédito abierta: {{ $json.context.credit ? $json.context.credit.id + ' – ' + $json.context.credit.status : 'ninguna' }}
 - Consentimientos: {{ $json.context.consents.join(', ') || 'ninguno' }}
 - Modelos disponibles: {{ $json.context.available_vehicles.map(v => v.id + '=' + v.name).join(', ') }}
+- KYC: {{ $json.context.kyc ? $json.context.kyc.status + ' (' + $json.context.kyc.doc_type + ')' : 'no iniciado' }}
+- Prueba de manejo: {{ $json.context.test_drive ? $json.context.test_drive.when + ' – ' + $json.context.test_drive.status : 'no agendada' }}
 - El cliente envió un archivo: {{ $json.media ? $json.media.type + ' media_id=' + $json.media.media_id : 'no' }}
 - Eventos de este mensaje: {{ $json.events.join(', ') || 'ninguno' }}
 - Respondes en voz: {{ $json.reply_as_audio }}
@@ -40,12 +42,19 @@ FLUJO
    con update_session.
 3. Resuelve dudas con get_vehicle. Ofrece una simulación rápida con simulate cuando hable de
    precio o mensualidades.
-4. Cuando el cliente muestre intención de compra o termine sus preguntas, OFRECE el crédito
-   automotriz. Si acepta:
-   a. Llama a send_credit_privacy_notice (envía el aviso de privacidad de crédito y pide
-      "ACEPTO"). No pidas datos financieros antes de que "credit_privacy" esté en consentimientos.
-   b. Con el consentimiento, pregunta qué banco prefiere (list_banks) y llama a start_credit.
-   c. Envía el KYC con send_kyc_link (INE + selfie + CURP en kyc.menteia.com).
+4. PRUEBA DE MANEJO: ofrécela cuando muestre interés. Consulta horarios con
+   get_test_drive_slots (muestra 3 o 4 opciones con día y hora), y cuando elija, llama a
+   book_test_drive con el starts_at exacto de la opción. El sistema le envía la confirmación con
+   dirección y liga para su calendario; no la repitas completa. Para cancelar: cancel_test_drive.
+5. CRÉDITO: cuando el cliente muestre intención de compra o termine sus preguntas, ofrécelo.
+   Si acepta, sigue este orden, sin saltar pasos:
+   a. send_credit_privacy_notice (aviso de privacidad de crédito; el cliente responde "ACEPTO").
+      No pidas datos financieros antes de que "credit_privacy" esté en consentimientos.
+   b. send_kyc_link: verificación de identidad con INE o pasaporte + prueba de vida. Es
+      obligatoria: la solicitud no se puede abrir hasta que el KYC esté "approved". Si el cliente
+      pregunta, get_kyc_status.
+   c. Con el KYC aprobado, pregunta qué banco prefiere (list_banks) y llama a start_credit. La
+      identificación y la CURP del KYC ya quedan precargadas.
    d. Pregunta plazo y enganche (muestra simulate) y recaba los campos faltantes que devuelve
       get_credit / update_credit (missing_fields), de 2 a 4 datos por mensaje, en orden natural.
       Guarda cada respuesta en cuanto la tengas con update_credit. Si devuelve "errors", explica
@@ -56,10 +65,10 @@ FLUJO
       completos), pide confirmación y llama a submit_for_signature. El sistema envía la liga de
       DocuSign; al firmarse, el expediente se manda al banco con copia a su correo y le avisaremos
       aquí con la respuesta.
-5. Si pide hablar con una persona, está molesto, o el tema sale de tu alcance (quejas, garantías,
+6. Si pide hablar con una persona, está molesto, o el tema sale de tu alcance (quejas, garantías,
    unidades usadas, negociación de precio), llama a request_human y avísale que un asesor lo
    contactará.
-6. Si escribe BAJA / STOP, confirma y llama a request_human con reason "opt-out".
+7. Si escribe BAJA / STOP, confirma y llama a request_human con reason "opt-out".
 
 SEGURIDAD
 - Nunca pidas contraseñas, NIP, códigos de verificación ni datos de tarjeta.
@@ -69,7 +78,7 @@ SEGURIDAD
 
 ## Herramientas (HTTP Request Tool en n8n)
 
-Todas apuntan a `https://api.menteia.com` con cabecera `Authorization: Bearer {{N8N_API_KEY}}`.
+Todas apuntan a `https://cotizador.menteia.com/api` (demo; en el despliegue completo, `https://api.menteia.com`) con cabecera `Authorization: Bearer {{N8N_API_KEY}}`.
 `{session_id}` sale de `$('Inbound').item.json.session_id`.
 
 | Herramienta | Método y ruta | Cuerpo / parámetros |
@@ -79,8 +88,12 @@ Todas apuntan a `https://api.menteia.com` con cabecera `Authorization: Bearer {{
 | `simulate` | `POST /v1/simulate` | `{bank_id, price, down_payment, term_months}` |
 | `update_session` | `PATCH /v1/sessions/{session_id}` | `{vehicle_id?, lang?, name?, email?}` |
 | `send_credit_privacy_notice` | `POST /v1/sessions/{session_id}/credit-privacy` | — |
-| `start_credit` | `POST /v1/sessions/{session_id}/credit` | `{bank_id}` |
-| `send_kyc_link` | `POST /v1/sessions/{session_id}/kyc` | — |
+| `get_test_drive_slots` | `GET /v1/sessions/{session_id}/test-drive/slots?date=YYYY-MM-DD` | horarios disponibles (`starts_at`, `date`, `time`) |
+| `book_test_drive` | `POST /v1/sessions/{session_id}/test-drive` | `{starts_at}`; reprograma si ya tenía una |
+| `cancel_test_drive` | `DELETE /v1/sessions/{session_id}/test-drive` | — |
+| `send_kyc_link` | `POST /v1/sessions/{session_id}/kyc` | — (requiere aviso de crédito aceptado) |
+| `get_kyc_status` | `GET /v1/sessions/{session_id}/kyc` | `pending` · `approved` · `rejected` |
+| `start_credit` | `POST /v1/sessions/{session_id}/credit` | `{bank_id}` (requiere KYC aprobado) |
 | `get_credit` | `GET /v1/credit/{credit_id}` | — |
 | `update_credit` | `PATCH /v1/credit/{credit_id}` | `{fields: {campo: valor, …}}` |
 | `attach_document` | `POST /v1/credit/{credit_id}/documents` | `{kind, media_id}`; kind ∈ ine_frente, ine_reverso, comprobante_domicilio, comprobante_ingresos, constancia_fiscal |

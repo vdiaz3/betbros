@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, PDFName, PDFRef, StandardFonts, rgb } from 'pdf-lib';
 import { FIELDS, DOCS } from './credit.js';
 import { getBank, getVehicle, getDealer } from '../data/catalog.js';
 import { loc } from '../lib/i18n.js';
@@ -16,6 +16,9 @@ const clean = (s) => String(s ?? '').replace(/[^\x20-\x7E\xA0-\xFF]/g, '');
 const money = (n) => (typeof n === 'number' ? `$${n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN` : '');
 
 // Marcadores invisibles que DocuSign usa para colocar firma y fecha (anchor tabs).
+// Sin object streams: PDF 1.4 clásico, que leen sin advertencias DocuSign, poppler y los bancos.
+const SAVE = { useObjectStreams: false };
+
 export const ANCHORS = { sign: '\\s1\\', date: '\\d1\\', buroSign: '\\s2\\', buroDate: '\\d2\\' };
 
 const SECTIONS = [
@@ -27,7 +30,7 @@ const SECTIONS = [
 
 export async function buildCreditPdf({ credit, session, status, documents }) {
   const bank = getBank(credit.bank_id);
-  if (bank.form_template) return fillBankTemplate(bank, credit.data);
+  if (bank.form_template) return fillBankTemplate(bank, templateValues({ credit, session, status, documents, bank }));
 
   const pdf = await PDFDocument.create();
   pdf.setTitle(`Solicitud de crédito ${credit.folio}`);
@@ -137,17 +140,56 @@ export async function buildCreditPdf({ credit, session, status, documents }) {
   y -= 4;
   text('Firma del solicitante                                                         Fecha', { size: 9 });
 
-  return Buffer.from(await pdf.save());
+  return Buffer.from(await pdf.save(SAVE));
 }
 
-async function fillBankTemplate(bank, data) {
+// Valores para formularios del banco: los campos capturados + los calculados (folio, montos…).
+export function templateValues({ credit, session, status, documents, bank }) {
+  const d = credit.data;
+  const vehicle = getVehicle(session.vehicle_id);
+  const dealer = getDealer(session.dealer_id);
+  const today = new Date().toISOString().slice(0, 10);
+  const values = {};
+  for (const [k, def] of Object.entries(FIELDS)) {
+    if (d[k] === undefined) continue;
+    values[k] = def.type === 'money' ? money(d[k]) : String(d[k]);
+  }
+  const fullName = [d.nombres, d.apellido_paterno, d.apellido_materno].filter(Boolean).join(' ');
+  const address = [d.calle_numero, d.colonia, d.municipio, d.estado, d.cp && `C.P. ${d.cp}`].filter(Boolean).join(', ');
+  const kyc = documents.some((x) => x.kind === 'pasaporte') ? 'Pasaporte + prueba de vida' : 'INE + prueba de vida';
+  return {
+    ...values,
+    banco: bank.name, banco_buro: bank.name, folio: credit.folio, fecha: today,
+    distribuidor: dealer?.name ?? '', vehiculo: `${vehicle ? loc(vehicle.name, 'es') : ''} ${d.version ?? ''}`.trim(),
+    monto_financiar: money((d.precio_vehiculo_mxn ?? 0) - (d.enganche_mxn ?? 0)),
+    mensualidad: status?.simulation ? money(status.simulation.monthly_payment) : '',
+    tasa: `${bank.rate_annual_pct}% anual (referencia)`,
+    kyc,
+    anexos: documents.map((x) => DOCS[x.kind]?.label.es ?? x.kind).join(', '),
+    nombre_completo: fullName, rfc_buro: d.rfc ?? '', curp_buro: d.curp ?? '',
+    domicilio_completo: address, lugar_fecha: `${d.municipio ?? ''}, ${d.estado ?? ''} – ${today}`,
+  };
+}
+
+async function fillBankTemplate(bank, values) {
   const file = path.resolve(here, '../data/forms', bank.form_template);
   const pdf = await PDFDocument.load(fs.readFileSync(file));
   const form = pdf.getForm();
   for (const field of form.getFields()) {
-    const v = data[field.getName()];
+    const v = values[field.getName()];
     if (v !== undefined && typeof field.setText === 'function') field.setText(clean(v));
   }
+  // Se aplana para que nadie edite los datos después de firmar; las marcas de firma (\s1\…)
+  // ya vienen en el contenido de la plantilla.
   form.flatten();
-  return Buffer.from(await pdf.save());
+  // pdf-lib deja en /Annots las referencias a los widgets que eliminó al aplanar; se quitan
+  // para que el PDF no tenga referencias rotas (DocuSign y algunos lectores las rechazan).
+  for (const pg of pdf.getPages()) {
+    const annots = pg.node.lookup(PDFName.of('Annots'));
+    if (!annots) continue;
+    const alive = annots.asArray().filter((ref) => !(ref instanceof PDFRef) || pdf.context.lookup(ref));
+    if (alive.length) pg.node.set(PDFName.of('Annots'), pdf.context.obj(alive));
+    else pg.node.delete(PDFName.of('Annots'));
+  }
+  return Buffer.from(await pdf.save(SAVE));
 }

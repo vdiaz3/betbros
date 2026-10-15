@@ -1,0 +1,29 @@
+# Demo rápido en cotizador.menteia.com (sin CRM Twenty: el CRM es la vista de sólo lectura).
+#   cd core && node scripts/write-env.mjs && cd ..
+#   docker compose -f docker-compose.demo.yml up -d --build
+services:
+  caddy:
+    image: caddy:2.8
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      ACME_EMAIL: ${ACME_EMAIL}
+    volumes:
+      - ./Caddyfile.demo:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on: [core]
+
+  core:
+    build: ./core
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SINGLE_HOST: cotizador.menteia.com
+      DEMO_MODE: "true"
+    volumes:
+      - core_data:/data
+      - ./core/public/media:/app/public/media:ro   # videos y PDFs del demo
+
+volumes:
+  caddy_data:
+  core_data:

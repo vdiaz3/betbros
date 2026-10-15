@@ -28,7 +28,7 @@ r.get('/r/:token', (req, res) => {
     body: `<div class="card"><h1>Dictamen · ${esc(bank.name)}</h1>
 <p>Folio <b>${esc(credit.folio)}</b> · Solicitante: <b>${esc([credit.data.nombres, credit.data.apellido_paterno].join(' '))}</b></p>
 ${decided ? `<p>Dictamen registrado: <b>${esc(credit.status)}</b></p>` : `
-<form method="post" action="/r/${esc(req.params.token)}" class="grid">
+<form method="post" action="${esc(req.baseUrl)}/r/${esc(req.params.token)}" class="grid">
   <label>Resultado
     <select name="status" required>
       <option value="approved">Aprobado</option>
@@ -66,7 +66,7 @@ r.get('/f/:token', (req, res) => {
   const docs = listDocuments(credit.id);
   res.send(page({
     title: `Expediente ${credit.folio}`,
-    body: `<div class="card"><h1>Expediente ${esc(credit.folio)}</h1><ul>${docs.map((d) => `<li><a href="/f/${esc(req.params.token)}/${esc(d.id)}">${esc(d.filename)}</a> <small>SHA-256 ${esc(d.sha256.slice(0, 12))}…</small></li>`).join('')}</ul></div>`,
+    body: `<div class="card"><h1>Expediente ${esc(credit.folio)}</h1><ul>${docs.map((d) => `<li><a href="${esc(req.baseUrl)}/f/${esc(req.params.token)}/${esc(d.id)}">${esc(d.filename)}</a> <small>SHA-256 ${esc(d.sha256.slice(0, 12))}…</small></li>`).join('')}</ul></div>`,
   }));
 });
 r.get('/f/:token/:docId', (req, res) => {

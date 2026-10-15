@@ -1,0 +1,12 @@
+# Demo: un solo subdominio. Registro DNS A de cotizador.menteia.com → IP del servidor.
+{
+	email {$ACME_EMAIL}
+}
+
+cotizador.menteia.com {
+	encode zstd gzip
+	request_body {
+		max_size 30MB
+	}
+	reverse_proxy core:3000
+}

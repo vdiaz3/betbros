@@ -1,4 +1,4 @@
-import { startApp } from './helpers.js';
+import { startApp, completeKyc } from './helpers.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PDFDocument } from 'pdf-lib';
@@ -57,8 +57,25 @@ test('QR → go → WhatsApp → sesión → crédito → firma → banco → di
   assert.ok(acc.events.includes('credit_privacy_accepted'));
   assert.equal(acc.stage, 'credit_collecting');
 
+  // KYC obligatorio antes del crédito
+  const noKyc = await post(`/v1/sessions/${sid}/credit`, { bank_id: 'bbva' });
+  assert.equal(noKyc.status, 409);
+  assert.equal((await noKyc.json()).error, 'kyc_required');
+  const kycLink = await (await post(`/v1/sessions/${sid}/kyc`, {})).json();
+  assert.match(kycLink.url, /^http:\/\/kyc\.test\/k\//);
+  const kyc = await completeKyc(req, kycLink.url);
+  assert.equal(kyc.status, 200);
+  assert.equal(kyc.json.status, 'approved');
+  assert.equal(kyc.boot.challenges.length, 3);
+  assert.ok(kyc.json.analysis.checks.find((c) => c.id === 'liveness').score > 0.9);
+  // la liga ya no se puede reutilizar
+  assert.equal((await completeKyc(req, kycLink.url)).status, 410);
+
   const started = await (await post(`/v1/sessions/${sid}/credit`, { bank_id: 'bbva' })).json();
   assert.equal(started.ready, false);
+  // la identificación y la CURP del KYC ya vienen precargadas
+  assert.deepEqual(started.documents.map((d) => d.kind).sort(), ['ine_frente', 'ine_reverso']);
+  assert.equal(started.data.curp, 'HEGG560427MVZRRL04');
   const cid = started.id;
 
   // Validaciones
@@ -79,7 +96,7 @@ test('QR → go → WhatsApp → sesión → crédito → firma → banco → di
   assert.equal(ok.missing_fields.length, 0);
   assert.equal(ok.data.ingreso_mensual_mxn, 45000);
   assert.ok(ok.simulation.monthly_payment > 0);
-  assert.deepEqual(ok.missing_documents.map((d) => d.key), ['ine_frente', 'ine_reverso', 'comprobante_domicilio', 'comprobante_ingresos']);
+  assert.deepEqual(ok.missing_documents.map((d) => d.key), ['comprobante_domicilio', 'comprobante_ingresos']);
 
   // Firmar sin documentos → 409
   assert.equal((await post(`/v1/credit/${cid}/sign`, {})).status, 409);
@@ -87,7 +104,7 @@ test('QR → go → WhatsApp → sesión → crédito → firma → banco → di
   // Documentos (se insertan directo: en producción vienen de WhatsApp vía media_id)
   const { saveDocument, creditStatus, getCredit } = await import('../src/services/credit.js');
   const jpg = Buffer.alloc(30_000, 1);
-  for (const kind of ['ine_frente', 'ine_reverso', 'comprobante_domicilio', 'comprobante_ingresos']) {
+  for (const kind of ['comprobante_domicilio', 'comprobante_ingresos']) {
     saveDocument({ sessionId: sid, creditId: cid, kind, buffer: jpg, mime: 'image/jpeg', filename: `${kind}.jpg` });
   }
   assert.equal(creditStatus(cid).ready, true);
@@ -106,7 +123,10 @@ test('QR → go → WhatsApp → sesión → crédito → firma → banco → di
   const fs = await import('node:fs');
   const signed = listDocuments(cid).find((d) => d.kind === 'solicitud_firmada');
   const pdf = await PDFDocument.load(fs.readFileSync(signed.path));
-  assert.ok(pdf.getPageCount() >= 2);
+  assert.equal(pdf.getPageCount(), 2); // formulario demo BBVA: solicitud + autorización Buró
+  const unsigned = listDocuments(cid).find((d) => d.kind === 'solicitud');
+  const filled = await PDFDocument.load(fs.readFileSync(unsigned.path));
+  assert.equal(filled.getForm().getFields().length, 0, 'el formulario llenado queda aplanado');
 
   // 6. Dictamen del banco
   const { signToken } = await import('../src/lib/token.js');

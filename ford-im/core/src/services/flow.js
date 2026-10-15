@@ -1,24 +1,28 @@
 // Orquestación de los pasos "deterministas" del recorrido (los que no decide la IA):
 // bienvenida + aviso + video, avisos de privacidad, firma, envío al banco y dictamen.
-import { config, publicUrl } from '../config.js';
+import { config, publicUrl, mediaUrl } from '../config.js';
 import { getVehicle, getDealer, getBank } from '../data/catalog.js';
 import { t, loc } from '../lib/i18n.js';
 import { signToken } from '../lib/token.js';
 import { logEvent } from '../db.js';
 import * as wa from './whatsapp.js';
-import { getSession, updateSession, hasConsent } from './sessions.js';
-import { getCredit, creditStatus, listDocuments, setCreditStatus, saveDocument } from './credit.js';
+import { getSession, updateSession, hasConsent, onStageChange } from './sessions.js';
+import { getCredit, creditStatus, listDocuments, setCreditStatus, saveDocument, startCredit, updateCreditData } from './credit.js';
 import { buildCreditPdf } from './forms.js';
 import * as docusign from './docusign.js';
 import { sendToBank } from './mailer.js';
 import { syncSession } from './crm.js';
-import { startKyc } from './kyc.js';
+import { startKyc, isKycApproved, attachKycDocsToCredit, latestKyc } from './kyc.js';
+import { bookTestDrive, describe as describeTestDrive } from './testdrive.js';
 import { synthesize, splitForVoice } from './voice.js';
 
 const legalUrl = (doc, lang) => publicUrl('legal', `/${doc}?lang=${lang}`);
 
 const crmSafe = (session, note) =>
   syncSession(session, { note }).catch((err) => console.warn('[crm]', err.message));
+
+// Cada cambio de etapa mueve la oportunidad en el pipeline del CRM.
+onStageChange((s) => crmSafe(s));
 
 export async function startConversation(sessionId) {
   const s = getSession(sessionId);
@@ -31,7 +35,7 @@ export async function startConversation(sessionId) {
     privacyUrl: legalUrl('privacidad', s.lang),
   };
   await wa.sendText(s.wa_id, t(s.lang, 'welcome', vars));
-  if (vehicle?.video_url) await wa.sendVideo(s.wa_id, vehicle.video_url, t(s.lang, 'videoCaption', vars));
+  if (vehicle?.video_url) await wa.sendVideo(s.wa_id, mediaUrl(vehicle.video_url), t(s.lang, 'videoCaption', vars));
   logEvent('greeting_sent', { sessionId, data: { privacy_version: config.legal.privacyVersion } });
   crmSafe(s, { title: 'Lead desde kiosco', body: `Escaneó el QR del ${vars.vehicle} en ${dealer?.name ?? '-'} (kiosco ${s.kiosk_id ?? '-'}).` });
   return { sent: ['welcome', vehicle?.video_url ? 'video' : null].filter(Boolean) };
@@ -39,12 +43,12 @@ export async function startConversation(sessionId) {
 
 // Respuesta del agente: en texto o como nota de voz (si el cliente habló por audio).
 export async function reply({ waId, text, asAudio, lang }) {
-  if (!asAudio) return { sent: [await wa.sendText(waId, text)] };
+  if (!asAudio) return { sent: [await wa.sendText(waId, text, 'bot')] };
   const { spoken, links } = splitForVoice(text);
   const ogg = await synthesize(spoken, lang);
   const media = await wa.uploadMedia(ogg, 'audio/ogg', 'respuesta.ogg');
-  const sent = [await wa.sendAudioId(waId, media.id)];
-  if (links.length) sent.push(await wa.sendText(waId, links.join('\n')));
+  const sent = [await wa.sendAudioId(waId, media.id, 'bot', spoken)];
+  if (links.length) sent.push(await wa.sendText(waId, links.join('\n'), 'bot'));
   return { sent };
 }
 
@@ -149,4 +153,31 @@ async function notify(session, key, vars, template, params) {
     console.warn('[notify] texto rechazado, usando plantilla', err.message);
     await wa.sendTemplate(session.wa_id, template, session.lang, params);
   }
+}
+
+export async function confirmTestDrive(sessionId, startsAt) {
+  const td = bookTestDrive(sessionId, startsAt);
+  const s = getSession(sessionId);
+  const d = describeTestDrive(td, s.lang);
+  const dealer = getDealer(td.dealer_id);
+  const text = s.lang === 'en'
+    ? `🚗 Your test drive is booked!\n*${d.vehicle}* · ${d.when}\n📍 ${dealer?.name}, ${dealer?.address}${dealer?.maps_url ? `\n${dealer.maps_url}` : ''}\n📅 Add to calendar: ${d.calendar_url}\nBring your driver's license. We'll send you a reminder the day before.`
+    : `🚗 ¡Tu prueba de manejo quedó agendada!\n*${d.vehicle}* · ${d.when}\n📍 ${dealer?.name}, ${dealer?.address}${dealer?.maps_url ? `\n${dealer.maps_url}` : ''}\n📅 Agrégala a tu calendario: ${d.calendar_url}\nTrae tu licencia de manejo vigente. Te mandaremos un recordatorio un día antes.`;
+  await wa.sendText(s.wa_id, text);
+  crmSafe(getSession(sessionId), { title: `🚗 Prueba de manejo: ${d.vehicle}`, body: d.when });
+  return d;
+}
+
+// La solicitud de crédito sólo se abre con consentimiento expreso y KYC aprobado. La
+// identificación del KYC se adjunta sola y la CURP verificada se precarga.
+export function openCredit(sessionId, bankId) {
+  if (!hasConsent(sessionId, 'credit_privacy')) throw Object.assign(new Error('credit_privacy_consent_missing'), { status: 409 });
+  if (!isKycApproved(sessionId)) throw Object.assign(new Error('kyc_required'), { status: 409, details: { kyc: latestKyc(sessionId)?.status ?? 'not_started' } });
+  const c = startCredit(sessionId, bankId);
+  attachKycDocsToCredit(sessionId, c.id);
+  const kyc = latestKyc(sessionId);
+  if (kyc?.curp && !c.data.curp) updateCreditData(c.id, { curp: kyc.curp });
+  const s = getSession(sessionId);
+  if (['chatting', 'test_drive_booked', 'credit_consent', 'kyc'].includes(s.stage)) updateSession(sessionId, { stage: 'credit_collecting' });
+  return c;
 }

@@ -2,7 +2,8 @@
 #   python3 n8n/generate.py
 import json, re, uuid, sys, os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-API = "https://api.menteia.com"
+# URL base de la API (demo: un solo subdominio). Para el despliegue completo: FORD_IM_API=https://api.menteia.com
+API = os.environ.get("FORD_IM_API", "https://cotizador.menteia.com/api")
 prompt_md = open(ROOT + '/agent/whatsapp-agent-prompt.md').read()
 system = re.search(r"```text\n(.*?)```", prompt_md, re.S).group(1).strip()
 system = system.replace("{{ $json.", "{{ $('Inbound').item.json.")
@@ -91,9 +92,15 @@ tool("simulate", "Simulación informativa de mensualidad.", "POST", "/v1/simulat
 tool("update_session", "Guarda vehículo de interés (vehicle_id), idioma (lang es|en), nombre o email del cliente.", "PATCH", "/v1/sessions/" + SID,
      fa('patch', 'objeto JSON con vehicle_id, lang, name y/o email', 'json'), x=3)
 tool("send_credit_privacy_notice", "Envía el aviso de privacidad para crédito y pide ACEPTO. Usar antes de pedir datos financieros.", "POST", "/v1/sessions/" + SID + "/credit-privacy", "{}", x=4)
-tool("start_credit", "Abre la solicitud de crédito con el banco elegido. Devuelve id, campos y documentos faltantes.", "POST", "/v1/sessions/" + SID + "/credit",
+tool("start_credit", "Abre la solicitud de crédito con el banco elegido (requiere KYC aprobado). Devuelve id, campos y documentos faltantes.", "POST", "/v1/sessions/" + SID + "/credit",
      "{ bank_id: " + fa('bank_id', 'id del banco elegido') + " }", x=5)
-tool("send_kyc_link", "Envía la liga de verificación de identidad (INE + selfie + CURP).", "POST", "/v1/sessions/" + SID + "/kyc", "{}", x=6)
+tool("send_kyc_link", "Envía la liga de verificación de identidad (INE o pasaporte + prueba de vida + CURP). Requiere aviso de crédito aceptado.", "POST", "/v1/sessions/" + SID + "/kyc", "{}", x=6)
+tool("get_kyc_status", "Estado de la verificación de identidad: pending, approved o rejected.", "GET", "/v1/sessions/" + SID + "/kyc", x=12)
+tool("get_test_drive_slots", "Horarios disponibles para prueba de manejo. Opcional: fecha YYYY-MM-DD.", "GET",
+     "/v1/sessions/" + SID + "/test-drive/slots?limit=6&date={{ " + fa('date', 'fecha YYYY-MM-DD o vacío para los próximos días') + " }}", x=13)
+tool("book_test_drive", "Agenda (o reprograma) la prueba de manejo en el horario elegido.", "POST", "/v1/sessions/" + SID + "/test-drive",
+     "{ starts_at: " + fa('starts_at', 'starts_at exacto (número) de la opción elegida', 'number') + " }", x=14)
+tool("cancel_test_drive", "Cancela la prueba de manejo agendada.", "DELETE", "/v1/sessions/" + SID + "/test-drive", x=15)
 tool("get_credit", "Estado de la solicitud: datos, faltantes, simulación y si está lista.", "GET", "/v1/credit/" + CID, x=7)
 tool("update_credit", "Guarda datos de la solicitud. Devuelve errores de validación y faltantes.", "PATCH", "/v1/credit/" + CID,
      "{ fields: " + fa('fields', 'objeto JSON {campo: valor} con las claves de missing_fields', 'json') + " }", x=8)

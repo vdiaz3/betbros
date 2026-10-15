@@ -2,14 +2,19 @@
   "name": "ford-im-core",
   "version": "0.1.0",
   "private": true,
-  "description": "Ford IM – backend: QR rotativo, sesiones WhatsApp, crédito, KYC, DocuSign, CRM",
+  "description": "Ford IM \u2013 backend: QR rotativo, sesiones WhatsApp, cr\u00e9dito, KYC, DocuSign, CRM",
   "type": "module",
   "main": "src/server.js",
-  "engines": { "node": ">=22.13" },
+  "engines": {
+    "node": ">=22.13"
+  },
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node --disable-warning=ExperimentalWarning src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "node --test test/*.test.js"
+    "test": "node --test test/*.test.js",
+    "seed:demo": "node --disable-warning=ExperimentalWarning -e \"import('./src/demo/seed.js').then(m => console.log(m.seedDemo({ force: process.argv[1] === '--force' })))\"",
+    "build:demo-form": "node scripts/build-demo-form.mjs",
+    "check:env": "node --disable-warning=ExperimentalWarning scripts/check-env.mjs"
   },
   "dependencies": {
     "express": "5.1.0",

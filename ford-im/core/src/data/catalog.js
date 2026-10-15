@@ -7,7 +7,9 @@ const read = (f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
 
 export const vehicles = read('vehicles.json').vehicles;
 export const { dealers, kiosks } = read('dealers.json');
-export const banks = read('banks.json').banks;
+// ENABLED_BANKS=bbva limita los bancos que ofrece el agente (útil para la demo con un solo banco).
+const enabledBanks = (process.env.ENABLED_BANKS || '').split(',').map((s) => s.trim()).filter(Boolean);
+export const banks = read('banks.json').banks.filter((b) => !enabledBanks.length || enabledBanks.includes(b.id));
 
 export const getVehicle = (id) => vehicles.find((v) => v.id === id) || null;
 export const getDealer = (id) => dealers.find((d) => d.id === id) || null;

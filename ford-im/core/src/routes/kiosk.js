@@ -1,5 +1,6 @@
 // fordim.menteia.com: app del panel táctil. /k/<kioskId>?key=… abre el kiosco.
 import express from 'express';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { requireKiosk } from '../lib/auth.js';
@@ -12,7 +13,9 @@ const pub = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../pu
 const r = express.Router();
 
 r.use('/kiosk', express.static(pub, { maxAge: '1h' }));
-r.get(['/', '/k/:kioskId'], (req, res) => res.sendFile(path.join(pub, 'index.html')));
+// <base href> = ruta donde está montado el kiosco (raíz de su subdominio o /kiosco).
+const indexHtml = fs.readFileSync(path.join(pub, 'index.html'), 'utf8');
+r.get(['/', '/k/:kioskId'], (req, res) => res.type('html').send(indexHtml.replace('__BASE__', `${req.baseUrl}/`)));
 
 r.get('/api/config', requireKiosk, (req, res) => {
   const kiosk = getKiosk(req.kioskId);
@@ -25,7 +28,7 @@ r.get('/api/config', requireKiosk, (req, res) => {
 
 r.get('/api/qr', requireKiosk, (req, res) => {
   const q = issueQrToken({ kioskId: req.kioskId, vehicleId: req.query.vehicle, lang: req.query.lang });
-  res.set('Cache-Control', 'no-store').json({ ...q, svg: renderQrSvg(q.url) });
+  res.set('Cache-Control', 'no-store').json({ ...q, svg: renderQrSvg(q.url, { logoHref: `${req.baseUrl}/kiosk/assets/ford-logo.png` }) });
 });
 
 r.post('/api/eleven/session', requireKiosk, express.json(), async (req, res, next) => {

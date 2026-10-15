@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<base href="__BASE__">
+<title>Ford IM · CRM</title>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="app/app.css">
+</head>
+<body>
+<header class="bar">
+  <div class="brand-sm"><img src="app/ford-logo.png" alt="Ford"> <b>Ford IM</b> <span id="demoTag" class="tag" hidden>DEMO</span> <span id="roTag" class="tag ro" hidden>SÓLO LECTURA</span></div>
+  <nav class="tabs">
+    <a href="./" data-view="inbox">Bandeja</a>
+    <a href="funnel" data-view="funnel">Funnel</a>
+    <a href="agenda" data-view="agenda">Pruebas de manejo</a>
+  </nav>
+  <div class="me"><span id="me"></span> <a id="crmLink" target="_blank" hidden>CRM ↗</a> <a href="logout" id="logout">Salir</a></div>
+</header>
+
+<section id="inbox" class="view inbox">
+  <aside class="list">
+    <div class="filters">
+      <input id="q" type="search" placeholder="Buscar nombre, teléfono o ref">
+      <div class="chips">
+        <button data-filter="all" class="on">Todas</button>
+        <button data-filter="handoff">Piden asesor</button>
+        <button data-filter="mine">Mías</button>
+        <button data-filter="credit">Crédito</button>
+        <button data-filter="test_drive">Prueba de manejo</button>
+      </div>
+    </div>
+    <ul id="convs"></ul>
+  </aside>
+  <main class="chat" id="chat">
+    <div class="empty">Selecciona una conversación</div>
+  </main>
+  <aside class="side" id="side"></aside>
+</section>
+
+<section id="funnel" class="view" hidden>
+  <div class="fhead"><h1>Funnel de venta</h1>
+    <select id="days"><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option><option value="90">Últimos 90 días</option></select>
+  </div>
+  <div class="tiles" id="tiles"></div>
+  <div class="panel"><h2>Embudo de conversión</h2><div id="funnelChart" class="fchart"></div></div>
+  <div class="panel"><h2>Pipeline de leads</h2><div id="kanban" class="kanban"></div></div>
+</section>
+
+<section id="agenda" class="view" hidden>
+  <h1>Pruebas de manejo</h1>
+  <div id="agendaList" class="panel"></div>
+</section>
+
+<div id="tip" class="tip" hidden></div>
+<script type="module" src="app/app.js"></script>
+</body>
+</html>

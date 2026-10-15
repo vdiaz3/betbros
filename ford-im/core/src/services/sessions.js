@@ -7,7 +7,7 @@ import { normLang } from '../lib/i18n.js';
 const db = () => getDb();
 
 export const STAGES = [
-  'scanned', 'chatting', 'credit_consent', 'kyc', 'credit_collecting',
+  'scanned', 'chatting', 'test_drive_booked', 'credit_consent', 'kyc', 'credit_collecting',
   'signing', 'sent_to_bank', 'bank_approved', 'bank_rejected', 'bank_more_info', 'closed',
 ];
 
@@ -77,18 +77,27 @@ function createOrphan(waId, name, t) {
   return getSession(id);
 }
 
-const UPDATABLE = ['vehicle_id', 'dealer_id', 'lang', 'name', 'email', 'stage', 'bot_paused', 'crm_person_id', 'crm_opportunity_id'];
+const UPDATABLE = ['vehicle_id', 'dealer_id', 'lang', 'name', 'email', 'stage', 'bot_paused', 'assigned_to', 'crm_person_id', 'crm_opportunity_id'];
+
+// Suscriptores a cambios de etapa (p. ej. sincronizar el pipeline del CRM).
+const stageListeners = [];
+export const onStageChange = (fn) => stageListeners.push(fn);
 
 export function updateSession(id, patch) {
   const fields = Object.keys(patch).filter((k) => UPDATABLE.includes(k) && patch[k] !== undefined);
   if (patch.lang) patch.lang = normLang(patch.lang);
   if (patch.stage && !STAGES.includes(patch.stage)) throw Object.assign(new Error('invalid_stage'), { status: 400 });
+  const before = patch.stage ? getSession(id) : null;
   if (fields.length) {
     const sql = `UPDATE sessions SET ${fields.map((k) => `${k} = ?`).join(', ')}, updated_at = ? WHERE id = ?`;
     db().prepare(sql).run(...fields.map((k) => (typeof patch[k] === 'boolean' ? Number(patch[k]) : patch[k])), now(), id);
-    if (patch.stage) logEvent(`stage_${patch.stage}`, { sessionId: id });
   }
-  return getSession(id);
+  const s = getSession(id);
+  if (patch.stage && before?.stage !== patch.stage) {
+    logEvent(`stage_${patch.stage}`, { sessionId: id });
+    for (const fn of stageListeners) Promise.resolve().then(() => fn(s)).catch((err) => console.warn('[stage]', err.message));
+  }
+  return s;
 }
 
 export function recordConsent(sessionId, { type, version, channel = 'whatsapp', evidence = null }) {

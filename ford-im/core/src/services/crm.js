@@ -21,11 +21,15 @@ async function rest(method, p, body) {
 
 const first = (json, key) => json?.data?.[key]?.[0] ?? json?.data?.[key] ?? null;
 
-// Etapas del funnel → etapas de la oportunidad en Twenty (ajustar a las configuradas).
-const STAGE_MAP = {
-  scanned: 'NEW', chatting: 'NEW', credit_consent: 'SCREENING', kyc: 'SCREENING',
-  credit_collecting: 'SCREENING', signing: 'MEETING', sent_to_bank: 'PROPOSAL',
-  bank_more_info: 'PROPOSAL', bank_approved: 'CUSTOMER', bank_rejected: 'PROPOSAL', closed: 'CUSTOMER',
+// Etapas del funnel → valores del campo `stage` de Opportunity en Twenty. Los valores son los que
+// trae Twenty por defecto; en Settings → Data model → Opportunities → Stage se renombran sus
+// etiquetas (ver docs/DEMO-BBVA.md) para que el pipeline del CRM muestre el funnel en español.
+export const STAGE_MAP = {
+  scanned: 'NEW', chatting: 'NEW',
+  test_drive_booked: 'SCREENING',
+  credit_consent: 'MEETING', kyc: 'MEETING', credit_collecting: 'MEETING', signing: 'MEETING',
+  sent_to_bank: 'PROPOSAL', bank_more_info: 'PROPOSAL', bank_rejected: 'PROPOSAL',
+  bank_approved: 'CUSTOMER', closed: 'CUSTOMER',
 };
 
 export async function syncSession(session, { note } = {}) {

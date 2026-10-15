@@ -15,7 +15,8 @@
 | 9 | ElevenLabs: API key, voces ES/EN y el agente del kiosco | `ELEVENLABS_*` (ver `agent/elevenlabs-kiosk-agent.md`) |
 | 10 | DNS: registros A de `fordim`, `go`, `api`, `kyc`, `firma`, `bancos`, `legal`, `crm` (y `n8n`) de menteia.com hacia el VPS | proveedor DNS |
 | 11 | Plantillas de WhatsApp aprobadas por Meta (`ford_im_respuesta_banco`, `ford_im_firma_completa`), para avisar fuera de la ventana de 24 h | Meta Business Manager |
-| 12 | Logo oficial en vector (SVG) del kit de marca, si lo hay; hoy se usa el PNG que enviaste | `public/kiosk/assets/ford-logo.png` |
+| 12 | Credenciales: ver cómo pasarlas en [DEMO.md](DEMO.md#1-credenciales-cómo-pasármelas) | variables del entorno |
+| 13 | Logo oficial en vector (SVG) del kit de marca, si lo hay; hoy se usa el PNG que enviaste | `public/kiosk/assets/ford-logo.png` |
 
 ## Configuración de Twenty CRM
 
@@ -28,13 +29,12 @@
 ## Qué más agregaría
 
 **Ventas**
-1. **Agendar prueba de manejo** desde el chat, con el calendario del asesor (Google Calendar o
-   Cal.com en `agenda.menteia.com`) y un recordatorio por WhatsApp 24 h antes.
+1. ~~Agendar prueba de manejo~~ ✅ hecho: horarios con cupo, confirmación con liga a Google
+   Calendar y recordatorio 24 h antes. Siguiente paso: sincronizar con el calendario de cada asesor.
 2. **Toma de auto usado (trade-in):** el cliente manda fotos, kilometraje y año, y se calcula un
    avalúo preliminar que se suma como enganche.
-3. **Paso a asesor humano en el mismo chat:** ya existe `request_human`, que pausa el bot. Falta
-   una bandeja para el vendedor (Chatwoot self-hosted en `chat.menteia.com`) para que conteste
-   desde el mismo número.
+3. ~~Bandeja del vendedor~~ ✅ hecho: `vendedor.menteia.com` (o `/crm` en el demo). El vendedor
+   toma la conversación, el bot se pausa y responde desde el mismo número.
 4. **Seguimiento automático** de leads que no terminaron (24 h, 72 h, 7 días) con plantillas
    aprobadas y sólo con opt-in.
 5. **Comparativa entre bancos:** mandar la solicitud a 2 o 3 bancos a la vez y mostrar al cliente

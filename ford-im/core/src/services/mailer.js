@@ -48,11 +48,11 @@ export async function sendToBank({ bank, credit, status, client, vehicleName, de
 
   return getTransport().sendMail({
     from: config.mail.from,
-    to: bank.email_to,
+    to: config.mail.bankEmailOverride || bank.email_to,
     cc: client.email,
     bcc: [...config.mail.bccDealer, ...(dealer?.fi_email ? [dealer.fi_email] : [])],
     replyTo: dealer?.fi_email || undefined,
-    subject: `Solicitud de crédito automotriz – ${client.name} – ${vehicleName} – Folio ${credit.folio}`,
+    subject: `${config.demoMode ? '[DEMO] ' : ''}Solicitud de crédito automotriz – ${client.name} – ${vehicleName} – Folio ${credit.folio}`,
     html,
     attachments,
   });

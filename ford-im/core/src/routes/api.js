@@ -15,6 +15,9 @@ import { transcribe } from '../services/voice.js';
 import { downloadMedia } from '../services/whatsapp.js';
 import { syncSession } from '../services/crm.js';
 import { latestKyc, setKycResult } from '../services/kyc.js';
+import { logMessage } from '../services/messages.js';
+import * as testdrive from '../services/testdrive.js';
+import { dealers } from '../data/catalog.js';
 
 const r = express.Router();
 r.use(express.json({ limit: '1mb' }));
@@ -74,6 +77,12 @@ r.post('/v1/inbound', wrap(async (req, res) => {
   }
 
   logEvent(inputWasAudio ? 'msg_in_audio' : 'msg_in', { sessionId: s.id });
+  logMessage({
+    sessionId: s.id, waId: wa_id, direction: 'in', author: 'customer', type,
+    body: inputWasAudio ? `🎙️ ${text}` : text || (media_id ? `📎 ${type}` : ''),
+  });
+  const kyc = latestKyc(s.id);
+  const td = testdrive.activeTestDrive(s.id);
   const vehicle = getVehicle(s.vehicle_id);
   const dealer = getDealer(s.dealer_id);
   const openCredit = credit.latestCreditForSession(s.id);
@@ -97,6 +106,9 @@ r.post('/v1/inbound', wrap(async (req, res) => {
       dealer: dealer ? { id: dealer.id, name: dealer.name, city: dealer.city, phone: dealer.phone, address: dealer.address } : null,
       credit: openCredit ? { id: openCredit.id, folio: openCredit.folio, bank_id: openCredit.bank_id, status: openCredit.status } : null,
       consents: sessions.listConsents(s.id).map((c) => c.type),
+      kyc: kyc ? { status: kyc.status, doc_type: kyc.doc_type } : null,
+      test_drive: td ? testdrive.describe(td, s.lang) : null,
+      assigned_to: s.assigned_to,
       available_vehicles: vehicles.map((v) => ({ id: v.id, name: loc(v.name, s.lang) })),
     },
   });
@@ -154,12 +166,31 @@ r.post('/v1/sessions/:id/kyc', wrap(async (req, res) => {
   if (!sessions.hasConsent(s.id, 'credit_privacy')) return res.status(409).json({ error: 'credit_privacy_consent_missing' });
   res.json(await flow.sendKycLink(s.id));
 }));
+r.get('/v1/sessions/:id/kyc', (req, res) => {
+  const k = latestKyc(mustSession(req.params.id).id);
+  res.json(k ? { id: k.id, status: k.status, doc_type: k.doc_type, updated_at: k.updated_at } : { status: 'not_started' });
+});
 r.post('/v1/sessions/:id/credit', (req, res) => {
-  const s = mustSession(req.params.id);
-  if (!sessions.hasConsent(s.id, 'credit_privacy')) return res.status(409).json({ error: 'credit_privacy_consent_missing' });
-  const c = credit.startCredit(s.id, req.body.bank_id);
-  if (s.stage === 'credit_consent' || s.stage === 'chatting' || s.stage === 'kyc') sessions.updateSession(s.id, { stage: 'credit_collecting' });
+  const c = flow.openCredit(mustSession(req.params.id).id, req.body.bank_id);
   res.json(credit.creditStatus(c.id));
+});
+
+// --- Prueba de manejo ---------------------------------------------------------------------
+const dealerOf = (s) => s.dealer_id || dealers[0]?.id;
+r.get('/v1/sessions/:id/test-drive/slots', (req, res) => {
+  const s = mustSession(req.params.id);
+  const slots = testdrive.availableSlots(dealerOf(s), { date: req.query.date || null, limit: Number(req.query.limit) || 8 });
+  res.json(slots.map((x) => ({ starts_at: x.starts_at, date: x.local.date, time: x.local.time, spots_left: x.spots_left })));
+});
+r.post('/v1/sessions/:id/test-drive', wrap(async (req, res) => {
+  const s = mustSession(req.params.id);
+  if (req.body.vehicle_id) sessions.updateSession(s.id, { vehicle_id: req.body.vehicle_id });
+  res.json(await flow.confirmTestDrive(s.id, req.body.starts_at));
+}));
+r.delete('/v1/sessions/:id/test-drive', (req, res) => {
+  const td = testdrive.activeTestDrive(mustSession(req.params.id).id);
+  if (!td) return res.status(404).json({ error: 'no_active_test_drive' });
+  res.json(testdrive.setTestDriveStatus(td.id, 'cancelled'));
 });
 r.get('/v1/credit/:id', (req, res) => res.json(credit.creditStatus(mustCredit(req.params.id).id)));
 r.patch('/v1/credit/:id', (req, res) => res.json(credit.updateCreditData(mustCredit(req.params.id).id, req.body.fields || req.body)));

@@ -30,8 +30,12 @@ export const config = {
     firma: env.HOST_FIRMA || 'firma.menteia.com',
     bancos: env.HOST_BANCOS || 'bancos.menteia.com',
     legal: env.HOST_LEGAL || 'legal.menteia.com',
+    vendedor: env.HOST_VENDEDOR || 'vendedor.menteia.com',
+    media: env.HOST_MEDIA || 'media.menteia.com',
   },
   publicScheme: env.PUBLIC_SCHEME || 'https',
+  // Modo demo en UN solo subdominio: todo cuelga de cotizador.menteia.com por ruta.
+  singleHost: env.SINGLE_HOST || '',
 
   qr: {
     rotateSeconds: Number(env.QR_ROTATE_SECONDS || 30),
@@ -39,6 +43,23 @@ export const config = {
     refTtlMinutes: Number(env.REF_TTL_MINUTES || 30),
   },
   kioskKeys,
+
+  // CRM de sólo lectura (sin login, sin enviar mensajes). Por defecto activo en modo demo.
+  crmReadOnly: env.CRM_READONLY ? env.CRM_READONLY === 'true' : env.DEMO_MODE === 'true',
+  // Llave opcional para ver el CRM de sólo lectura (se abre una vez con /crm/?k=LLAVE).
+  crmViewKey: env.CRM_VIEW_KEY || '',
+  demoSeed: env.DEMO_SEED === 'true',
+
+  // Modo demo: KYC simulado, PDF con marca "DEMO" y todos los correos al banco a BANK_EMAIL_OVERRIDE.
+  demoMode: env.DEMO_MODE === 'true',
+
+  // Vendedores del panel vendedor.menteia.com: "usuario:Nombre Visible:llave,..."
+  sellers: Object.fromEntries(
+    list(env.SELLER_USERS).map((entry) => {
+      const [user, name, ...key] = entry.split(':');
+      return [user, { user, name, key: key.join(':') }];
+    }),
+  ),
 
   n8nApiKey: env.N8N_API_KEY || 'dev-n8n-key',
   adminApiKey: env.ADMIN_API_KEY || 'dev-admin-key',
@@ -52,6 +73,7 @@ export const config = {
     templates: {
       bankDecision: env.WA_TEMPLATE_BANK_DECISION || 'ford_im_respuesta_banco',
       signatureDone: env.WA_TEMPLATE_SIGNATURE_DONE || 'ford_im_firma_completa',
+      testDriveReminder: env.WA_TEMPLATE_TEST_DRIVE || 'ford_im_recordatorio_prueba',
     },
   },
 
@@ -78,7 +100,7 @@ export const config = {
   },
 
   kyc: {
-    provider: env.KYC_PROVIDER || 'manual', // manual | webhook
+    provider: env.KYC_PROVIDER || (env.DEMO_MODE === 'true' ? 'simulated' : 'manual'), // simulated | manual | webhook
     webhookUrl: env.KYC_WEBHOOK_URL || '',
     linkTtlHours: Number(env.KYC_LINK_TTL_HOURS || 24),
   },
@@ -88,7 +110,10 @@ export const config = {
     integrationKey: env.DOCUSIGN_INTEGRATION_KEY || '',
     userId: env.DOCUSIGN_USER_ID || '',
     accountId: env.DOCUSIGN_ACCOUNT_ID || '',
-    privateKey: (env.DOCUSIGN_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
+    // La llave RSA se acepta tal cual, con \n escapados, o en base64 (más fácil de guardar como secreto).
+    privateKey: env.DOCUSIGN_PRIVATE_KEY_B64
+      ? Buffer.from(env.DOCUSIGN_PRIVATE_KEY_B64, 'base64').toString('utf8')
+      : (env.DOCUSIGN_PRIVATE_KEY || '').replace(/\\n/g, '\n'),
     connectHmacKey: env.DOCUSIGN_CONNECT_HMAC_KEY || '',
   },
 
@@ -98,6 +123,7 @@ export const config = {
     bccDealer: list(env.MAIL_BCC_DEALER),
     // attachments = adjunta PDFs (lo pedido); secure_link = liga con caducidad (recomendado)
     bankDeliveryMode: env.BANK_DELIVERY_MODE || 'attachments',
+    bankEmailOverride: env.BANK_EMAIL_OVERRIDE || '',
     maxAttachmentMb: Number(env.MAIL_MAX_ATTACHMENT_MB || 20),
   },
 
@@ -110,6 +136,16 @@ export const config = {
   },
 };
 
+// Ruta de cada sitio cuando todo vive en un solo subdominio (SINGLE_HOST).
+export const PREFIX = {
+  kiosk: '/kiosco', go: '/go', api: '/api', kyc: '/kyc', firma: '/firma',
+  bancos: '/bancos', legal: '/legal', vendedor: '/crm', media: '/media',
+};
+
 export function publicUrl(hostKey, p = '/') {
+  if (config.singleHost) return `${config.publicScheme}://${config.singleHost}${PREFIX[hostKey]}${p}`;
   return `${config.publicScheme}://${config.hosts[hostKey]}${p}`;
 }
+
+// Videos y PDFs: URL absoluta tal cual, o ruta relativa servida desde /media.
+export const mediaUrl = (u) => (!u || /^https?:\/\//.test(u) ? u : publicUrl('media', `/${u.replace(/^\/+/, '')}`));

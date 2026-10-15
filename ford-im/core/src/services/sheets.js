@@ -1,7 +1,7 @@
 // Lee el Google Sheet de vehículos / precios / promociones vía CSV publicado.
 // Cada pestaña debe tener una columna `vehicle_id` que coincida con data/vehicles.json.
 // Las demás columnas son libres: se entregan tal cual al agente.
-import { config } from '../config.js';
+import { config, mediaUrl } from '../config.js';
 import { vehicles, getVehicle } from '../data/catalog.js';
 import { loc } from '../lib/i18n.js';
 
@@ -70,7 +70,7 @@ export async function vehicleInfo(vehicleId, lang = 'es') {
     id: v.id,
     name: loc(v.name, lang),
     tagline: loc(v.tagline, lang),
-    video_url: v.video_url,
+    video_url: mediaUrl(v.video_url),
     specs: mine(specs),
     prices: mine(prices),
     promotions: mine(promos).filter((p) => isPromoActive(p)),

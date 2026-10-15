@@ -1,11 +1,29 @@
 // Adaptador WhatsApp Cloud API (Meta). Si el número está conectado por otro proveedor
 // (360dialog, Evolution API, Twilio…), sólo hay que reimplementar estas funciones.
 import { config } from '../config.js';
+import { logMessage } from './messages.js';
 
 const graph = (p) => `https://graph.facebook.com/${config.whatsapp.graphVersion}/${p}`;
 const enabled = () => Boolean(config.whatsapp.token && config.whatsapp.phoneNumberId);
 
-async function call(body) {
+// Resumen legible de lo enviado, para la bandeja del vendedor.
+function describe(body) {
+  switch (body.type) {
+    case 'text': return body.text.body;
+    case 'video': return `🎬 ${body.video.caption || 'video'}`;
+    case 'audio': return '🎙️ nota de voz';
+    case 'document': return `📄 ${body.document.filename}`;
+    case 'template': return `📋 plantilla ${body.template.name}`;
+    default: return body.type;
+  }
+}
+
+async function call(body, author = 'system', summary = null) {
+  try {
+    logMessage({ waId: body.to, direction: 'out', author, type: body.type, body: summary ?? describe(body) });
+  } catch (err) {
+    console.warn('[messages]', err.message);
+  }
   if (!enabled()) {
     console.log('[whatsapp:dry-run]', JSON.stringify(body));
     return { dryRun: true };
@@ -20,9 +38,10 @@ async function call(body) {
   return json;
 }
 
-export const sendText = (to, text) => call({ to, type: 'text', text: { body: text, preview_url: true } });
+export const sendText = (to, text, author) => call({ to, type: 'text', text: { body: text, preview_url: true } }, author);
 export const sendVideo = (to, link, caption) => call({ to, type: 'video', video: { link, caption } });
-export const sendAudioId = (to, id) => call({ to, type: 'audio', audio: { id } });
+export const sendAudioId = (to, id, author, transcript) =>
+  call({ to, type: 'audio', audio: { id } }, author, transcript ? `🎙️ ${transcript}` : null);
 export const sendDocument = (to, link, filename, caption) => call({ to, type: 'document', document: { link, filename, caption } });
 
 // Plantillas aprobadas: obligatorias para escribir fuera de la ventana de 24 h

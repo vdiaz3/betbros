@@ -54,7 +54,7 @@ const anchorTab = (anchorString, extra = {}) => ({ anchorString, anchorUnits: 'p
 
 export async function createEnvelope({ credit, signer, pdf, webhookUrl, lang = 'es' }) {
   const body = {
-    emailSubject: lang === 'en' ? `Financing application ${credit.folio}` : `Solicitud de crédito ${credit.folio}`,
+    emailSubject: (config.demoMode ? '[DEMO] ' : '') + (lang === 'en' ? `Financing application ${credit.folio}` : `Solicitud de crédito ${credit.folio}`),
     documents: [{ documentBase64: pdf.toString('base64'), name: `Solicitud-${credit.folio}.pdf`, fileExtension: 'pdf', documentId: '1' }],
     recipients: {
       signers: [{

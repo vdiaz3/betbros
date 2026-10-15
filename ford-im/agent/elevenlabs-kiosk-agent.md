@@ -14,7 +14,7 @@ agente puede ser **privado** y la API key nunca llega al navegador.
    notas de voz de WhatsApp). Modelo de LLM: Claude (`claude-sonnet-5-5`) si está disponible en tu
    cuenta.
 5. **Knowledge base**: sube las fichas técnicas de los 3 modelos y la política de crédito, o
-   conecta la URL `https://api.menteia.com/v1/vehicles` mediante una herramienta (abajo).
+   conecta la URL `https://cotizador.menteia.com/api/v1/vehicles` mediante una herramienta (abajo).
 6. Copia el Agent ID en `ELEVENLABS_KIOSK_AGENT_ID`.
 
 ## Variables dinámicas que envía el kiosco
@@ -49,6 +49,6 @@ frente a la pantalla viendo el {{vehicle}}. Habla en {{lang}} (es = español de 
 
 ## Herramienta opcional (Server tool / webhook)
 
-- **get_vehicle** → `GET https://api.menteia.com/v1/vehicles/{vehicle_id}?lang={lang}`
+- **get_vehicle** → `GET https://cotizador.menteia.com/api/v1/vehicles/{vehicle_id}?lang={lang}`
   con cabecera `Authorization: Bearer <N8N_API_KEY>` (guárdala como *secret* en ElevenLabs).
   Parámetros: `vehicle_id` (enum: bronco, ranger, explorer), `lang` (es|en).

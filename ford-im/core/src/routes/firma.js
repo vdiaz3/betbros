@@ -21,7 +21,7 @@ r.get('/s/:token', async (req, res, next) => {
     if (!docusign.docusignEnabled()) {
       // Modo desarrollo: simula la firma.
       return res.send(page({ title: 'Firma (demo)', body: `<div class="card center"><p>DocuSign no configurado (modo demo).</p>
-        <form method="post" action="/s/${esc(req.params.token)}/demo-complete"><button class="btn">Simular firma</button></form></div>` }));
+        <form method="post" action="${esc(req.baseUrl)}/s/${esc(req.params.token)}/demo-complete"><button class="btn">Simular firma</button></form></div>` }));
     }
     const url = await docusign.recipientViewUrl({ envelopeId: credit.envelope_id, signer: signerFor(credit), returnUrl: publicUrl('firma', '/gracias') });
     logEvent('signing_opened', { sessionId: credit.session_id });
@@ -36,7 +36,7 @@ r.post('/s/:token/demo-complete', async (req, res, next) => {
     const credit = p && getCredit(p.c);
     if (!credit) return res.status(410).end();
     await onEnvelopeCompleted(credit);
-    res.redirect(303, '/gracias');
+    res.redirect(303, `${req.baseUrl}/gracias`);
   } catch (err) { next(err); }
 });
 

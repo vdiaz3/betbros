@@ -47,8 +47,10 @@ export const FIELDS = {
 };
 
 export const DOCS = {
-  ine_frente: { label: { es: 'INE (frente)', en: 'INE / ID (front)' }, required: true },
-  ine_reverso: { label: { es: 'INE (reverso)', en: 'INE / ID (back)' }, required: true },
+  // Identificación: INE (ambos lados) o pasaporte. Se toma del KYC; ver identityMissing().
+  ine_frente: { label: { es: 'INE (frente)', en: 'INE / ID (front)' }, required: false },
+  ine_reverso: { label: { es: 'INE (reverso)', en: 'INE / ID (back)' }, required: false },
+  pasaporte: { label: { es: 'Pasaporte', en: 'Passport' }, required: false },
   comprobante_domicilio: { label: { es: 'Comprobante de domicilio (máx. 3 meses)', en: 'Proof of address (≤ 3 months)' }, required: true },
   comprobante_ingresos: { label: { es: 'Comprobantes de ingresos (3 últimos meses)', en: 'Proof of income (last 3 months)' }, required: true },
   constancia_fiscal: { label: { es: 'Constancia de situación fiscal', en: 'Tax status certificate' }, required: false },
@@ -186,6 +188,10 @@ export function creditStatus(id) {
   const missingDocs = Object.entries(DOCS)
     .filter(([k, d]) => (d.required || (k === 'constancia_fiscal' && ['independiente', 'empresario'].includes(credit.data.tipo_ingreso))) && !docs.some((x) => x.kind === k))
     .map(([k, d]) => ({ key: k, label: d.label }));
+  const has = (k) => docs.some((x) => x.kind === k);
+  if (!has('pasaporte') && !(has('ine_frente') && has('ine_reverso'))) {
+    missingDocs.unshift({ key: 'identificacion', label: { es: 'Identificación oficial (INE o pasaporte, se toma del KYC)', en: 'Official ID (INE or passport, taken from KYC)' } });
+  }
   const ready = missingFields.length === 0 && missingDocs.length === 0;
   if (ready && credit.status === 'collecting') {
     db().prepare("UPDATE credit_apps SET status = 'ready', updated_at = ? WHERE id = ?").run(now(), id);

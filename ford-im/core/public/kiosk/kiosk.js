@@ -32,7 +32,7 @@ if (params.get('key')) {
   // La llave se guarda en el equipo y se quita de la URL visible.
   localStorage.setItem('kioskId', kioskId);
   localStorage.setItem('kioskKey', kioskKey);
-  history.replaceState(null, '', `/k/${kioskId}`);
+  history.replaceState(null, '', `k/${kioskId}`); // relativo a <base>
 }
 
 const state = { lang: 'es', vehicles: [], idx: 0, lastTouch: Date.now(), qrTimer: null, ringAnim: null, conv: null, voiceTimer: null, qrSvg: '' };
@@ -92,7 +92,7 @@ async function refreshQr() {
   clearTimeout(state.qrTimer);
   const v = state.vehicles[state.idx];
   try {
-    const q = await api(`/api/qr?vehicle=${encodeURIComponent(v.id)}&lang=${state.lang}`);
+    const q = await api(`api/qr?vehicle=${encodeURIComponent(v.id)}&lang=${state.lang}`);
     $('qr').classList.add('swap');
     setTimeout(() => {
       $('qr').innerHTML = q.svg;
@@ -142,7 +142,7 @@ async function startVoice() {
   try {
     const [{ Conversation }, { signedUrl }] = await Promise.all([
       import(ELEVEN_SDK),
-      api('/api/eleven/session', { method: 'POST', body: JSON.stringify({ vehicle: v.id, lang: state.lang }) }),
+      api('api/eleven/session', { method: 'POST', body: JSON.stringify({ vehicle: v.id, lang: state.lang }) }),
     ]);
     state.conv = await Conversation.startSession({
       signedUrl,
@@ -177,7 +177,7 @@ async function endVoice() {
 // --- Arranque ----------------------------------------------------------------------------
 async function boot() {
   if (!kioskId || !kioskKey) {
-    document.body.innerHTML = '<p style="padding:40px;font-size:24px">Kiosco no configurado: abre /k/&lt;ID&gt;?key=&lt;LLAVE&gt;</p>';
+    document.body.innerHTML = '<p style="padding:40px;font-size:24px">Kiosco no configurado: abre k/&lt;ID&gt;?key=&lt;LLAVE&gt;</p>';
     return;
   }
   document.querySelectorAll('.lang button').forEach((b) => (b.onclick = () => {
@@ -194,7 +194,7 @@ async function boot() {
 
   for (;;) {
     try {
-      const cfg = await api('/api/config');
+      const cfg = await api('api/config');
       state.vehicles = cfg.vehicles;
       $('dealerName').textContent = cfg.dealer?.name ?? 'Ford';
       break;
@@ -207,7 +207,7 @@ async function boot() {
   renderPicker();
   renderVehicle();
   refreshQr();
-  setInterval(() => api('/api/heartbeat', { method: 'POST', body: JSON.stringify({ ua: navigator.userAgent, vehicle: state.vehicles[state.idx].id }) }).catch(() => {}), 60_000);
+  setInterval(() => api('api/heartbeat', { method: 'POST', body: JSON.stringify({ ua: navigator.userAgent, vehicle: state.vehicles[state.idx].id }) }).catch(() => {}), 60_000);
   // Si el navegador del kiosco se suspende (pantalla apagada), al volver se pide un QR nuevo.
   document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshQr(); });
 }

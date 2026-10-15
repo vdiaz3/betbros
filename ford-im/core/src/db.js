@@ -90,6 +90,31 @@ CREATE TABLE IF NOT EXISTS kyc_checks (
   updated_at INTEGER NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id TEXT,
+  wa_id TEXT NOT NULL,
+  direction TEXT NOT NULL,
+  author TEXT NOT NULL,
+  type TEXT NOT NULL,
+  body TEXT,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS messages_session ON messages(session_id, id);
+
+CREATE TABLE IF NOT EXISTS test_drives (
+  id TEXT PRIMARY KEY,
+  session_id TEXT NOT NULL,
+  dealer_id TEXT NOT NULL,
+  vehicle_id TEXT NOT NULL,
+  starts_at INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'booked',
+  reminder_sent INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS test_drives_slot ON test_drives(dealer_id, starts_at);
+
 CREATE TABLE IF NOT EXISTS events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   session_id TEXT,
@@ -108,8 +133,17 @@ export function getDb() {
     db = new DatabaseSync(file);
     db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
     db.exec(SCHEMA);
+    migrate(db);
   }
   return db;
+}
+
+// Columnas agregadas después de la primera versión (SQLite no tiene ADD COLUMN IF NOT EXISTS).
+function migrate(d) {
+  const cols = (t) => d.prepare(`PRAGMA table_info(${t})`).all().map((c) => c.name);
+  if (!cols('sessions').includes('assigned_to')) d.exec('ALTER TABLE sessions ADD COLUMN assigned_to TEXT');
+  if (!cols('sessions').includes('last_inbound_at')) d.exec('ALTER TABLE sessions ADD COLUMN last_inbound_at INTEGER');
+  if (!cols('kyc_checks').includes('doc_type')) d.exec('ALTER TABLE kyc_checks ADD COLUMN doc_type TEXT');
 }
 
 export const now = () => Date.now();
