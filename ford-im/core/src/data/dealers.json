@@ -1,0 +1,17 @@
+{
+  "_nota": "PLACEHOLDER: un registro por distribuidor. Cada kiosco se asigna a un dealer en kiosks.",
+  "dealers": [
+    {
+      "id": "dealer-demo",
+      "name": "Ford Demo Distribuidor",
+      "city": "Ciudad de México",
+      "address": "[Dirección del distribuidor]",
+      "phone": "+52 55 0000 0000",
+      "sales_email": "ventas@dealer-demo.mx",
+      "fi_email": "fi@dealer-demo.mx"
+    }
+  ],
+  "kiosks": [
+    { "id": "K-DEMO-01", "dealer_id": "dealer-demo", "location": "Showroom – entrada" }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "ford-im-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ford IM – backend: QR rotativo, sesiones WhatsApp, crédito, KYC, DocuSign, CRM",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "express": "5.1.0",
+    "multer": "2.0.2",
+    "nodemailer": "7.0.6",
+    "pdf-lib": "1.17.1",
+    "qrcode": "1.5.4"
+  }
+}

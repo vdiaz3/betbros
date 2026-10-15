@@ -1,0 +1,32 @@
+{
+  "_nota": "PLACEHOLDERS: reemplazar con los 3 modelos reales. Especificaciones, precios y promociones vienen del Google Sheet (columna vehicle_id). video_url debe ser MP4 H.264/AAC < 16 MB accesible por HTTPS.",
+  "vehicles": [
+    {
+      "id": "bronco",
+      "name": { "es": "Ford Bronco", "en": "Ford Bronco" },
+      "tagline": { "es": "Nacido para la aventura", "en": "Built for adventure" },
+      "hero_image": "/kiosk/assets/vehicles/bronco.jpg",
+      "video_url": "https://media.menteia.com/ford-im/bronco-30s.mp4",
+      "price_from_mxn": 0,
+      "accent": "#1f4e8c"
+    },
+    {
+      "id": "ranger",
+      "name": { "es": "Ford Ranger", "en": "Ford Ranger" },
+      "tagline": { "es": "Trabaja duro, vive más", "en": "Work hard, live more" },
+      "hero_image": "/kiosk/assets/vehicles/ranger.jpg",
+      "video_url": "https://media.menteia.com/ford-im/ranger-30s.mp4",
+      "price_from_mxn": 0,
+      "accent": "#2c5f2d"
+    },
+    {
+      "id": "explorer",
+      "name": { "es": "Ford Explorer", "en": "Ford Explorer" },
+      "tagline": { "es": "Espacio para toda la familia", "en": "Room for the whole family" },
+      "hero_image": "/kiosk/assets/vehicles/explorer.jpg",
+      "video_url": "https://media.menteia.com/ford-im/explorer-30s.mp4",
+      "price_from_mxn": 0,
+      "accent": "#6b3e26"
+    }
+  ]
+}

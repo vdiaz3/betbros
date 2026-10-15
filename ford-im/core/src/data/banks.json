@@ -1,0 +1,35 @@
+{
+  "_nota": "PLACEHOLDERS: confirmar con cada institución el correo receptor, tasas vigentes, plazos y documentos. Las tasas son sólo para la simulación informativa (el CAT real lo da el banco).",
+  "banks": [
+    {
+      "id": "bbva",
+      "name": "BBVA México",
+      "email_to": "credito.auto@bbva-ejemplo.mx",
+      "rate_annual_pct": 13.9,
+      "terms_months": [12, 24, 36, 48, 60],
+      "min_down_payment_pct": 10,
+      "iva_on_interest": true,
+      "form_template": null
+    },
+    {
+      "id": "banorte",
+      "name": "Banorte",
+      "email_to": "credito.auto@banorte-ejemplo.mx",
+      "rate_annual_pct": 14.5,
+      "terms_months": [12, 24, 36, 48, 60, 72],
+      "min_down_payment_pct": 15,
+      "iva_on_interest": true,
+      "form_template": null
+    },
+    {
+      "id": "santander",
+      "name": "Santander",
+      "email_to": "credito.auto@santander-ejemplo.mx",
+      "rate_annual_pct": 14.2,
+      "terms_months": [12, 24, 36, 48, 60],
+      "min_down_payment_pct": 10,
+      "iva_on_interest": true,
+      "form_template": null
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Ford IM</title>
+<link rel="stylesheet" href="/kiosk/kiosk.css">
+</head>
+<body>
+<div id="app" class="app">
+  <header class="top">
+    <div class="dealer"><img src="/kiosk/assets/ford-logo.svg" alt="" class="logo-sm"><span id="dealerName">Ford</span></div>
+    <div class="lang" role="group" aria-label="Idioma / Language">
+      <button data-lang="es" class="on">ES</button><button data-lang="en">EN</button>
+    </div>
+  </header>
+
+  <section class="stage">
+    <div class="hero" id="hero">
+      <div class="hero-img" id="heroImg"></div>
+      <div class="hero-text">
+        <p class="eyebrow" data-i18n="discover">Descubre</p>
+        <h1 id="vehicleName">Ford</h1>
+        <p id="vehicleTagline" class="tagline"></p>
+        <p id="vehiclePrice" class="price"></p>
+      </div>
+    </div>
+
+    <aside class="qr-panel">
+      <div class="qr-wrap" id="qrWrap">
+        <span class="wave"></span><span class="wave"></span><span class="wave"></span>
+        <svg class="countdown" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" id="countdownRing"/></svg>
+        <div class="qr" id="qr" aria-live="polite"></div>
+        <div class="qr-offline" id="qrOffline" data-i18n="reconnecting">Reconectando…</div>
+      </div>
+      <p class="qr-title" data-i18n="scan">Escanea con la cámara de tu celular</p>
+      <p class="qr-sub" data-i18n="scanSub">y continúa por WhatsApp: video, precios, promociones y crédito.</p>
+      <button class="voice-btn" id="voiceBtn"><span class="mic">🎙️</span><span data-i18n="talk">Habla con nuestro asesor virtual</span></button>
+    </aside>
+  </section>
+
+  <nav class="picker" id="picker" aria-label="Modelos"></nav>
+  <footer class="foot"><span data-i18n="privacy">Al escanear aceptas el aviso de privacidad disponible en el chat.</span></footer>
+</div>
+
+<div class="voice" id="voice" hidden>
+  <div class="voice-card">
+    <div class="orb" id="orb"><span></span><span></span><span></span></div>
+    <p class="voice-status" id="voiceStatus" data-i18n="connecting">Conectando…</p>
+    <div class="transcript" id="transcript"></div>
+    <p class="voice-note" data-i18n="micNote">Usamos el micrófono sólo durante esta conversación. No se graba video.</p>
+    <div class="voice-actions">
+      <button class="end" id="endBtn" data-i18n="end">Terminar</button>
+    </div>
+    <p class="voice-hint" data-i18n="voiceHint">¿Prefieres seguir en tu celular? Escanea el código:</p>
+    <div class="qr mini" id="qrMini"></div>
+  </div>
+</div>
+
+<script type="module" src="/kiosk/kiosk.js"></script>
+</body>
+</html>
