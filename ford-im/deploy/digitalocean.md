@@ -16,6 +16,13 @@ cd /opt/betbros && git pull
 cd ford-im && docker compose -f docker-compose.demo.yml up -d --build
 ```
 
+## Reinstalar sin SSH
+
+DigitalOcean → droplet → *Rebuild* con Ubuntu 24.04 (o `POST /v2/droplets/<id>/actions`
+`{"type":"rebuild","image":"ubuntu-24-04-x64"}`). Conserva la IP, vuelve a correr el script de
+instalación y baja la última versión de la rama. Se pierden los leads reales; los de ejemplo se
+vuelven a cargar.
+
 ## Cambiar credenciales
 
 Edita `/opt/betbros/ford-im/.env` (o regenéralo con `core/scripts/write-env.mjs`) y reinicia:
