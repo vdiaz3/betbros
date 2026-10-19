@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Ford IM · Pitch 1 minuto</title>
+<style>
+  @page { size: Letter; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --navy: #00095B; --blue: #1700F4; --ink: #0b1030; --muted: #5b6475; --line: #e3e7f0; --hot: #ff5a36; }
+  body { font-family: "Inter", sans-serif; color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width: 8.5in; height: 11in; position: relative; overflow: hidden; page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+
+  /* ---------- Página 1 ---------- */
+  .hero { background: radial-gradient(120% 90% at 85% 10%, #1b2bb8 0%, var(--navy) 55%, #02052e 100%); color: #fff; padding: 0.55in 0.6in 0.5in; height: 5.6in; position: relative; }
+  .hero .top { display: flex; justify-content: space-between; align-items: center; }
+  .hero .top img { height: 0.42in; border-radius: 6px; }
+  .tag { font: 700 9pt "Inter"; letter-spacing: .22em; text-transform: uppercase; color: #aeb8ff; }
+  .headline { font: 900 64pt/0.92 "Inter Display"; letter-spacing: -0.035em; margin-top: 0.45in; }
+  .headline span { display: block; }
+  .headline .hot { color: var(--hot); }
+  .sub { font: 500 15pt/1.35 "Inter"; color: #dfe4ff; margin-top: 0.22in; max-width: 5.6in; }
+  .rings { position: absolute; right: -1.1in; top: 1.2in; width: 4.4in; height: 4.4in; border-radius: 50%; border: 2px solid rgba(255,255,255,.10); }
+  .rings::before, .rings::after { content: ""; position: absolute; inset: 0.45in; border-radius: 50%; border: 2px solid rgba(255,255,255,.08); }
+  .rings::after { inset: 0.95in; border-color: rgba(255,255,255,.06); }
+
+  .pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.14in; padding: 0 0.6in; margin-top: -0.38in; position: relative; }
+  .pillar { background: #fff; border-radius: 14px; padding: 0.18in 0.16in 0.2in; box-shadow: 0 10px 30px rgba(0, 9, 91, .16); border-top: 5px solid var(--blue); }
+  .pillar .n { font: 900 22pt "Inter Display"; color: var(--blue); line-height: 1; }
+  .pillar h3 { font: 800 13pt/1.1 "Inter Display"; margin: 0.08in 0 0.06in; text-transform: uppercase; letter-spacing: -.01em; }
+  .pillar p { font: 400 8.6pt/1.4 "Inter"; color: var(--muted); }
+
+  .strip { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0.3in 0.6in 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .strip div { padding: 0.14in 0.06in; text-align: center; border-right: 1px solid var(--line); }
+  .strip div:last-child { border-right: 0; }
+  .strip b { display: block; font: 900 22pt "Inter Display"; color: var(--navy); letter-spacing: -.02em; }
+  .strip span { font: 500 8pt "Inter"; color: var(--muted); }
+
+  .bottom { display: grid; grid-template-columns: 1fr 1.45in; gap: 0.3in; align-items: center; margin: 0.28in 0.6in 0; }
+  .punch { font: 900 21pt/1.12 "Inter Display"; letter-spacing: -.02em; }
+  .punch em { font-style: normal; color: var(--blue); }
+  .fact { font: 400 8.5pt/1.4 "Inter"; color: var(--muted); margin-top: 0.1in; }
+  .qr { text-align: center; }
+  .qr .box { width: 1.4in; height: 1.4in; padding: 0.06in; border: 2px solid var(--navy); border-radius: 14px; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr small { display: block; font: 700 7.5pt "Inter"; color: var(--navy); margin-top: 0.06in; letter-spacing: .04em; text-transform: uppercase; }
+  .foot { position: absolute; left: 0.6in; right: 0.6in; bottom: 0.32in; display: flex; justify-content: space-between; font: 500 7.5pt "Inter"; color: #8a91a6; }
+
+  /* ---------- Página 2 ---------- */
+  .p2 { padding: 0.6in; }
+  .p2 header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid var(--navy); padding-bottom: 0.14in; }
+  .p2 h1 { font: 900 30pt/1 "Inter Display"; letter-spacing: -.03em; color: var(--navy); }
+  .p2 header .meta { text-align: right; font: 600 9pt "Inter"; color: var(--muted); }
+  .p2 header .meta b { display: block; font: 900 20pt "Inter Display"; color: var(--hot); }
+  .beat { display: grid; grid-template-columns: 0.72in 1fr; gap: 0.18in; padding: 0.17in 0; border-bottom: 1px solid var(--line); }
+  .beat .t { font: 800 11pt "Inter Display"; color: var(--blue); padding-top: 3px; }
+  .beat .t small { display: block; font: 600 7.5pt "Inter"; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-top: 2px; }
+  .beat p { font: 500 13.5pt/1.42 "Inter"; }
+  .beat p b { font-weight: 800; }
+  .beat .dir { display: block; font: italic 400 8.8pt/1.35 "Inter"; color: var(--muted); margin-top: 0.05in; }
+  .beat.close p { font: 900 17pt/1.25 "Inter Display"; letter-spacing: -.01em; color: var(--navy); }
+  .tips { margin-top: 0.24in; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.14in; }
+  .tips div { background: #f4f6fb; border-radius: 10px; padding: 0.12in 0.14in; font: 400 8.4pt/1.4 "Inter"; color: var(--muted); }
+  .tips b { display: block; color: var(--ink); font: 700 9pt "Inter"; margin-bottom: 2px; }
+  .src { margin-top: 0.16in; font: 400 7pt/1.4 "Inter"; color: #8a91a6; }
+</style>
+</head>
+<body>
+
+<section class="page">
+  <div class="hero">
+    <div class="rings"></div>
+    <div class="top"><img src="data:image/png;base64,__LOGO__" alt="Ford"><span class="tag">Ford IM · Pitch</span></div>
+    <h1 class="headline"><span>Escanea.</span><span>Manéjalo.</span><span class="hot">Llévatelo.</span></h1>
+    <p class="sub">Un QR en la agencia que convierte a quien solo está viendo en un cliente atendido al instante, con prueba de manejo agendada y crédito en camino.</p>
+  </div>
+
+  <div class="pillars">
+    <div class="pillar"><div class="n">01</div><h3>Escanea</h3><p>QR que cambia cada 30&nbsp;s. Un toque y estás en WhatsApp con el video del Ford que tienes enfrente.</p></div>
+    <div class="pillar"><div class="n">02</div><h3>Pruébalo</h3><p>La IA te asesora por texto o nota de voz, en español o inglés, y agenda tu prueba de manejo.</p></div>
+    <div class="pillar"><div class="n">03</div><h3>Finánciate</h3><p>INE o pasaporte con prueba de vida. La solicitud BBVA se llena sola y la firmas en DocuSign.</p></div>
+    <div class="pillar"><div class="n">04</div><h3>Al instante</h3><p>Respuesta inmediata a toda hora. El gerente ve cada lead y cada conversación en el CRM.</p></div>
+  </div>
+
+  <div class="strip">
+    <div><b>0</b><span>papeles impresos</span></div>
+    <div><b>0</b><span>filas en la agencia</span></div>
+    <div><b>24/7</b><span>atención por WhatsApp</span></div>
+    <div><b>1</b><span>QR de principio a fin</span></div>
+  </div>
+
+  <div class="bottom">
+    <div>
+      <p class="punch">Ford no necesita más clientes.<br>Necesita <em>dejar de perder</em> los que ya entraron por la puerta.</p>
+      <p class="fact">72 de cada 100 autos nuevos en México se compran a crédito (AMDA, 1er semestre 2025). Responder en la primera hora multiplica por 7 la probabilidad de concretar (Harvard Business Review).</p>
+    </div>
+    <div class="qr"><div class="box">__QR__</div><small>Demo en vivo<br>cotizador.menteia.com</small></div>
+  </div>
+
+  <div class="foot"><span>Ford IM · Kiosco + WhatsApp con IA + crédito digital + CRM</span><span>Prototipo funcional · Demo</span></div>
+</section>
+
+<section class="page p2">
+  <header>
+    <h1>Guion · 60 segundos</h1>
+    <div class="meta"><b>1:00</b>~140 palabras · tono: seguro, rápido</div>
+  </header>
+
+  <div class="beat"><div class="t">0:00<small>Gancho</small></div>
+    <p>Ves una Bronco en la agencia. Sacas el celular. <b>Escaneas.</b> Listo.
+    <span class="dir">Levanta el celular como si escanearas. Pausa de un segundo.</span></p></div>
+
+  <div class="beat"><div class="t">0:08<small>Atención</small></div>
+    <p>En segundos estás en WhatsApp, con el video de <b>tu</b> camioneta y un asesor que te contesta al instante. Por texto o por voz. A las once de la noche. En español o en inglés.</p></div>
+
+  <div class="beat"><div class="t">0:20<small>Prueba y crédito</small></div>
+    <p>¿Quieres manejarla? <b>Agéndalo ahí mismo.</b> ¿Quieres llevártela? Tu INE y una selfie, tu solicitud de crédito <b>se llena sola</b>, firmas desde el celular y el banco ya la tiene.</p></div>
+
+  <div class="beat"><div class="t">0:35<small>Remate</small></div>
+    <p><b>Sin filas. Sin papeles. Sin “déjeme le llamo”.</b>
+    <span class="dir">Más lento. Una frase por respiración.</span></p></div>
+
+  <div class="beat"><div class="t">0:40<small>Para el negocio</small></div>
+    <p>Y el gerente ve cada cliente, cada conversación y cada peso del embudo, <b>en tiempo real.</b></p></div>
+
+  <div class="beat"><div class="t">0:48<small>Tesis</small></div>
+    <p>Ford no necesita más clientes. Necesita <b>dejar de perder</b> los que ya entran por la puerta.</p></div>
+
+  <div class="beat close"><div class="t">0:55<small>Cierre</small></div>
+    <p>Ford IM. Escanea… y llévate un Ford.
+    <span class="dir">Señala el QR en pantalla. Silencio. “Gracias.”</span></p></div>
+
+  <div class="tips">
+    <div><b>Que lo escaneen</b>Proyecta el QR de la página 1 al cerrar: el jurado lo prueba en su celular.</div>
+    <div><b>Una sola idea</b>Si te comes una frase, salta directo a “Sin filas. Sin papeles.” Es la que se recuerda.</div>
+    <div><b>Ensaya con reloj</b>Debe quedarte en 55 s. Los 5 restantes son las pausas que hacen que se escuche seguro.</div>
+  </div>
+  <p class="src">Fuentes: AMDA, boletín julio 2025 (72.1% de ventas al menudeo a crédito, 1er semestre 2025). Oldroyd, McElheran y Elkington, “The Short Life of Online Sales Leads”, Harvard Business Review, 2011 (respuesta en menos de 1 hora: 7 veces más probabilidad de calificar al cliente).</p>
+</section>
+
+</body>
+</html>
