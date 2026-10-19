@@ -62,7 +62,26 @@ function renderVehicle() {
   const probe = new Image();
   probe.onload = () => { img.style.backgroundImage = `url("${v.hero_image}")`; img.classList.remove('empty'); };
   probe.src = v.hero_image;
+  playLoop(v.loop_video);
   $('picker').querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', i === state.idx));
+}
+
+// Video del vehículo: siempre sin sonido (requisito para autoplay) y en loop. Si falla o no
+// existe, queda la foto/fondo de respaldo.
+function playLoop(src) {
+  const video = $('heroVideo');
+  if (video.dataset.src === (src || '')) return; // mismo video (p. ej. sólo cambió el idioma)
+  video.dataset.src = src || '';
+  video.classList.remove('on');
+  if (!src) { video.removeAttribute('src'); video.load(); return; }
+  video.muted = true;
+  video.onerror = () => video.classList.remove('on');
+  video.onended = () => video.play().catch(() => {}); // respaldo por si loop no aplica
+  video.oncanplay = () => { video.classList.add('on'); video.play().catch(() => {}); };
+  // Si el navegador no reproduce H.264, usa la versión WebM con el mismo nombre.
+  const noH264 = !video.canPlayType('video/mp4; codecs="avc1.42E01E"');
+  video.src = noH264 && src.endsWith('.mp4') ? src.replace(/\.mp4$/, '.webm') : src;
+  video.load();
 }
 
 function renderPicker() {

@@ -7,6 +7,7 @@ import { requireKiosk } from '../lib/auth.js';
 import { issueQrToken, renderQrSvg } from '../services/qr.js';
 import { kioskAgentSignedUrl } from '../services/voice.js';
 import { vehicles, getKiosk, getDealer } from '../data/catalog.js';
+import { mediaUrl } from '../config.js';
 import { logEvent } from '../db.js';
 
 const pub = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public/kiosk');
@@ -22,7 +23,7 @@ r.get('/api/config', requireKiosk, (req, res) => {
   res.json({
     kiosk,
     dealer: getDealer(kiosk?.dealer_id),
-    vehicles: vehicles.map(({ id, name, tagline, hero_image, price_from_mxn, accent }) => ({ id, name, tagline, hero_image, price_from_mxn, accent })),
+    vehicles: vehicles.map(({ id, name, tagline, hero_image, loop_video, price_from_mxn, accent }) => ({ id, name, tagline, hero_image, loop_video: mediaUrl(loop_video), price_from_mxn, accent })),
   });
 });
 

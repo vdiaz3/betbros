@@ -75,8 +75,12 @@ cd ford-im/core && node scripts/write-env.mjs && cd ..
 docker compose -f docker-compose.demo.yml up -d --build
 ```
 
-Los videos van en `core/public/media/videos/` (`bronco-30s.mp4`, `ranger-30s.mp4`,
-`explorer-30s.mp4`). En n8n, apunta el webhook de la app de Meta a
+Los videos van en `core/public/media/videos/`. Para cada modelo hay un `<id>-loop.mp4` (loop
+horizontal sin audio que se reproduce en la pantalla del kiosco, con su `.webm`) y un
+`<id>-30s.mp4` (el que se envía por WhatsApp). Hoy son **videos de muestra** generados por el
+sistema. Ver `core/public/media/videos/LEEME.txt`. Las fichas técnicas de referencia
+(`/media/pdf/ficha-tecnica-<id>.pdf`) se generan desde `core/src/data/specs.json` con
+`npm run build:datasheets`. En n8n, apunta el webhook de la app de Meta a
 `https://<tu-n8n>/webhook/ford-im/whatsapp` e importa el workflow
 (`node core/scripts/n8n-import.mjs`). Las herramientas ya apuntan a
 `https://cotizador.menteia.com/api`.
@@ -112,4 +116,8 @@ Los videos van en `core/public/media/videos/` (`bronco-30s.mp4`, `ranger-30s.mp4
   aparecen junto a ellos.
 - **Banco:** el correo llega a tu dirección de prueba y el dictamen se registra a mano en
   `/bancos`.
+- **Videos y fichas técnicas:** los videos son de muestra y las fichas usan datos de referencia
+  de fuentes públicas (la mayoría de los campos dice "por confirmar"). El material oficial de Ford
+  (videos de prensa, fichas de ford.mx) es para uso editorial; para un uso comercial hay que pedir
+  autorización a Ford (media@ford.com) o usar el kit de marketing del distribuidor.
 - **Llave del kiosco:** aparece en la portada para facilitar el demo. En producción no.

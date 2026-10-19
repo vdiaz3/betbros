@@ -14,7 +14,9 @@
     "test": "node --test test/*.test.js",
     "seed:demo": "node --disable-warning=ExperimentalWarning -e \"import('./src/demo/seed.js').then(m => console.log(m.seedDemo({ force: process.argv[1] === '--force' })))\"",
     "build:demo-form": "node scripts/build-demo-form.mjs",
-    "check:env": "node --disable-warning=ExperimentalWarning scripts/check-env.mjs"
+    "check:env": "node --disable-warning=ExperimentalWarning scripts/check-env.mjs",
+    "build:datasheets": "node scripts/build-datasheets.mjs",
+    "build:videos": "bash scripts/build-placeholder-videos.sh"
   },
   "dependencies": {
     "express": "5.1.0",

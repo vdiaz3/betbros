@@ -1,0 +1,47 @@
+{
+  "_nota": "Datos de REFERENCIA para la ficha técnica del demo. Sustituir por la ficha oficial de Ford México (o capturar aquí los valores oficiales y regenerar con `npm run build:datasheets`). 'Por confirmar' = sin dato verificado.",
+  "fuentes": [
+    "https://www.informabtl.com/asi-luce-la-ford-bronco-2026-precio-ficha-tecnica-versiones-y-colores/",
+    "https://my-car.mx/auto/Ford_Explorer",
+    "https://my-car.mx/auto/ford-bronco",
+    "https://autos.mercadolibre.com.mx/ford/_OfficialStoreId_all"
+  ],
+  "vehicles": {
+    "bronco": {
+      "anio_modelo": "2026",
+      "versiones": "Outer Banks, Badlands (2 y 4 puertas) — referencia",
+      "motor": "2.3L EcoBoost, 300 hp · 2.7L V6 EcoBoost, 330 hp (según versión) — referencia",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar"
+    },
+    "ranger": {
+      "anio_modelo": "Por confirmar",
+      "versiones": "Wildtrak, entre otras — referencia",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar"
+    },
+    "explorer": {
+      "anio_modelo": "2026",
+      "versiones": "Active, Platinum, ST, Tremor — referencia",
+      "motor": "2.3L EcoBoost, 300 hp (versión de entrada) — referencia",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar"
+    }
+  }
+}

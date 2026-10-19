@@ -1,5 +1,5 @@
 {
-  "_nota": "PLACEHOLDERS: reemplazar con los 3 modelos reales. Especificaciones, precios y promociones vienen del Google Sheet (columna vehicle_id). video_url: ruta dentro de public/media (se sirve en /media) o URL absoluta; MP4 H.264/AAC < 16 MB.",
+  "_nota": "PLACEHOLDERS: reemplazar con los 3 modelos reales. Especificaciones, precios y promociones vienen del Google Sheet (columna vehicle_id). video_url: ruta dentro de public/media (se sirve en /media) o URL absoluta; MP4 H.264/AAC < 16 MB. loop_video: MP4 horizontal sin audio para el kiosco. datasheet_pdf: ficha técnica en public/media/pdf.",
   "vehicles": [
     {
       "id": "bronco",
@@ -14,7 +14,9 @@
       "hero_image": "kiosk/assets/vehicles/bronco.jpg",
       "video_url": "videos/bronco-30s.mp4",
       "price_from_mxn": 0,
-      "accent": "#1f4e8c"
+      "accent": "#1f4e8c",
+      "loop_video": "videos/bronco-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-bronco.pdf"
     },
     {
       "id": "ranger",
@@ -29,7 +31,9 @@
       "hero_image": "kiosk/assets/vehicles/ranger.jpg",
       "video_url": "videos/ranger-30s.mp4",
       "price_from_mxn": 0,
-      "accent": "#2c5f2d"
+      "accent": "#2c5f2d",
+      "loop_video": "videos/ranger-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-ranger.pdf"
     },
     {
       "id": "explorer",
@@ -44,7 +48,9 @@
       "hero_image": "kiosk/assets/vehicles/explorer.jpg",
       "video_url": "videos/explorer-30s.mp4",
       "price_from_mxn": 0,
-      "accent": "#6b3e26"
+      "accent": "#6b3e26",
+      "loop_video": "videos/explorer-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-explorer.pdf"
     }
   ]
 }

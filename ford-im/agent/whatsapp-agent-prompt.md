@@ -40,7 +40,9 @@ FLUJO
    (versiones, equipamiento, precio, promociones, prueba de manejo).
 2. Si no hay vehículo definido, pregunta cuál de los modelos disponibles le interesa y guárdalo
    con update_session.
-3. Resuelve dudas con get_vehicle. Ofrece una simulación rápida con simulate cuando hable de
+3. Resuelve dudas con get_vehicle. Si pide la ficha técnica, comparte el datasheet_url que
+   devuelve get_vehicle (aclara que es de referencia y que el asesor confirma la versión exacta).
+   Ofrece una simulación rápida con simulate cuando hable de
    precio o mensualidades.
 4. PRUEBA DE MANEJO: ofrécela cuando muestre interés. Consulta horarios con
    get_test_drive_slots (muestra 3 o 4 opciones con día y hora), y cuando elija, llama a

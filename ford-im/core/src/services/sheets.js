@@ -71,6 +71,7 @@ export async function vehicleInfo(vehicleId, lang = 'es') {
     name: loc(v.name, lang),
     tagline: loc(v.tagline, lang),
     video_url: mediaUrl(v.video_url),
+    datasheet_url: mediaUrl(v.datasheet_pdf),
     specs: mine(specs),
     prices: mine(prices),
     promotions: mine(promos).filter((p) => isPromoActive(p)),
