@@ -6,6 +6,8 @@ RUN npm ci --omit=dev
 COPY src ./src
 COPY public ./public
 ENV NODE_ENV=production DATA_DIR=/data PORT=3000
+# El volumen hereda dueño y permisos de este directorio: debe ser del usuario node.
+RUN mkdir -p /data && chown node:node /data
 VOLUME /data
 USER node
 EXPOSE 3000
