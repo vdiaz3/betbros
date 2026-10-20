@@ -1,6 +1,9 @@
 // Lee el Google Sheet de vehículos / precios / promociones vía CSV publicado.
 // Cada pestaña debe tener una columna `vehicle_id` que coincida con data/vehicles.json.
 // Las demás columnas son libres: se entregan tal cual al agente.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { config, mediaUrl } from '../config.js';
 import { vehicles, getVehicle } from '../data/catalog.js';
 import { loc } from '../lib/i18n.js';
@@ -33,6 +36,17 @@ export function parseCsv(text) {
 }
 
 const cache = new Map();
+
+// Ficha de referencia (src/data/specs.json): versiones, precio desde, motor… Se usa siempre como
+// respaldo, para que el agente tenga datos aunque el Google Sheet no esté conectado.
+const specsFile = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../data/specs.json');
+const reference = (id) => {
+  try {
+    const all = JSON.parse(fs.readFileSync(specsFile, 'utf8'));
+    const r = all.vehicles?.[id];
+    return r ? { ...r, nota: 'Datos de referencia (fuentes públicas); el asesor confirma versión, precio y disponibilidad.' } : null;
+  } catch { return null; }
+};
 
 async function loadCsv(url) {
   if (!url) return [];
@@ -72,6 +86,7 @@ export async function vehicleInfo(vehicleId, lang = 'es') {
     tagline: loc(v.tagline, lang),
     video_url: mediaUrl(v.video_url),
     datasheet_url: mediaUrl(v.datasheet_pdf),
+    reference: reference(v.id),
     review: v.review || null,
     price_from_mxn: v.price_from_mxn || null,
     specs: mine(specs),

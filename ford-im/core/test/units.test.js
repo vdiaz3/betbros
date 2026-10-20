@@ -49,3 +49,12 @@ test('ref del mensaje pre-llenado, voz e idioma', () => {
   assert.equal(detectLangSwitch('Español'), 'es');
   assert.equal(detectLangSwitch('quiero info'), null);
 });
+
+test('la info del vehículo incluye la ficha de referencia aunque no haya Sheet', async () => {
+  const { vehicleInfo } = await import('../src/services/sheets.js');
+  const info = await vehicleInfo('territory', 'es');
+  assert.match(info.reference.versiones, /Titanium Híbrida HEV/);
+  assert.match(info.reference.precio_desde, /569,900/);
+  assert.ok(info.review.url.includes('youtube.com'));
+  assert.equal(info.prices.length, 0);
+});
