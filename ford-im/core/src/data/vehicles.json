@@ -1,22 +1,62 @@
 {
-  "_nota": "PLACEHOLDERS: reemplazar con los 3 modelos reales. Especificaciones, precios y promociones vienen del Google Sheet (columna vehicle_id). video_url: ruta dentro de public/media (se sirve en /media) o URL absoluta; MP4 H.264/AAC < 16 MB. loop_video: MP4 horizontal sin audio para el kiosco. datasheet_pdf: ficha técnica en public/media/pdf.",
+  "_nota": "Gama Ford México (referencia: todosobreautos.com, oct-2026; confirmar con ford.mx). price_from_mxn = precio de lista 'desde' de referencia. video_url: video que se envía por WhatsApp; loop_video: loop del kiosco (si el kiosco no tiene background_video). review: reseña de YouTube que se manda tras el video.",
   "vehicles": [
     {
-      "id": "bronco",
+      "id": "territory",
       "name": {
-        "es": "Ford Bronco",
-        "en": "Ford Bronco"
+        "es": "Ford Territory",
+        "en": "Ford Territory"
       },
       "tagline": {
-        "es": "Nacido para la aventura",
-        "en": "Built for adventure"
+        "es": "SUV familiar, también híbrida",
+        "en": "Family SUV, also hybrid"
       },
-      "hero_image": "kiosk/assets/vehicles/bronco.jpg",
-      "video_url": "videos/bronco-30s.mp4",
-      "price_from_mxn": 0,
-      "accent": "#1f4e8c",
-      "loop_video": "videos/bronco-loop.mp4",
-      "datasheet_pdf": "pdf/ficha-tecnica-bronco.pdf"
+      "hero_image": "kiosk/assets/vehicles/territory.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-territory.pdf",
+      "price_from_mxn": 569900,
+      "accent": "#3d6b8c",
+      "review": {
+        "url": "https://www.youtube.com/watch?v=lAd3196f5ZQ",
+        "title": "Ford Territory Híbrida - Una grata sorpresa | Reseña",
+        "author": "AutoDinámico",
+        "vehicle": "Ford Territory Híbrida"
+      }
+    },
+    {
+      "id": "maverick",
+      "name": {
+        "es": "Ford Maverick",
+        "en": "Ford Maverick"
+      },
+      "tagline": {
+        "es": "Pickup híbrida compacta",
+        "en": "Compact hybrid pickup"
+      },
+      "hero_image": "kiosk/assets/vehicles/maverick.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-maverick.pdf",
+      "price_from_mxn": 770700,
+      "accent": "#5b6b2e"
+    },
+    {
+      "id": "bronco-sport",
+      "name": {
+        "es": "Ford Bronco Sport",
+        "en": "Ford Bronco Sport"
+      },
+      "tagline": {
+        "es": "Aventura en formato compacto",
+        "en": "Compact adventure"
+      },
+      "hero_image": "kiosk/assets/vehicles/bronco-sport.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-bronco-sport.pdf",
+      "price_from_mxn": 773500,
+      "accent": "#7a5a2e"
     },
     {
       "id": "ranger",
@@ -30,10 +70,146 @@
       },
       "hero_image": "kiosk/assets/vehicles/ranger.jpg",
       "video_url": "videos/ranger-30s.mp4",
-      "price_from_mxn": 0,
-      "accent": "#2c5f2d",
       "loop_video": "videos/ranger-loop.mp4",
-      "datasheet_pdf": "pdf/ficha-tecnica-ranger.pdf"
+      "datasheet_pdf": "pdf/ficha-tecnica-ranger.pdf",
+      "price_from_mxn": 775000,
+      "accent": "#2c5f2d"
+    },
+    {
+      "id": "transit",
+      "name": {
+        "es": "Ford Transit",
+        "en": "Ford Transit"
+      },
+      "tagline": {
+        "es": "Furgones y pasajeros para tu negocio",
+        "en": "Vans for your business"
+      },
+      "hero_image": "kiosk/assets/vehicles/transit.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-transit.pdf",
+      "price_from_mxn": 865500,
+      "accent": "#4a5563"
+    },
+    {
+      "id": "edge-hibrida",
+      "name": {
+        "es": "Ford Edge Híbrida",
+        "en": "Ford Edge Híbrida"
+      },
+      "tagline": {
+        "es": "SUV mediana híbrida",
+        "en": "Hybrid midsize SUV"
+      },
+      "hero_image": "kiosk/assets/vehicles/edge-hibrida.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-edge-hibrida.pdf",
+      "price_from_mxn": 899900,
+      "accent": "#365e7d"
+    },
+    {
+      "id": "mustang",
+      "name": {
+        "es": "Ford Mustang",
+        "en": "Ford Mustang"
+      },
+      "tagline": {
+        "es": "Leyenda deportiva",
+        "en": "A sports car legend"
+      },
+      "hero_image": "kiosk/assets/vehicles/mustang.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-mustang.pdf",
+      "price_from_mxn": 951500,
+      "accent": "#8c1f1f"
+    },
+    {
+      "id": "mustang-mach-e",
+      "name": {
+        "es": "Ford Mustang Mach-E",
+        "en": "Ford Mustang Mach-E"
+      },
+      "tagline": {
+        "es": "100% eléctrico, hecho en México",
+        "en": "All-electric, made in Mexico"
+      },
+      "hero_image": "kiosk/assets/vehicles/mustang-mach-e.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-mustang-mach-e.pdf",
+      "price_from_mxn": 996500,
+      "accent": "#1f3f8c"
+    },
+    {
+      "id": "bronco",
+      "name": {
+        "es": "Ford Bronco",
+        "en": "Ford Bronco"
+      },
+      "tagline": {
+        "es": "Nacido para la aventura",
+        "en": "Built for adventure"
+      },
+      "hero_image": "kiosk/assets/vehicles/bronco.jpg",
+      "video_url": "videos/bronco-30s.mp4",
+      "loop_video": "videos/bronco-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-bronco.pdf",
+      "price_from_mxn": 998500,
+      "accent": "#1f4e8c"
+    },
+    {
+      "id": "f-150",
+      "name": {
+        "es": "Ford F-150",
+        "en": "Ford F-150"
+      },
+      "tagline": {
+        "es": "La pickup de trabajo",
+        "en": "The work pickup"
+      },
+      "hero_image": "kiosk/assets/vehicles/f-150.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-f-150.pdf",
+      "price_from_mxn": 1027000,
+      "accent": "#3b3b3b"
+    },
+    {
+      "id": "ranger-raptor",
+      "name": {
+        "es": "Ford Ranger Raptor",
+        "en": "Ford Ranger Raptor"
+      },
+      "tagline": {
+        "es": "Desempeño todoterreno extremo",
+        "en": "Extreme off-road performance"
+      },
+      "hero_image": "kiosk/assets/vehicles/ranger-raptor.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-ranger-raptor.pdf",
+      "price_from_mxn": 1334000,
+      "accent": "#c2541b"
+    },
+    {
+      "id": "lobo",
+      "name": {
+        "es": "Ford Lobo",
+        "en": "Ford Lobo"
+      },
+      "tagline": {
+        "es": "La pickup más completa de Ford",
+        "en": "Ford's most complete pickup"
+      },
+      "hero_image": "kiosk/assets/vehicles/lobo.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-lobo.pdf",
+      "price_from_mxn": 1453500,
+      "accent": "#2b2b40"
     },
     {
       "id": "explorer",
@@ -47,16 +223,61 @@
       },
       "hero_image": "kiosk/assets/vehicles/explorer.jpg",
       "video_url": "videos/explorer-30s.mp4",
-      "price_from_mxn": 0,
-      "accent": "#6b3e26",
       "loop_video": "videos/explorer-loop.mp4",
-      "datasheet_pdf": "pdf/ficha-tecnica-explorer.pdf"
+      "datasheet_pdf": "pdf/ficha-tecnica-explorer.pdf",
+      "price_from_mxn": 1214900,
+      "accent": "#6b3e26"
+    },
+    {
+      "id": "super-duty",
+      "name": {
+        "es": "Ford Super Duty",
+        "en": "Ford Super Duty"
+      },
+      "tagline": {
+        "es": "Capacidad de trabajo pesado (F-250 a F-550)",
+        "en": "Heavy-duty capability (F-250 to F-550)"
+      },
+      "hero_image": "kiosk/assets/vehicles/super-duty.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-super-duty.pdf",
+      "price_from_mxn": 1099000,
+      "accent": "#44403c"
+    },
+    {
+      "id": "e-transit",
+      "name": {
+        "es": "Ford E-Transit",
+        "en": "Ford E-Transit"
+      },
+      "tagline": {
+        "es": "Van 100% eléctrica",
+        "en": "All-electric van"
+      },
+      "hero_image": "kiosk/assets/vehicles/e-transit.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-e-transit.pdf",
+      "price_from_mxn": 1667500,
+      "accent": "#2f6f6a"
+    },
+    {
+      "id": "expedition",
+      "name": {
+        "es": "Ford Expedition",
+        "en": "Ford Expedition"
+      },
+      "tagline": {
+        "es": "SUV grande de lujo",
+        "en": "Full-size premium SUV"
+      },
+      "hero_image": "kiosk/assets/vehicles/expedition.jpg",
+      "video_url": "videos/ford-brand-loop.mp4",
+      "loop_video": "videos/ford-brand-loop.mp4",
+      "datasheet_pdf": "pdf/ficha-tecnica-expedition.pdf",
+      "price_from_mxn": 1794900,
+      "accent": "#3a2f4f"
     }
-  ],
-  "featured_review": {
-    "url": "https://www.youtube.com/watch?v=lAd3196f5ZQ",
-    "title": "Ford Territory Híbrida - Una grata sorpresa | Reseña",
-    "author": "AutoDinámico",
-    "vehicle": "Ford Territory Híbrida"
-  }
+  ]
 }

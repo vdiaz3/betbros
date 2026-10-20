@@ -1,7 +1,7 @@
 // Orquestación de los pasos "deterministas" del recorrido (los que no decide la IA):
 // bienvenida + aviso + video, avisos de privacidad, firma, envío al banco y dictamen.
 import { config, publicUrl, mediaUrl } from '../config.js';
-import { getVehicle, getDealer, getBank, featuredReview } from '../data/catalog.js';
+import { getVehicle, getDealer, getBank } from '../data/catalog.js';
 import { t, loc } from '../lib/i18n.js';
 import { signToken } from '../lib/token.js';
 import { logEvent } from '../db.js';
@@ -36,10 +36,11 @@ export async function startConversation(sessionId) {
   };
   await wa.sendText(s.wa_id, t(s.lang, 'welcome', vars));
   if (vehicle?.video_url) await wa.sendVideo(s.wa_id, mediaUrl(vehicle.video_url), t(s.lang, 'videoCaption', vars));
-  if (featuredReview) await wa.sendText(s.wa_id, t(s.lang, 'review', featuredReview));
+  // Reseña en YouTube del modelo (si tiene), después del video.
+  if (vehicle?.review) await wa.sendText(s.wa_id, t(s.lang, 'review', vehicle.review));
   logEvent('greeting_sent', { sessionId, data: { privacy_version: config.legal.privacyVersion } });
   crmSafe(s, { title: 'Lead desde kiosco', body: `Escaneó el QR del ${vars.vehicle} en ${dealer?.name ?? '-'} (kiosco ${s.kiosk_id ?? '-'}).` });
-  return { sent: ['welcome', vehicle?.video_url ? 'video' : null, featuredReview ? 'review' : null].filter(Boolean) };
+  return { sent: ['welcome', vehicle?.video_url ? 'video' : null, vehicle?.review ? 'review' : null].filter(Boolean) };
 }
 
 // Respuesta del agente: en texto o como nota de voz (si el cliente habló por audio).

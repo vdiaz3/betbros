@@ -7,8 +7,6 @@ const read = (f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
 
 const vehiclesFile = read('vehicles.json');
 export const vehicles = vehiclesFile.vehicles;
-// Reseña destacada que se comparte en la bienvenida de WhatsApp (YouTube).
-export const featuredReview = vehiclesFile.featured_review || null;
 export const { dealers, kiosks } = read('dealers.json');
 // ENABLED_BANKS=bbva limita los bancos que ofrece el agente (útil para la demo con un solo banco).
 const enabledBanks = (process.env.ENABLED_BANKS || '').split(',').map((s) => s.trim()).filter(Boolean);

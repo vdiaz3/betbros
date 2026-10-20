@@ -59,8 +59,11 @@ h1 { font-size: clamp(40px, 6vw, 120px); margin: 0.05em 0; line-height: 1; font-
 .price { font-size: clamp(14px, 1.4vw, 26px); color: var(--muted); margin: 0; }
 
 /* ---- Barra inferior translúcida ---- */
-.dock { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1.2vw; padding: 1.6vh 2.6vw 1vh; }
-.picker { display: flex; gap: 1vw; flex-wrap: wrap; }
+.dock { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1.2vw; padding: 1.6vh 2.6vw 1vh; }
+.picker { display: flex; gap: 0.8vw; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 4px 2px; min-width: 0;
+  mask-image: linear-gradient(90deg, #000 92%, transparent); }
+.picker::-webkit-scrollbar { display: none; }
+.picker button { flex: 0 0 auto; }
 .picker button { padding: 1.4vh 1.8vw; border-radius: 999px; background: rgb(255 255 255 / 0.12); border: 2px solid rgb(255 255 255 / 0.18); backdrop-filter: blur(10px); font-size: clamp(14px, 1.25vw, 24px); font-weight: 600; transition: all 0.25s; }
 .picker button.on { background: #fff; color: var(--ford); border-color: #fff; }
 .dock-right { display: flex; align-items: center; gap: 1vw; }

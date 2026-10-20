@@ -20,7 +20,7 @@ const n8n = { authorization: 'Bearer n8n-test', 'content-type': 'application/jso
 const post = (p, body) => req('api.test', p, { method: 'POST', headers: n8n, body: JSON.stringify(body) });
 
 test('bienvenida, video y reseña salen por el webhook de n8n', async () => {
-  const qr = await (await req('fordim.test', '/api/qr?vehicle=bronco&lang=es', { headers: { 'x-kiosk-id': 'K-DEMO-01', 'x-kiosk-key': 'kiosk-test' } })).json();
+  const qr = await (await req('fordim.test', '/api/qr?vehicle=territory&lang=es', { headers: { 'x-kiosk-id': 'K-DEMO-01', 'x-kiosk-key': 'kiosk-test' } })).json();
   const html = await (await req('go.test', new URL(qr.url).pathname)).text();
   const text = decodeURIComponent(html.match(/wa\.me\/\d+\?text=([^"&]+)/)[1]);
   const inbound = await (await post('/v1/inbound', { wa_id: '5215583139537', text })).json();
@@ -31,7 +31,7 @@ test('bienvenida, video y reseña salen por el webhook de n8n', async () => {
   assert.deepEqual(captured.map((c) => c.body.type), ['text', 'video', 'text']);
   assert.equal(captured[0].body.to, '5215583139537');
   assert.match(captured[0].body.text.body, /Aviso de Privacidad/);
-  assert.match(captured[1].body.video.link, /bronco-30s\.mp4$/);
+  assert.match(captured[1].body.video.link, /ford-brand-loop\.mp4$/);
   assert.match(captured[2].body.text.body, /AutoDinámico/);
 
   // Respuesta "en voz" sin voz disponible → se manda como texto

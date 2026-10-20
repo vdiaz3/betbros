@@ -1,27 +1,16 @@
 {
   "_nota": "Datos de REFERENCIA para la ficha técnica del demo. Sustituir por la ficha oficial de Ford México (o capturar aquí los valores oficiales y regenerar con `npm run build:datasheets`). 'Por confirmar' = sin dato verificado.",
   "fuentes": [
+    "https://www.todosobreautos.com/mexico/ford/precios/",
+    "https://www.ford.mx/",
     "https://www.informabtl.com/asi-luce-la-ford-bronco-2026-precio-ficha-tecnica-versiones-y-colores/",
     "https://my-car.mx/auto/Ford_Explorer",
     "https://my-car.mx/auto/ford-bronco",
     "https://autos.mercadolibre.com.mx/ford/_OfficialStoreId_all"
   ],
   "vehicles": {
-    "bronco": {
-      "anio_modelo": "2026",
-      "versiones": "Outer Banks, Badlands (2 y 4 puertas) — referencia",
-      "motor": "2.3L EcoBoost, 300 hp · 2.7L V6 EcoBoost, 330 hp (según versión) — referencia",
-      "transmision": "Por confirmar",
-      "traccion": "Por confirmar",
-      "rendimiento": "Por confirmar",
-      "dimensiones": "Por confirmar",
-      "capacidad": "Por confirmar",
-      "seguridad": "Por confirmar",
-      "garantia": "Por confirmar"
-    },
-    "ranger": {
+    "territory": {
       "anio_modelo": "Por confirmar",
-      "versiones": "Wildtrak, entre otras — referencia",
       "motor": "Por confirmar",
       "transmision": "Por confirmar",
       "traccion": "Por confirmar",
@@ -29,11 +18,155 @@
       "dimensiones": "Por confirmar",
       "capacidad": "Por confirmar",
       "seguridad": "Por confirmar",
-      "garantia": "Por confirmar"
+      "garantia": "Por confirmar",
+      "versiones": "Ambiente, Trend, Titanium, Trend Híbrida HEV, Titanium Híbrida HEV — referencia",
+      "precio_desde": "$569,900 MXN — precio de lista de referencia"
+    },
+    "maverick": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "XLT Híbrida HEV, Lariat Híbrida HEV — referencia",
+      "precio_desde": "$770,700 MXN — precio de lista de referencia"
+    },
+    "bronco-sport": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "Big Bend, Outer Banks, Badlands, Badlands Sasquatch — referencia",
+      "precio_desde": "$773,500 MXN — precio de lista de referencia"
+    },
+    "ranger": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "XL Gasolina 4x2, XLT Gasolina 4x2, XLT Diésel 4x4, Wildtrak — referencia",
+      "precio_desde": "$775,000 MXN — precio de lista de referencia"
+    },
+    "transit": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "Furgón, pasajeros, Custom, Tourneo y chasis (10 versiones) — referencia",
+      "precio_desde": "$865,500 MXN — precio de lista de referencia"
+    },
+    "edge-hibrida": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "Trend HEV, Titanium HEV — referencia",
+      "precio_desde": "$899,900 MXN — precio de lista de referencia"
+    },
+    "mustang": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "EcoBoost, EcoBoost Convertible, GT, GT Convertible, Dark Horse (manual y automática) — referencia",
+      "precio_desde": "$951,500 MXN — precio de lista de referencia"
+    },
+    "mustang-mach-e": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "Select EV, Premium EV, GT EV, Rally EV — referencia",
+      "precio_desde": "$996,500 MXN — precio de lista de referencia"
+    },
+    "bronco": {
+      "anio_modelo": "2026",
+      "motor": "2.3L EcoBoost, 300 hp · 2.7L V6 EcoBoost, 330 hp (según versión) — referencia",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "2 y 4 puertas: Badlands, Big Bend, Outer Banks, Heritage, Raptor (11 versiones) — referencia",
+      "precio_desde": "$998,500 MXN — precio de lista de referencia"
+    },
+    "f-150": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "XL y XLT; cabina regular, media y doble; V6, V8 e híbrida (9 versiones) — referencia",
+      "precio_desde": "$1,027,000 MXN — precio de lista de referencia"
+    },
+    "ranger-raptor": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "4x4 — referencia",
+      "precio_desde": "$1,334,000 MXN — precio de lista de referencia"
+    },
+    "lobo": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "Lariat, King Ranch, Tremor High, Platinum, Platinum Plus Híbrida, Raptor High, Raptor R — referencia",
+      "precio_desde": "$1,453,500 MXN — precio de lista de referencia"
     },
     "explorer": {
       "anio_modelo": "2026",
-      "versiones": "Active, Platinum, ST, Tremor — referencia",
       "motor": "2.3L EcoBoost, 300 hp (versión de entrada) — referencia",
       "transmision": "Por confirmar",
       "traccion": "Por confirmar",
@@ -41,7 +174,48 @@
       "dimensiones": "Por confirmar",
       "capacidad": "Por confirmar",
       "seguridad": "Por confirmar",
-      "garantia": "Por confirmar"
+      "garantia": "Por confirmar",
+      "versiones": "Active, Platinum, ST, Tremor — referencia",
+      "precio_desde": "$1,214,900 MXN — precio de lista de referencia"
+    },
+    "super-duty": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "F-250 (XLT DSL, King Ranch DSL, Platinum Plus DSL), F-350, F-450 y F-550 (XL, gasolina y diésel) — referencia",
+      "precio_desde": "$1,099,000 MXN — precio de lista de referencia"
+    },
+    "e-transit": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "Chasis y furgón en varias configuraciones de techo y longitud (5 versiones) — referencia",
+      "precio_desde": "$1,667,500 MXN — precio de lista de referencia"
+    },
+    "expedition": {
+      "anio_modelo": "Por confirmar",
+      "motor": "Por confirmar",
+      "transmision": "Por confirmar",
+      "traccion": "Por confirmar",
+      "rendimiento": "Por confirmar",
+      "dimensiones": "Por confirmar",
+      "capacidad": "Por confirmar",
+      "seguridad": "Por confirmar",
+      "garantia": "Por confirmar",
+      "versiones": "Active, Platinum, Platinum Ultimate, Tremor, King Ranch; también MAX — referencia",
+      "precio_desde": "$1,794,900 MXN — precio de lista de referencia"
     }
   }
 }

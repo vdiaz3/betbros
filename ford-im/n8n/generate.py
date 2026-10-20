@@ -85,7 +85,7 @@ def tool(name, desc, method, path, body=None, x=0):
 
 fa = lambda key, desc, t='string': f"$fromAI('{key}', '{desc}', '{t}')"
 tool("get_vehicle", "Especificaciones, precios por versión y promociones vigentes de un vehículo (datos del Google Sheet).", "GET",
-     "/v1/vehicles/{{ " + fa('vehicle_id', 'id del vehículo: bronco, ranger o explorer') + " }}?lang=" + LANG, x=0)
+     "/v1/vehicles/{{ " + fa('vehicle_id', 'id del vehículo tal como aparece en Modelos disponibles (p. ej. territory, ranger, bronco-sport, mustang-mach-e)') + " }}?lang=" + LANG, x=0)
 tool("list_banks", "Lista de bancos disponibles con plazos permitidos y enganche mínimo.", "GET", "/v1/banks", x=1)
 tool("simulate", "Simulación informativa de mensualidad.", "POST", "/v1/simulate",
      "{ bank_id: " + fa('bank_id', 'id del banco') + ", price: " + fa('price', 'precio del vehículo en MXN', 'number') + ", down_payment: " + fa('down_payment', 'enganche en MXN', 'number') + ", term_months: " + fa('term_months', 'plazo en meses', 'number') + " }", x=2)

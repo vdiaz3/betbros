@@ -64,7 +64,10 @@ function renderVehicle() {
   probe.src = v.hero_image;
   // El video de marca del kiosco (si existe) tiene prioridad sobre el del modelo.
   playLoop(state.bgVideo || v.loop_video);
-  $('picker').querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', i === state.idx));
+  $('picker').querySelectorAll('button').forEach((b, i) => {
+    b.classList.toggle('on', i === state.idx);
+    if (i === state.idx) b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  });
 }
 
 // Video del vehículo: siempre sin sonido (requisito para autoplay) y en loop. Si falla o no

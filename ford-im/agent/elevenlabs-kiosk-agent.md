@@ -51,4 +51,4 @@ frente a la pantalla viendo el {{vehicle}}. Habla en {{lang}} (es = español de 
 
 - **get_vehicle** → `GET https://cotizador.menteia.com/api/v1/vehicles/{vehicle_id}?lang={lang}`
   con cabecera `Authorization: Bearer <N8N_API_KEY>` (guárdala como *secret* en ElevenLabs).
-  Parámetros: `vehicle_id` (enum: bronco, ranger, explorer), `lang` (es|en).
+  Parámetros: `vehicle_id` (id del catálogo: territory, maverick, bronco-sport, ranger, transit, edge-hibrida, mustang, mustang-mach-e, bronco, f-150, ranger-raptor, lobo, explorer, super-duty, e-transit, expedition), `lang` (es|en).

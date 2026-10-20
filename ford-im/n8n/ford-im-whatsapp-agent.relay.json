@@ -16,7 +16,7 @@
         0,
         240
       ],
-      "webhookId": "e7db3ad3-917d-4fe8-83e4-8e2f6f51f834"
+      "webhookId": "f23ce3e7-0189-4137-92ba-b57e519cf330"
     },
     {
       "parameters": {
@@ -71,7 +71,7 @@
           },
           "conditions": [
             {
-              "id": "51230cf5-6d1b-4483-91a8-f376639778b2",
+              "id": "282b62db-8daa-453b-89e8-bbafc3e5f155",
               "leftValue": "={{ $json.bot_paused }}",
               "rightValue": false,
               "operator": {
@@ -157,7 +157,7 @@
       "parameters": {
         "toolDescription": "Especificaciones, precios por versión y promociones vigentes de un vehículo (datos del Google Sheet).",
         "method": "GET",
-        "url": "=https://cotizador.menteia.com/api/v1/vehicles/{{ $fromAI('vehicle_id', 'id del vehículo: bronco, ranger o explorer', 'string') }}?lang={{ $('Inbound').item.json.lang }}",
+        "url": "=https://cotizador.menteia.com/api/v1/vehicles/{{ $fromAI('vehicle_id', 'id del vehículo tal como aparece en Modelos disponibles (p. ej. territory, ranger, bronco-sport, mustang-mach-e)', 'string') }}?lang={{ $('Inbound').item.json.lang }}",
         "authentication": "none",
         "options": {},
         "sendHeaders": true,

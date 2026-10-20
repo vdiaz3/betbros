@@ -13,7 +13,7 @@ const logo = fs.readFileSync(path.join(root, 'public/kiosk/assets/ford-logo.png'
 const NAVY = rgb(0, 0.035, 0.36);
 const GRAY = rgb(0.4, 0.42, 0.47);
 const LABELS = {
-  anio_modelo: 'Año modelo', versiones: 'Versiones', motor: 'Motor', transmision: 'Transmisión', traccion: 'Tracción',
+  anio_modelo: 'Año modelo', precio_desde: 'Precio desde', versiones: 'Versiones', motor: 'Motor', transmision: 'Transmisión', traccion: 'Tracción',
   rendimiento: 'Rendimiento de combustible', dimensiones: 'Dimensiones', capacidad: 'Capacidad (pasajeros / carga)',
   seguridad: 'Seguridad y asistencias', garantia: 'Garantía',
 };
