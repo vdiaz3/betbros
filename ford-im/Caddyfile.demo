@@ -1,9 +1,13 @@
-# Demo: un solo subdominio. Registro DNS A de cotizador.menteia.com → IP del servidor.
+# Demo: un solo subdominio. Registro DNS A de cotizador.menteia.com → IP del servidor, con proxy de Cloudflare.
 {
 	email {$ACME_EMAIL}
 }
 
 cotizador.menteia.com {
+	# Certificado propio de Caddy: el público ve el certificado de Cloudflare (registro con proxy
+	# activo, SSL/TLS "Full" para este hostname). Así las reinstalaciones no consumen el límite de
+	# Let's Encrypt (5 certificados por semana para el mismo dominio).
+	tls internal
 	encode zstd gzip
 	request_body {
 		max_size 30MB

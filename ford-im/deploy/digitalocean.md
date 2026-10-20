@@ -5,8 +5,10 @@ Droplet actual: **ford-im-cotizador** · Ubuntu 24.04 · 1 vCPU / 2 GB (+2 GB sw
 clon de la rama `claude/epic-lovelace-kpklve` en `/opt/betbros` y
 `docker compose -f docker-compose.demo.yml up -d --build`.
 
-DNS (Cloudflare): `A  cotizador  165.227.203.0`, **DNS only** (nube gris) hasta que el sitio
-abra con HTTPS; después se puede activar el proxy con SSL/TLS en *Full (strict)*.
+DNS (Cloudflare): `A  cotizador  165.227.203.0` **con proxy (nube naranja)** y una *Configuration
+Rule* para `cotizador.menteia.com` con **SSL: Full**. Caddy usa su certificado interno (`tls internal`);
+el visitante ve el de Cloudflare. Motivo: cada reinstalación pedía un certificado nuevo a Let's
+Encrypt y se agotó su límite (5 por semana para el mismo dominio).
 
 ## Actualizar a la última versión
 
