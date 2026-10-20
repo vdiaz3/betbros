@@ -80,7 +80,7 @@ const n8n = async (p, opts = {}) => {
   if (!base || !process.env.N8N_API_TOKEN) throw Object.assign(new Error('n8n_not_configured'), { status: 503 });
   const res = await fetch(`${base}/api/v1${p}`, { ...opts, headers: { 'X-N8N-API-KEY': process.env.N8N_API_TOKEN, 'Content-Type': 'application/json', ...(opts.headers || {}) } });
   const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw Object.assign(new Error(`n8n ${res.status}: ${JSON.stringify(json).slice(0, 300)}`), { status: 502 });
+  if (!res.ok) throw Object.assign(new Error(`n8n ${res.status}: ${JSON.stringify(json).slice(0, 300)}`), { status: 424 }); // 424 y no 502: Cloudflare reemplaza el cuerpo de los 502 y se perdería el detalle
   return json;
 };
 const wrap = (fn) => (req, res) => fn(req, res).catch((err) => res.status(err.status || 500).json({ error: err.message }));
