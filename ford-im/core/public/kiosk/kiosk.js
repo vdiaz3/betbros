@@ -5,8 +5,8 @@ const VOICE_MAX_MS = 5 * 60_000; // tope de duración de cada conversación de v
 
 const I18N = {
   es: {
-    discover: 'Descubre', scan: 'Escanea con la cámara de tu celular',
-    scanSub: 'y continúa por WhatsApp: video, precios, promociones y crédito.',
+    discover: 'Descubre', scan: 'Escanea y llévate un Ford',
+    scanSub: 'Video, precios, prueba de manejo y crédito por WhatsApp.',
     talk: 'Habla con nuestro asesor virtual', privacy: 'Al escanear podrás consultar el aviso de privacidad en el chat.',
     reconnecting: 'Reconectando…', connecting: 'Conectando…', listening: 'Te escucho…', speaking: 'Hablando…',
     end: 'Terminar', micNote: 'Usamos el micrófono sólo durante esta conversación. No se graba video.',
@@ -14,8 +14,8 @@ const I18N = {
     from: 'Desde', error: 'El asesor no está disponible. Intenta de nuevo.',
   },
   en: {
-    discover: 'Discover', scan: 'Scan with your phone camera',
-    scanSub: 'and continue on WhatsApp: video, prices, promotions and financing.',
+    discover: 'Discover', scan: 'Scan and drive home a Ford',
+    scanSub: 'Video, prices, test drive and financing on WhatsApp.',
     talk: 'Talk to our virtual advisor', privacy: 'After scanning, the privacy notice is available in the chat.',
     reconnecting: 'Reconnecting…', connecting: 'Connecting…', listening: 'Listening…', speaking: 'Speaking…',
     end: 'End', micNote: 'The microphone is only used during this conversation. No video is recorded.',
@@ -62,7 +62,8 @@ function renderVehicle() {
   const probe = new Image();
   probe.onload = () => { img.style.backgroundImage = `url("${v.hero_image}")`; img.classList.remove('empty'); };
   probe.src = v.hero_image;
-  playLoop(v.loop_video);
+  // El video de marca del kiosco (si existe) tiene prioridad sobre el del modelo.
+  playLoop(state.bgVideo || v.loop_video);
   $('picker').querySelectorAll('button').forEach((b, i) => b.classList.toggle('on', i === state.idx));
 }
 
@@ -215,6 +216,7 @@ async function boot() {
     try {
       const cfg = await api('api/config');
       state.vehicles = cfg.vehicles;
+      state.bgVideo = cfg.background_video || null;
       $('dealerName').textContent = cfg.dealer?.name ?? 'Ford';
       break;
     } catch (err) {

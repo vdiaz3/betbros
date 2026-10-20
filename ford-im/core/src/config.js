@@ -1,9 +1,20 @@
 // Configuración central. Todo sale de variables de entorno (ver ../../.env.example).
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const env = process.env;
+
+// Credenciales guardadas desde la página /admin/secrets (DATA_DIR/secrets.env). Tienen prioridad
+// sobre .env y sobreviven a reinicios y actualizaciones del contenedor.
+export const SECRETS_FILE = path.join(env.DATA_DIR || path.resolve(here, '../../.data'), 'secrets.env');
+try {
+  for (const line of fs.readFileSync(SECRETS_FILE, 'utf8').split('\n')) {
+    const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
+    if (m) env[m[1]] = JSON.parse(m[2]);
+  }
+} catch { /* sin archivo de secretos */ }
 
 const list = (v) => (v ? v.split(',').map((s) => s.trim()).filter(Boolean) : []);
 

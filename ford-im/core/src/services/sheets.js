@@ -2,7 +2,7 @@
 // Cada pestaña debe tener una columna `vehicle_id` que coincida con data/vehicles.json.
 // Las demás columnas son libres: se entregan tal cual al agente.
 import { config, mediaUrl } from '../config.js';
-import { vehicles, getVehicle } from '../data/catalog.js';
+import { vehicles, getVehicle, featuredReview } from '../data/catalog.js';
 import { loc } from '../lib/i18n.js';
 
 export function parseCsv(text) {
@@ -72,6 +72,7 @@ export async function vehicleInfo(vehicleId, lang = 'es') {
     tagline: loc(v.tagline, lang),
     video_url: mediaUrl(v.video_url),
     datasheet_url: mediaUrl(v.datasheet_pdf),
+    featured_review: featuredReview,
     specs: mine(specs),
     prices: mine(prices),
     promotions: mine(promos).filter((p) => isPromoActive(p)),

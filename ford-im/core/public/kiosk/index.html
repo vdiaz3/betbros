@@ -8,43 +8,47 @@
 <link rel="stylesheet" href="kiosk/kiosk.css">
 </head>
 <body>
+<!-- Video a pantalla completa, sin sonido y en loop -->
+<div class="bg" aria-hidden="true">
+  <div class="hero-img" id="heroImg"></div>
+  <video id="heroVideo" muted autoplay loop playsinline disablepictureinpicture preload="auto"></video>
+  <div class="shade"></div>
+</div>
+
 <div id="app" class="app">
   <header class="top">
     <div class="dealer"><img src="kiosk/assets/ford-logo.png" alt="" class="logo-sm"><span id="dealerName">Ford</span></div>
-    <div class="lang" role="group" aria-label="Idioma / Language">
-      <button data-lang="es" class="on">ES</button><button data-lang="en">EN</button>
-    </div>
   </header>
 
-  <section class="stage">
-    <div class="hero" id="hero">
-      <div class="hero-media">
-        <div class="hero-img" id="heroImg"></div>
-        <video id="heroVideo" muted autoplay loop playsinline disablepictureinpicture preload="auto" aria-hidden="true"></video>
-      </div>
-      <div class="hero-text">
-        <p class="eyebrow" data-i18n="discover">Descubre</p>
-        <h1 id="vehicleName">Ford</h1>
-        <p id="vehicleTagline" class="tagline"></p>
-        <p id="vehiclePrice" class="price"></p>
-      </div>
+  <!-- QR flotante (arriba a la derecha) -->
+  <aside class="qr-float">
+    <div class="qr-wrap" id="qrWrap">
+      <span class="wave"></span><span class="wave"></span>
+      <svg class="countdown" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" id="countdownRing"/></svg>
+      <div class="qr" id="qr" aria-live="polite"></div>
+      <div class="qr-offline" id="qrOffline" data-i18n="reconnecting">Reconectando…</div>
     </div>
+    <p class="qr-title" data-i18n="scan">Escanea y llévate un Ford</p>
+    <p class="qr-sub" data-i18n="scanSub">Video, precios, prueba de manejo y crédito por WhatsApp.</p>
+  </aside>
 
-    <aside class="qr-panel">
-      <div class="qr-wrap" id="qrWrap">
-        <span class="wave"></span><span class="wave"></span><span class="wave"></span>
-        <svg class="countdown" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" id="countdownRing"/></svg>
-        <div class="qr" id="qr" aria-live="polite"></div>
-        <div class="qr-offline" id="qrOffline" data-i18n="reconnecting">Reconectando…</div>
-      </div>
-      <p class="qr-title" data-i18n="scan">Escanea con la cámara de tu celular</p>
-      <p class="qr-sub" data-i18n="scanSub">y continúa por WhatsApp: video, precios, promociones y crédito.</p>
-      <button class="voice-btn" id="voiceBtn"><span class="mic">🎙️</span><span data-i18n="talk">Habla con nuestro asesor virtual</span></button>
-    </aside>
+  <section class="caption">
+    <p class="eyebrow" data-i18n="discover">Descubre</p>
+    <h1 id="vehicleName">Ford</h1>
+    <p id="vehicleTagline" class="tagline"></p>
+    <p id="vehiclePrice" class="price"></p>
   </section>
 
-  <nav class="picker" id="picker" aria-label="Modelos"></nav>
-  <footer class="foot"><span data-i18n="privacy">Al escanear aceptas el aviso de privacidad disponible en el chat.</span></footer>
+  <footer class="dock">
+    <nav class="picker" id="picker" aria-label="Modelos"></nav>
+    <div class="dock-right">
+      <button class="voice-btn" id="voiceBtn"><span class="mic">🎙️</span><span data-i18n="talk">Habla con nuestro asesor virtual</span></button>
+      <div class="lang" role="group" aria-label="Idioma / Language">
+        <button data-lang="es" class="on">ES</button><button data-lang="en">EN</button>
+      </div>
+    </div>
+    <p class="foot" data-i18n="privacy">Al escanear podrás consultar el aviso de privacidad en el chat.</p>
+  </footer>
 </div>
 
 <div class="voice" id="voice" hidden>

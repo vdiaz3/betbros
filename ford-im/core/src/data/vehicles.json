@@ -52,5 +52,11 @@
       "loop_video": "videos/explorer-loop.mp4",
       "datasheet_pdf": "pdf/ficha-tecnica-explorer.pdf"
     }
-  ]
+  ],
+  "featured_review": {
+    "url": "https://www.youtube.com/watch?v=lAd3196f5ZQ",
+    "title": "Ford Territory Híbrida - Una grata sorpresa | Reseña",
+    "author": "AutoDinámico",
+    "vehicle": "Ford Territory Híbrida"
+  }
 }

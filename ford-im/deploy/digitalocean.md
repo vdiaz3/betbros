@@ -23,6 +23,14 @@ DigitalOcean → droplet → *Rebuild* con Ubuntu 24.04 (o `POST /v2/droplets/<i
 instalación y baja la última versión de la rama. Se pierden los leads reales; los de ejemplo se
 vuelven a cargar.
 
+## Guardar credenciales sin SSH (bóveda)
+
+`https://cotizador.menteia.com/api/admin/secrets`: eliges la variable, pegas el valor y lo
+autorizas con `ADMIN_API_KEY` (está en `ford-im/.env`). Se guarda en el volumen de datos
+(`/data/secrets.env`, permisos 600), tiene prioridad sobre `.env` y el servicio se reinicia solo.
+`GET /api/admin/secrets/status` (con la llave de admin) muestra qué variables están cargadas, sin
+valores. **Ojo:** un *Rebuild* del droplet borra el disco y con él la bóveda.
+
 ## Cambiar credenciales
 
 Edita `/opt/betbros/ford-im/.env` (o regenéralo con `core/scripts/write-env.mjs`) y reinicia:

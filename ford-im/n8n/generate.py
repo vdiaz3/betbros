@@ -120,5 +120,6 @@ link("Asesor Ford (AI Agent)", "Responder (texto o voz)")
 wf = {"name": "Ford IM – Agente WhatsApp", "nodes": nodes, "connections": conns, "active": False,
       "settings": {"executionOrder": "v1", "saveDataErrorExecution": "all", "saveDataSuccessExecution": "none"},
       "pinData": {}, "meta": {"templateCredsSetupCompleted": False}, "tags": []}
-json.dump(wf, open(ROOT + '/n8n/ford-im-whatsapp-agent.json', 'w'), ensure_ascii=False, indent=2)
+for out in ('/n8n/ford-im-whatsapp-agent.json', '/core/src/data/n8n/ford-im-whatsapp-agent.json'):
+    json.dump(wf, open(ROOT + out, 'w'), ensure_ascii=False, indent=2)
 print(len(nodes), "nodos")

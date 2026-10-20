@@ -33,7 +33,8 @@
     {
       "id": "K-DEMO-01",
       "dealer_id": "dealer-demo",
-      "location": "Showroom – entrada"
+      "location": "Showroom – entrada",
+      "background_video": "videos/ford-brand-loop.mp4"
     }
   ]
 }

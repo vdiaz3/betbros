@@ -23,6 +23,8 @@ r.get('/api/config', requireKiosk, (req, res) => {
   res.json({
     kiosk,
     dealer: getDealer(kiosk?.dealer_id),
+    // Video de marca a pantalla completa (sin sonido, en loop) para todo el kiosco.
+    background_video: kiosk?.background_video ? mediaUrl(kiosk.background_video) : null,
     vehicles: vehicles.map(({ id, name, tagline, hero_image, loop_video, price_from_mxn, accent }) => ({ id, name, tagline, hero_image, loop_video: mediaUrl(loop_video), price_from_mxn, accent })),
   });
 });
