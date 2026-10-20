@@ -5,6 +5,9 @@ import { logMessage } from './messages.js';
 
 const graph = (p) => `https://graph.facebook.com/${config.whatsapp.graphVersion}/${p}`;
 const enabled = () => Boolean(config.whatsapp.token && config.whatsapp.phoneNumberId);
+// Transporte: Cloud API directa (con token) o relevo por n8n (sin token).
+const viaN8n = () => !enabled() && Boolean(config.whatsapp.n8nSendUrl);
+export const transport = () => (enabled() ? 'cloud' : viaN8n() ? 'n8n' : 'dry-run');
 
 // Resumen legible de lo enviado, para la bandeja del vendedor.
 function describe(body) {
@@ -23,6 +26,17 @@ async function call(body, author = 'system', summary = null) {
     logMessage({ waId: body.to, direction: 'out', author, type: body.type, body: summary ?? describe(body) });
   } catch (err) {
     console.warn('[messages]', err.message);
+  }
+  if (viaN8n()) {
+    // Mismo formato de mensaje que la Cloud API; n8n lo envía con su nodo de WhatsApp.
+    const res = await fetch(config.whatsapp.n8nSendUrl, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${config.n8nApiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(20000),
+    });
+    if (!res.ok) throw Object.assign(new Error(`whatsapp_n8n_error: HTTP ${res.status} ${(await res.text()).slice(0, 200)}`), { status: 502 });
+    return { via: 'n8n' };
   }
   if (!enabled()) {
     console.log('[whatsapp:dry-run]', JSON.stringify(body));

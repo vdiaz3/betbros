@@ -44,6 +44,7 @@ export async function startConversation(sessionId) {
 
 // Respuesta del agente: en texto o como nota de voz (si el cliente habló por audio).
 export async function reply({ waId, text, asAudio, lang }) {
+  if (asAudio && (wa.transport() !== 'cloud' || !config.elevenlabs.apiKey)) asAudio = false; // voz no disponible → texto
   if (!asAudio) return { sent: [await wa.sendText(waId, text, 'bot')] };
   const { spoken, links } = splitForVoice(text);
   const ogg = await synthesize(spoken, lang);

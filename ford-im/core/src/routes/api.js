@@ -50,11 +50,17 @@ r.post('/v1/inbound', wrap(async (req, res) => {
   let detectedLang = null;
 
   if (type === 'audio' && media_id) {
-    const media = await downloadMedia(media_id);
-    const tr = await transcribe(media.buffer, media.mime);
-    text = tr.text;
-    detectedLang = tr.lang;
-    inputWasAudio = true;
+    try {
+      const media = await downloadMedia(media_id);
+      const tr = await transcribe(media.buffer, media.mime);
+      text = tr.text;
+      detectedLang = tr.lang;
+      inputWasAudio = true;
+    } catch (err) {
+      // Sin token de Meta o sin ElevenLabs no hay transcripción: el agente pide que escriba.
+      console.warn('[inbound] nota de voz no disponible:', err.message);
+      text = '[El cliente envió una nota de voz que no se pudo transcribir; pídele amablemente que escriba su mensaje]';
+    }
   }
 
   const { session: s0, isNew, refStatus } = sessions.claimSession({ waId: wa_id, text, name });

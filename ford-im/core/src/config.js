@@ -80,6 +80,9 @@ export const config = {
     phoneNumberId: env.WA_PHONE_NUMBER_ID || '',
     token: env.WA_ACCESS_TOKEN || '',
     graphVersion: env.WA_GRAPH_VERSION || 'v23.0',
+    // Sin token de Meta: los mensajes salen por un webhook de n8n que usa su credencial de WhatsApp
+    // (flujo "Ford IM – Agente WhatsApp", disparador /webhook/ford-im/send).
+    n8nSendUrl: env.WA_N8N_SEND_URL || '',
     templateLang: { es: env.WA_TEMPLATE_LANG_ES || 'es_MX', en: env.WA_TEMPLATE_LANG_EN || 'en_US' },
     templates: {
       bankDecision: env.WA_TEMPLATE_BANK_DECISION || 'ford_im_respuesta_banco',

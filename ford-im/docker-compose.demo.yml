@@ -21,6 +21,8 @@ services:
       SINGLE_HOST: cotizador.menteia.com
       DEMO_MODE: "true"
       WA_DISPLAY_NUMBER: "527201346482"   # +52 720 134 6482 (número público del demo)
+      # Sin token de Meta: el cotizador envía por el flujo de n8n (credencial "WhatsApp VENEMEX").
+      WA_N8N_SEND_URL: "https://n8n.essavant.com/webhook/ford-im/send"
     volumes:
       - core_data:/data
       - ./core/public/media:/app/public/media:ro   # videos y PDFs del demo
