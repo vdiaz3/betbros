@@ -21,7 +21,20 @@
         "url": "https://www.youtube.com/watch?v=lAd3196f5ZQ",
         "title": "Ford Territory Híbrida - Una grata sorpresa | Reseña",
         "author": "AutoDinámico",
-        "vehicle": "Ford Territory Híbrida"
+        "host": "Gabriel “Gabo” Salazar",
+        "vehicle": "Ford Territory Híbrida",
+        "about": {
+          "es": "AutoDinámico es un canal mexicano de reseñas de autos creado por Gabriel “Gabo” Salazar (en YouTube desde 2014, más de 190 mil suscriptores; también conduce El Podcast de AutoDinámico). Sus reseñas son relajadas y enfocadas en lo práctico y en la vida diaria con el auto.",
+          "en": "AutoDinámico is a Mexican car-review channel created by Gabriel “Gabo” Salazar (on YouTube since 2014, 190k+ subscribers; he also co-hosts El Podcast de AutoDinámico). His reviews are relaxed and focused on practical, everyday use."
+        },
+        "note": {
+          "es": "Es un canal mexicano de reseñas de autos con más de 190 mil suscriptores, enfocado en lo práctico y en la vida diaria con el auto.",
+          "en": "It's a Mexican car-review channel with 190k+ subscribers, focused on practical, everyday driving."
+        },
+        "why": {
+          "es": "No es Ford hablando: es la opinión independiente de un canal que maneja y compara autos todo el tiempo, contada en términos de uso diario. El veredicto: “una grata sorpresa”.",
+          "en": "It isn't Ford talking: it's the independent opinion of a channel that drives and compares cars all the time, told in everyday terms. The verdict: “a pleasant surprise”."
+        }
       }
     },
     {

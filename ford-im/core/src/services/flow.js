@@ -37,7 +37,7 @@ export async function startConversation(sessionId) {
   await wa.sendText(s.wa_id, t(s.lang, 'welcome', vars));
   if (vehicle?.video_url) await wa.sendVideo(s.wa_id, mediaUrl(vehicle.video_url), t(s.lang, 'videoCaption', vars));
   // Reseña en YouTube del modelo (si tiene), después del video.
-  if (vehicle?.review) await wa.sendText(s.wa_id, t(s.lang, 'review', vehicle.review));
+  if (vehicle?.review) await wa.sendText(s.wa_id, t(s.lang, 'review', { ...vehicle.review, note: loc(vehicle.review.note, s.lang), why: loc(vehicle.review.why, s.lang) }));
   logEvent('greeting_sent', { sessionId, data: { privacy_version: config.legal.privacyVersion } });
   crmSafe(s, { title: 'Lead desde kiosco', body: `Escaneó el QR del ${vars.vehicle} en ${dealer?.name ?? '-'} (kiosco ${s.kiosk_id ?? '-'}).` });
   return { sent: ['welcome', vehicle?.video_url ? 'video' : null, vehicle?.review ? 'review' : null].filter(Boolean) };

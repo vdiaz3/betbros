@@ -9,7 +9,10 @@ const messages = {
       `Al continuar la conversación confirmas que lo leíste.\n\n` +
       `Puedes escribirme o mandarme notas de voz 🎙️. Write *English* to switch language.`,
     videoCaption: ({ vehicle }) => `${vehicle} en 30 segundos 🎬`,
-    review: ({ author, vehicle, url }) => `🎥 Mira la reseña de *${author}* sobre la ${vehicle}:\n${url}`,
+    review: ({ author, host, vehicle, url, note, why }) =>
+      `🎥 *Una opinión independiente:* la reseña de la ${vehicle} en *${author}*${host ? `, el canal de ${host}` : ''}.\n` +
+      `${note ? `${note}\n` : ''}` +
+      `${why ? `\n👉 ¿Por qué verla? ${why}\n` : ''}\n${url}`,
     creditPrivacy: ({ url }) =>
       `🔒 Para tramitar tu crédito necesitamos datos financieros y patrimoniales, que requieren tu *consentimiento expreso*.\n` +
       `Lee el Aviso de Privacidad para Crédito: ${url}\n\nResponde *ACEPTO* para continuar.`,
@@ -37,7 +40,10 @@ const messages = {
       `By continuing the conversation you confirm you have read it.\n\n` +
       `You can text me or send voice notes 🎙️. Escribe *Español* para cambiar de idioma.`,
     videoCaption: ({ vehicle }) => `The ${vehicle} in 30 seconds 🎬`,
-    review: ({ author, vehicle, url }) => `🎥 Watch *${author}*'s review of the ${vehicle} (Spanish):\n${url}`,
+    review: ({ author, host, vehicle, url, note, why }) =>
+      `🎥 *An independent take:* the ${vehicle} review on *${author}*${host ? `, ${host}'s channel` : ''} (in Spanish).\n` +
+      `${note ? `${note}\n` : ''}` +
+      `${why ? `\n👉 Why watch it? ${why}\n` : ''}\n${url}`,
     creditPrivacy: ({ url }) =>
       `🔒 To process your financing we need financial and asset information, which requires your *express consent*.\n` +
       `Please read the Credit Privacy Notice: ${url}\n\nReply *I ACCEPT* to continue.`,

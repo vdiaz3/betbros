@@ -87,7 +87,8 @@ export async function vehicleInfo(vehicleId, lang = 'es') {
     video_url: mediaUrl(v.video_url),
     datasheet_url: mediaUrl(v.datasheet_pdf),
     reference: reference(v.id),
-    review: v.review || null,
+    // Reseña independiente ya enviada al cliente; el agente la usa si pregunta quién es el reseñista.
+    review: v.review ? { ...v.review, about: loc(v.review.about, lang), note: loc(v.review.note, lang), why: loc(v.review.why, lang) } : null,
     price_from_mxn: v.price_from_mxn || null,
     specs: mine(specs),
     prices: mine(prices),
