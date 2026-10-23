@@ -1,4 +1,5 @@
 // Landing comercial (cotizador.menteia.com/): producto, precio y accesos al demo en vivo.
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -13,6 +14,8 @@ import { startKyc } from '../services/kyc.js';
 
 const pub = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public/landing');
 const template = fs.readFileSync(path.join(pub, 'index.html'), 'utf8');
+// Cambia con cada versión de los archivos para que Cloudflare y el navegador no sirvan copias viejas.
+const VERSION = crypto.createHash('sha1').update(['landing.css', 'landing.js'].map((f) => fs.readFileSync(path.join(pub, f))).join('')).digest('hex').slice(0, 10);
 const attr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 
 export const assets = express.static(pub, { maxAge: '1h', index: false });
@@ -26,6 +29,7 @@ export function home(req, res) {
     const view = config.crmViewKey ? `?k=${encodeURIComponent(config.crmViewKey)}` : '';
     const vars = {
       BASE: '/',
+      VERSION,
       KIOSK_URL: publicUrl('kiosk', `/k/${kiosk?.id}${key ? `?key=${encodeURIComponent(key)}` : ''}`),
       CRM_URL: publicUrl('vendedor', `/${view}`),
       FUNNEL_URL: publicUrl('vendedor', `/funnel${view}`),
