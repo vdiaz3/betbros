@@ -16,6 +16,7 @@ import legal from './routes/legal.js';
 import vendedor from './routes/vendedor.js';
 import { sendDueReminders } from './services/testdrive.js';
 import demoHome from './routes/demo-home.js';
+import * as landing from './routes/landing.js';
 import { seedDemo } from './demo/seed.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -45,7 +46,10 @@ export function createApp() {
 
   // Modo demo: un solo subdominio (SINGLE_HOST=cotizador.menteia.com), cada sitio en su ruta.
   const single = express.Router();
-  single.get('/', demoHome);
+  single.get('/', landing.home);
+  single.use('/landing', landing.assets);
+  single.get('/demo', demoHome);
+  single.get('/demo/kyc', ...landing.demoKyc);
   for (const [key, router] of Object.entries(routers)) single.use(PREFIX[key], router);
 
   // Modo completo: un subdominio por sitio.

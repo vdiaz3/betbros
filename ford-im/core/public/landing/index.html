@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vamo · Cotizador inteligente para agencias</title>
+<meta name="description" content="Vamo convierte cada visita a tu agencia en una venta: kiosco con QR, asesor con IA en WhatsApp, prueba de manejo, KYC, crédito y firma, todo en tu CRM. Renta desde $5,999 MXN al mes.">
+<meta property="og:title" content="Vamo · Escanea. Conversa. Maneja.">
+<meta property="og:description" content="Kiosco inteligente + asesor con IA en WhatsApp + crédito digital para agencias automotrices.">
+<meta property="og:image" content="{{BASE}}landing/img/kiosk.jpg">
+<meta name="theme-color" content="#070b14">
+<link rel="icon" href="{{BASE}}landing/img/vamo-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="{{BASE}}landing/landing.css">
+</head>
+<body>
+
+<header class="nav" id="top">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="Vamo">
+      <img src="{{BASE}}landing/img/vamo-mark.svg" alt="" width="34" height="34">
+      <span>vamo</span>
+    </a>
+    <nav class="links" aria-label="Secciones">
+      <a href="#como" data-i18n="nav.how">Cómo funciona</a>
+      <a href="#features" data-i18n="nav.features">Funciones</a>
+      <a href="#equipo" data-i18n="nav.hardware">Equipo</a>
+      <a href="#precio" data-i18n="nav.pricing">Precio</a>
+      <a href="#demo" data-i18n="nav.demo">Demo</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang" role="group" aria-label="Idioma / Language">
+        <button type="button" data-lang="es" class="on">ES</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
+      <a class="btn btn-primary btn-sm" href="#demo" data-i18n="cta.demo">Ver demo en vivo</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="glow g1"></div><div class="glow g2"></div>
+  <div class="wrap hero-in">
+    <div class="hero-copy">
+      <p class="pill"><span class="dot"></span><span data-i18n="hero.pill">Para agencias automotrices en México, LATAM y EE.UU.</span></p>
+      <h1 data-i18n="hero.title">Ningún cliente vuelve a esperar en tu agencia.</h1>
+      <p class="lead" data-i18n="hero.lead">Vamo pone un kiosco inteligente en tu piso de ventas. El cliente escanea un QR, un asesor con IA lo atiende al instante por WhatsApp y sale con prueba de manejo agendada, identidad verificada y su solicitud de crédito firmada. Tú lo ves todo en el CRM.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#demo" data-i18n="cta.demo">Ver demo en vivo</a>
+        <a class="btn btn-ghost" href="{{CONTACT_URL}}" data-i18n="cta.contact">Quiero Vamo en mi agencia</a>
+      </div>
+      <ul class="hero-points">
+        <li data-i18n="hero.p1">Desde <b>$5,999 MXN</b>/mes con equipo incluido</li>
+        <li data-i18n="hero.p2">Integración con tu DMS <b>sin costo</b></li>
+        <li data-i18n="hero.p3">Despliegue inmediato a nivel nacional</li>
+      </ul>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="screen">
+        <img src="{{BASE}}landing/img/kiosk.jpg" alt="" width="1600" height="900">
+      </div>
+      <div class="phone">
+        <div class="phone-bar"><span class="avatar">V</span><div><b>Agencia</b><small data-i18n="chat.online">en línea</small></div></div>
+        <div class="chat">
+          <p class="msg in" data-i18n="chat.m1">Hola 👋 Quiero información de la Territory</p>
+          <p class="msg out" data-i18n="chat.m2">¡Hola! Te comparto un video de 30 s 🎬 Hay versión híbrida desde $569,900. ¿Agendamos prueba de manejo?</p>
+          <p class="msg in" data-i18n="chat.m3">Sí, el sábado. ¿Y a crédito?</p>
+          <p class="msg out" data-i18n="chat.m4">✅ Sábado 11:00 agendado. Para el crédito verifica tu INE aquí (2 min) 🪪</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIFRAS -->
+<section class="stats">
+  <div class="wrap stats-in">
+    <div class="stat"><b>7×</b><span data-i18n="stats.s1">más probabilidad de calificar al cliente si respondes en menos de 1 hora¹</span></div>
+    <div class="stat"><b>72%</b><span data-i18n="stats.s2">de los autos nuevos en México se compran a crédito²</span></div>
+    <div class="stat"><b>98%</b><span data-i18n="stats.s3">de los internautas en México usan WhatsApp³</span></div>
+    <div class="stat"><b>0 s</b><span data-i18n="stats.s4">de espera: el asesor con IA contesta al instante, 24/7</span></div>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="section" id="como">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="how.eyebrow">Cómo funciona</p>
+    <h2 data-i18n="how.title">Del piso de ventas al banco, sin papeles.</h2>
+    <ol class="steps">
+      <li>
+        <span class="num">1</span>
+        <h3 data-i18n="how.s1t">Escanea</h3>
+        <p data-i18n="how.s1d">El kiosco muestra el auto en video y un QR que cambia cada 30 segundos, así nadie lo reutiliza fuera de la agencia.</p>
+      </li>
+      <li>
+        <span class="num">2</span>
+        <h3 data-i18n="how.s2t">Conversa</h3>
+        <p data-i18n="how.s2d">Se abre WhatsApp con el modelo y la agencia identificados. El asesor con IA responde por texto o voz, en español o inglés, con precios, versiones y fichas.</p>
+      </li>
+      <li>
+        <span class="num">3</span>
+        <h3 data-i18n="how.s3t">Maneja y financia</h3>
+        <p data-i18n="how.s3d">Agenda la prueba de manejo, verifica su identidad (INE o pasaporte + prueba de vida) y la solicitud del banco se llena sola para firmar desde el celular.</p>
+      </li>
+      <li>
+        <span class="num">4</span>
+        <h3 data-i18n="how.s4t">Cierra</h3>
+        <p data-i18n="how.s4d">El expediente llega al banco con copia al cliente. Tu equipo ve cada lead, conversación y etapa del funnel en tiempo real.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section alt" id="features">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="feat.eyebrow">Funciones</p>
+    <h2 data-i18n="feat.title">Todo lo que tu agencia necesita para no perder un lead.</h2>
+    <div class="grid">
+      <article class="card"><span class="ico">⌁</span><h3 data-i18n="feat.f1t">QR dinámico</h3><p data-i18n="feat.f1d">Cambia cada 30 s y lleva modelo, agencia y kiosco. Sabes qué pantalla y qué auto generaron cada venta.</p></article>
+      <article class="card"><span class="ico">💬</span><h3 data-i18n="feat.f2t">Asesor con IA en WhatsApp</h3><p data-i18n="feat.f2d">Responde al instante, 24/7, con tu catálogo, precios y promociones. Entiende notas de voz y pasa la conversación a un vendedor cuando hace falta.</p></article>
+      <article class="card"><span class="ico">🎙️</span><h3 data-i18n="feat.f3t">Asesor de voz en el kiosco</h3><p data-i18n="feat.f3d">El cliente pregunta en voz alta frente a la pantalla y recibe respuesta hablada, en español o inglés.</p></article>
+      <article class="card"><span class="ico">🚗</span><h3 data-i18n="feat.f4t">Pruebas de manejo</h3><p data-i18n="feat.f4d">Horarios disponibles por agencia, confirmación con ubicación, liga para el calendario y recordatorio un día antes.</p></article>
+      <article class="card"><span class="ico">🪪</span><h3 data-i18n="feat.f5t">KYC con prueba de vida</h3><p data-i18n="feat.f5d">INE por ambos lados o pasaporte, selfie y retos de movimiento desde el celular. La CURP verificada se precarga en la solicitud.</p></article>
+      <article class="card"><span class="ico">🏦</span><h3 data-i18n="feat.f6t">Crédito multibanco</h3><p data-i18n="feat.f6d">El cliente elige banco, la planilla oficial se llena con sus datos y documentos, y el expediente se envía por correo con copia al cliente.</p></article>
+      <article class="card"><span class="ico">✍️</span><h3 data-i18n="feat.f7t">Firma electrónica</h3><p data-i18n="feat.f7d">Firma con DocuSign desde el celular, sin imprimir ni escanear. El banco registra su dictamen en un portal y el cliente recibe aviso por WhatsApp.</p></article>
+      <article class="card"><span class="ico">📊</span><h3 data-i18n="feat.f8t">CRM y funnel en vivo</h3><p data-i18n="feat.f8d">Bandeja del vendedor, pipeline por etapa, agenda de pruebas y conversión de QR a crédito aprobado por agencia y por kiosco.</p></article>
+      <article class="card"><span class="ico">🔒</span><h3 data-i18n="feat.f9t">Privacidad desde el diseño</h3><p data-i18n="feat.f9d">Avisos de privacidad y consentimiento expreso para crédito conforme a la LFPDPPP, con registro de cada aceptación.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- DMS -->
+<section class="section" id="dms">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow" data-i18n="dms.eyebrow">Integraciones</p>
+      <h2 data-i18n="dms.title">Conectamos tu DMS sin costo.</h2>
+      <p class="lead" data-i18n="dms.lead">Nuestro equipo integra Vamo con el DMS que ya usas: inventario, precios y promociones entran solos al asesor, y los leads, citas y solicitudes regresan a tu sistema. Sin cuota de integración ni proyecto de meses.</p>
+      <ul class="checks">
+        <li data-i18n="dms.c1">Inventario y precios sincronizados</li>
+        <li data-i18n="dms.c2">Leads y pruebas de manejo de vuelta a tu DMS o CRM</li>
+        <li data-i18n="dms.c3">API y webhooks para lo que necesites</li>
+      </ul>
+    </div>
+    <div class="chips" aria-label="Integraciones">
+      <span class="chip chip-hi" data-i18n="dms.chip">Tu DMS</span>
+      <span class="chip">WhatsApp Business</span>
+      <span class="chip">DocuSign</span>
+      <span class="chip" data-i18n="dms.banks">Bancos y financieras</span>
+      <span class="chip">Google Calendar</span>
+      <span class="chip">Google Sheets</span>
+      <span class="chip">ElevenLabs</span>
+      <span class="chip">n8n</span>
+      <span class="chip" data-i18n="dms.crm">Tu CRM</span>
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPO -->
+<section class="section alt" id="equipo">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="hw.eyebrow">Equipo incluido</p>
+    <h2 data-i18n="hw.title">Pantallas y kioscos inteligentes, listos para tu piso de ventas.</h2>
+    <p class="lead narrow" data-i18n="hw.lead">Rentamos el equipo, lo instalamos y lo monitoreamos de forma remota. Si una pantalla se desconecta, lo sabemos antes que tú.</p>
+    <div class="grid three">
+      <article class="card hw"><div class="hw-shape totem"></div><h3 data-i18n="hw.h1t">Tótem vertical táctil</h3><p data-i18n="hw.h1d">Para la entrada o junto al auto en exhibición. Video del modelo, QR y asesor de voz.</p></article>
+      <article class="card hw"><div class="hw-shape wide"></div><h3 data-i18n="hw.h2t">Pantalla horizontal</h3><p data-i18n="hw.h2d">Para muro o sala de espera. Modo cine a pantalla completa con QR flotante.</p></article>
+      <article class="card hw"><div class="hw-shape desk"></div><h3 data-i18n="hw.h3t">Kiosco de mostrador</h3><p data-i18n="hw.h3d">Para recepción, servicio o eventos. Compacto y con el mismo recorrido completo.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- PRECIO -->
+<section class="section" id="precio">
+  <div class="wrap price-in">
+    <div>
+      <p class="eyebrow" data-i18n="price.eyebrow">Precio</p>
+      <h2 data-i18n="price.title">Una renta mensual. Todo incluido.</h2>
+      <p class="lead" data-i18n="price.lead">Sin inversión inicial en equipo ni costo de integración. Empieza con un kiosco y crece a todas tus agencias.</p>
+      <p class="deploy"><span class="dot"></span><span data-i18n="price.deploy">Despliegue inmediato a nivel nacional.</span></p>
+    </div>
+    <div class="price-card">
+      <p class="from" data-i18n="price.from">Renta desde</p>
+      <p class="amount"><span class="cur">$</span>5,999<span class="per" data-i18n="price.per">MXN / mes</span></p>
+      <p class="unit" data-i18n="price.unit">por kiosco</p>
+      <ul class="checks">
+        <li data-i18n="price.i1">Pantalla o kiosco inteligente, instalación y soporte</li>
+        <li data-i18n="price.i2">Asesor con IA en WhatsApp y en el kiosco</li>
+        <li data-i18n="price.i3">Pruebas de manejo, KYC, crédito y firma electrónica</li>
+        <li data-i18n="price.i4">CRM con funnel, bandeja del vendedor y reportes</li>
+        <li data-i18n="price.i5">Integración con tu DMS sin costo</li>
+      </ul>
+      <a class="btn btn-primary btn-block" href="{{CONTACT_URL}}" data-i18n="cta.quote">Solicitar cotización</a>
+      <p class="fine" data-i18n="price.fine">Precio de referencia en México; el plan final depende del equipo y número de agencias. En EE.UU. y LATAM cotizamos en moneda local.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="section alt" id="demo">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="demo.eyebrow">Demo en vivo</p>
+    <h2 data-i18n="demo.title">Pruébalo tú mismo, ahora.</h2>
+    <p class="lead narrow" data-i18n="demo.lead">Ambiente de demostración configurado para un distribuidor con la gama Ford México. Los clientes del CRM son ficticios y la verificación de identidad es simulada.</p>
+
+    <div class="demo-grid">
+      <a class="demo-card big" href="{{KIOSK_URL}}" target="_blank" rel="noopener">
+        <img src="{{BASE}}landing/img/kiosk.jpg" alt="Kiosco con QR" loading="lazy" width="1600" height="900">
+        <div><h3 data-i18n="demo.k">📺 Kiosco con QR</h3><p data-i18n="demo.kd">Ábrelo en una pantalla y escanea el QR con tu celular: la conversación en WhatsApp es real.</p><span class="go" data-i18n="demo.open">Abrir →</span></div>
+      </a>
+      <a class="demo-card big" href="{{FUNNEL_URL}}" target="_blank" rel="noopener">
+        <img src="{{BASE}}landing/img/crm-funnel.jpg" alt="Funnel del CRM" loading="lazy" width="1400" height="875">
+        <div><h3 data-i18n="demo.f">📊 CRM: funnel de venta</h3><p data-i18n="demo.fd">Escaneos, conversaciones, KYC, firma y créditos aprobados. Sólo lectura.</p><span class="go" data-i18n="demo.open">Abrir →</span></div>
+      </a>
+      <a class="demo-card" href="{{CRM_URL}}" target="_blank" rel="noopener">
+        <img src="{{BASE}}landing/img/crm-inbox.jpg" alt="Bandeja del vendedor" loading="lazy" width="1400" height="875">
+        <div><h3 data-i18n="demo.i">💬 Bandeja del vendedor</h3><p data-i18n="demo.id">Conversaciones de WhatsApp, agenda de pruebas y pipeline.</p><span class="go" data-i18n="demo.open">Abrir →</span></div>
+      </a>
+      <a class="demo-card" href="{{KYC_URL}}" target="_blank" rel="noopener">
+        <div class="kyc-art" aria-hidden="true"><span class="id"></span><span class="face"></span></div>
+        <div><h3 data-i18n="demo.y">🪪 KYC con prueba de vida</h3><p data-i18n="demo.yd">Ábrelo en tu celular: captura de INE o pasaporte, selfie y retos de movimiento.</p><span class="go" data-i18n="demo.open">Abrir →</span></div>
+      </a>
+      <a class="demo-card" href="{{CREDIT_FILLED}}" target="_blank" rel="noopener">
+        <img src="{{BASE}}landing/img/credit-form.jpg" alt="Solicitud de crédito llenada" loading="lazy" width="900" height="1165" class="top">
+        <div><h3 data-i18n="demo.c">🏦 Planilla de crédito llenada</h3><p data-i18n="demo.cd">Solicitud de crédito demo con los datos del cliente ya capturados.</p><span class="go" data-i18n="demo.pdf">Ver PDF →</span></div>
+      </a>
+    </div>
+
+    <ul class="demo-links">
+      <li><a href="{{CREDIT_BLANK}}" target="_blank" rel="noopener" data-i18n="demo.l1">Planilla de crédito en blanco (PDF)</a></li>
+      <li><a href="{{FICHA_URL}}" target="_blank" rel="noopener" data-i18n="demo.l2">Ficha técnica de ejemplo (PDF)</a></li>
+      <li><a href="{{TERMS_URL}}" target="_blank" rel="noopener" data-i18n="demo.l3">Términos y condiciones</a></li>
+      <li><a href="{{PRIVACY_URL}}" target="_blank" rel="noopener" data-i18n="demo.l4">Avisos de privacidad</a></li>
+      <li><a href="{{BASE}}demo" data-i18n="demo.l5">Todos los accesos del demo</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="wrap narrow-wrap">
+    <h2 data-i18n="faq.title">Preguntas frecuentes</h2>
+    <details><summary data-i18n="faq.q1">¿Necesito cambiar mi DMS o mi CRM?</summary><p data-i18n="faq.a1">No. Vamo se conecta a lo que ya usas y la integración con tu DMS no tiene costo.</p></details>
+    <details><summary data-i18n="faq.q2">¿Qué pasa si el cliente quiere hablar con una persona?</summary><p data-i18n="faq.a2">El asesor con IA pasa la conversación a un vendedor en la bandeja, con todo el contexto. El vendedor puede tomarla o devolverla al bot.</p></details>
+    <details><summary data-i18n="faq.q3">¿Funciona con cualquier banco?</summary><p data-i18n="faq.a3">Sí. Cargamos la planilla de cada banco o financiera con la que trabajas; el demo usa una solicitud de ejemplo de BBVA.</p></details>
+    <details><summary data-i18n="faq.q4">¿Cuánto tarda la instalación?</summary><p data-i18n="faq.a4">El despliegue es inmediato a nivel nacional: llevamos el equipo, lo instalamos y configuramos tu catálogo y tus agencias.</p></details>
+    <details><summary data-i18n="faq.q5">¿Sirve para otras marcas?</summary><p data-i18n="faq.a5">Sí. Vamo funciona para cualquier marca y grupo automotriz; el demo está configurado con la gama Ford México.</p></details>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="final">
+  <div class="wrap final-in">
+    <h2 data-i18n="final.title">Cada minuto que un cliente espera es una venta para la competencia.</h2>
+    <div class="hero-cta center">
+      <a class="btn btn-primary" href="{{CONTACT_URL}}" data-i18n="cta.contact">Quiero Vamo en mi agencia</a>
+      <a class="btn btn-ghost" href="{{KIOSK_URL}}" target="_blank" rel="noopener" data-i18n="cta.kiosk">Abrir el kiosco demo</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a class="logo" href="#top"><img src="{{BASE}}landing/img/vamo-mark.svg" alt="" width="28" height="28"><span>vamo</span></a>
+    <p class="sources" data-i18n="foot.sources">¹ Harvard Business Review, “The Short Life of Online Sales Leads” (2011). ² AMDA, primer semestre de 2025. ³ Statista / Asociación de Internet MX. Ford y los nombres de modelos son marcas de sus respectivos dueños; se usan sólo en el ambiente de demostración.</p>
+    <p class="legal"><a href="{{TERMS_URL}}" data-i18n="demo.l3">Términos y condiciones</a> · <a href="{{PRIVACY_URL}}" data-i18n="foot.privacy">Aviso de privacidad</a> · © <span id="year">2026</span> Vamo by MenteIA</p>
+  </div>
+</footer>
+
+<script src="{{BASE}}landing/landing.js" defer></script>
+</body>
+</html>

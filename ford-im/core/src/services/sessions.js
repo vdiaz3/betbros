@@ -113,3 +113,16 @@ export const listConsents = (sessionId) =>
 
 export const hasConsent = (sessionId, type) =>
   !!db().prepare('SELECT 1 FROM consents WHERE session_id = ? AND type = ?').get(sessionId, type);
+
+// Sesión sin WhatsApp para probar el KYC desde la landing (wa_id nulo: no aparece en el CRM).
+export function createWebDemoSession({ kiosk, vehicleId, lang }) {
+  const t = now();
+  const id = uid('ses_');
+  db()
+    .prepare(
+      `INSERT INTO sessions (id, ref, kiosk_id, dealer_id, vehicle_id, lang, name, stage, ref_expires_at, created_at, updated_at)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+    )
+    .run(id, `WEB${shortCode(6)}`, kiosk.id, kiosk.dealer_id, vehicleId, normLang(lang), 'Visitante web (demo)', 'kyc', t, t, t);
+  return getSession(id);
+}

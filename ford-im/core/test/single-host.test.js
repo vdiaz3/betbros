@@ -10,15 +10,29 @@ const H = 'cotizador.test';
 
 test('portada y sitios por ruta', async () => {
   const home = await (await req(H, '/')).text();
-  assert.match(home, /Abrir kiosco/);
+  assert.match(home, /5,999/);
   assert.match(home, /cotizador\.test\/kiosco\/k\/K-DEMO-01\?key=kiosk-test/);
   assert.match(home, /cotizador\.test\/crm\/\?k=ver-demo/);
+  assert.doesNotMatch(home, /\{\{\w+\}\}/);
+  assert.equal((await req(H, '/landing/landing.js')).status, 200);
+  assert.match(await (await req(H, '/demo')).text(), /Abrir kiosco/);
   const kiosk = await (await req(H, '/kiosco/k/K-DEMO-01')).text();
   assert.match(kiosk, /<base href="\/kiosco\/">/);
   assert.equal((await req(H, '/kiosco/kiosk/kiosk.js')).status, 200);
   assert.equal((await req(H, '/legal/terminos?lang=es')).status, 200);
   assert.equal((await req(H, '/media/pdf/solicitud-credito-bbva-demo.pdf')).status, 200);
   assert.equal((await req(H, '/api/health')).status, 200);
+});
+
+test('KYC de prueba desde la landing', async () => {
+  const r = await req(H, '/demo/kyc');
+  assert.equal(r.status, 302);
+  const url = r.headers.location;
+  assert.match(url, /^http:\/\/cotizador\.test\/kyc\/k\//);
+  const kyc = await completeKyc(req, url, { docType: 'pasaporte' });
+  assert.equal(kyc.json.status, 'approved');
+  const view = await (await req(H, '/crm/api/conversations?k=ver-demo')).json();
+  assert.ok(!JSON.stringify(view).includes('Visitante web'));
 });
 
 test('QR y ligas apuntan al mismo subdominio', async () => {

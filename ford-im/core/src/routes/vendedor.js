@@ -174,7 +174,7 @@ api.patch('/conversations/:id/stage', (req, res) => {
   res.json(details(updateSession(mustSession(req.params.id).id, { stage: req.body.stage })));
 });
 
-// Funnel: sesiones distintas que alcanzaron cada paso en el periodo.
+// Funnel: sesiones distintas que alcanzaron cada paso en el periodo (sin las pruebas de KYC de la landing).
 const FUNNEL = [
   { id: 'scans', label: 'Escaneos del QR', events: ['qr_scanned'] },
   { id: 'chats', label: 'Conversaciones en WhatsApp', events: ['chat_started'] },
@@ -187,7 +187,7 @@ const FUNNEL = [
 api.get('/funnel', (req, res) => {
   const days = Math.min(Number(req.query.days) || 30, 365);
   const since = Date.now() - days * 86_400_000;
-  const count = (types) => db().prepare(`SELECT COUNT(DISTINCT COALESCE(session_id, id)) n FROM events WHERE created_at >= ? AND type IN (${types.map(() => '?').join(',')})`).get(since, ...types).n;
+  const count = (types) => db().prepare(`SELECT COUNT(DISTINCT COALESCE(session_id, id)) n FROM events WHERE created_at >= ? AND type IN (${types.map(() => '?').join(',')}) AND COALESCE(session_id, '') NOT IN (SELECT id FROM sessions WHERE ref LIKE 'WEB%')`).get(since, ...types).n;
   const funnel = FUNNEL.map((f) => ({ id: f.id, label: f.label, count: count(f.events) }));
   const sessions = db().prepare('SELECT id, name, wa_id, vehicle_id, stage, assigned_to, bot_paused, updated_at FROM sessions WHERE wa_id IS NOT NULL AND updated_at >= ? ORDER BY updated_at DESC').all(since);
   const columns = COLUMNS.map((c) => ({

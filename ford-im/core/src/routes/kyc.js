@@ -70,7 +70,7 @@ r.post('/k/:token', rateLimit({ windowMs: 10 * 60_000, max: 10 }), upload.fields
     const msg = ctx.lang === 'en'
       ? (approved ? '✅ Identity verified. Let\'s continue with your financing application.' : '✅ We received your ID; an advisor will review it shortly.')
       : (approved ? '✅ Identidad verificada. Sigamos con tu solicitud de crédito.' : '✅ Recibimos tu identificación; un asesor la revisará en breve.');
-    wa.sendText(s.wa_id, msg).catch(() => {});
+    if (s.wa_id) wa.sendText(s.wa_id, msg).catch(() => {}); // las sesiones de prueba de la landing no tienen WhatsApp
     res.json({ status: out.kyc.status, analysis: out.analysis });
   } catch (err) { next(err); }
 });
