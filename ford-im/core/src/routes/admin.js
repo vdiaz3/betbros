@@ -68,6 +68,14 @@ r.post('/secrets', rateLimit({ windowMs: 15 * 60_000, max: 20 }), express.urlenc
   // Docker (restart: unless-stopped) vuelve a levantar el proceso con la nueva configuración.
   setTimeout(() => process.exit(0), 800);
 });
+// Dónde vive la bóveda (sin valores): si /secrets es el volumen persistente y su bitácora de montaje.
+r.get('/secrets/storage', requireAdmin, (req, res) => {
+  const dir = path.dirname(SECRETS_FILE);
+  const mount = fs.readFileSync('/proc/self/mountinfo', 'utf8').split('\n').find((l) => l.split(' ')[4] === dir) || null;
+  let log = null;
+  try { log = fs.readFileSync(path.join(dir, '.storage-log'), 'utf8').trim().split('\n').slice(-10); } catch { /* sin bitácora */ }
+  res.json({ secrets_file: SECRETS_FILE, exists: fs.existsSync(SECRETS_FILE), mount, log });
+});
 // Qué variables están configuradas (sin valores).
 r.get('/secrets/status', requireAdmin, (req, res) => {
   const saved = Object.keys(readSecrets());

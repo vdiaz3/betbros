@@ -6,12 +6,13 @@ DEV=/dev/disk/by-id/scsi-0DO_Volume_fordim-secrets
 MNT=/mnt/fordim-secrets
 mkdir -p "$MNT"
 if [ ! -e "$DEV" ]; then
-  echo "[storage-init] sin volumen $DEV: la bóveda queda en disco local y no sobrevive a un rebuild"
+  MSG="sin volumen $DEV: la bóveda queda en disco local y no sobrevive a un rebuild ($(ls /dev/disk/by-id 2>/dev/null | tr '\n' ' '))"
 else
-  # Sólo se formatea si el volumen está vacío (primer uso); nunca se toca uno con datos.
-  blkid "$DEV" >/dev/null 2>&1 || mkfs.ext4 -q -L fordimsec "$DEV"
+  # Sólo se formatea si el volumen no tiene sistema de archivos (primer uso); nunca uno con datos.
+  if [ -z "$(blkid -o value -s TYPE "$DEV" 2>/dev/null)" ]; then mkfs.ext4 -q -L fordimsec "$DEV"; MSG="formateado y montado"; else MSG="montado (ya tenía datos)"; fi
   mountpoint -q "$MNT" || mount -o defaults,discard "$DEV" "$MNT"
-  echo "[storage-init] volumen montado en $MNT"
 fi
+echo "[storage-init] $MSG"
+echo "$(date -u +%FT%TZ) $MSG" >> "$MNT/.storage-log"
 chown 1000:1000 "$MNT"   # usuario node del contenedor core
 chmod 700 "$MNT"
