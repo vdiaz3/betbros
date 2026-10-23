@@ -8,13 +8,16 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PDFDocument, StandardFonts, rgb, degrees } from 'pdf-lib';
 
-const out = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../src/data/forms/bbva-demo.pdf');
+// BRAND y la ruta de salida son opcionales (p. ej. la copia sin marca de la landing):
+//   BRAND=Vamo node scripts/build-demo-form.mjs public/landing/pdf/solicitud-credito-demo.pdf
+const BRAND = process.env.BRAND || 'Ford IM';
+const out = process.argv[2] ? path.resolve(process.argv[2]) : path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../src/data/forms/bbva-demo.pdf');
 const NAVY = rgb(0.03, 0.16, 0.4);
 const GRAY = rgb(0.4, 0.42, 0.47);
 
 const pdf = await PDFDocument.create();
 pdf.setTitle('Solicitud de Crédito Automotriz – DEMO');
-pdf.setProducer('Ford IM – menteia.com');
+pdf.setProducer(`${BRAND} – menteia.com`);
 const font = await pdf.embedFont(StandardFonts.Helvetica);
 const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
 const form = pdf.getForm();
@@ -25,9 +28,9 @@ function newPage(title) {
   page = pdf.addPage([W, H]);
   page.drawRectangle({ x: 0, y: H - 64, width: W, height: 64, color: NAVY });
   page.drawText(title, { x: M, y: H - 32, size: 15, font: bold, color: rgb(1, 1, 1) });
-  page.drawText('Formato de demostración – Ford IM', { x: M, y: H - 50, size: 9, font, color: rgb(0.8, 0.86, 1) });
+  page.drawText(`Formato de demostración – ${BRAND}`, { x: M, y: H - 50, size: 9, font, color: rgb(0.8, 0.86, 1) });
   page.drawText('DEMO', { x: 150, y: 300, size: 160, font: bold, color: rgb(0.93, 0.94, 0.97), rotate: degrees(35) });
-  page.drawText('Documento de demostración generado por Ford IM. No es un formato oficial de la institución financiera ni constituye oferta de crédito.',
+  page.drawText(`Documento de demostración generado por ${BRAND}. No es un formato oficial de la institución financiera ni constituye oferta de crédito.`,
     { x: M, y: 22, size: 7, font, color: GRAY });
   y = H - 92;
 }

@@ -30,9 +30,9 @@ export function home(req, res) {
       CRM_URL: publicUrl('vendedor', `/${view}`),
       FUNNEL_URL: publicUrl('vendedor', `/funnel${view}`),
       KYC_URL: '/demo/kyc',
-      CREDIT_BLANK: publicUrl('media', '/pdf/solicitud-credito-bbva-demo.pdf'),
-      CREDIT_FILLED: publicUrl('media', '/pdf/ejemplo-solicitud-llenada-bbva-demo.pdf'),
-      FICHA_URL: publicUrl('media', `/${vehicles[0]?.datasheet_pdf}`),
+      // Copias sin marca de la planilla (scripts/build-demo-form.mjs con BRAND=Vamo).
+      CREDIT_BLANK: '/landing/pdf/solicitud-credito-demo.pdf',
+      CREDIT_FILLED: '/landing/pdf/ejemplo-solicitud-llenada-demo.pdf',
       TERMS_URL: publicUrl('legal', '/terminos?lang=es'),
       PRIVACY_URL: publicUrl('legal', '/privacidad?lang=es'),
       CONTACT_URL: process.env.SALES_CONTACT_URL || '#demo',

@@ -13,9 +13,22 @@ services:
       - caddy_data:/data
     depends_on: [core]
 
+  # Monta el volumen persistente de la bóveda en el host antes de arrancar core (ver deploy/mount-secrets.sh).
+  storage-init:
+    image: alpine:3.20
+    privileged: true
+    pid: host
+    restart: "no"
+    volumes:
+      - ./deploy/mount-secrets.sh:/mount-secrets.sh:ro
+    command: ["sh", "-c", "apk add -q --no-cache util-linux && nsenter -t 1 -m -- sh -s < /mount-secrets.sh"]
+
   core:
     build: ./core
     restart: unless-stopped
+    depends_on:
+      storage-init:
+        condition: service_completed_successfully
     env_file: .env
     environment:
       SINGLE_HOST: cotizador.menteia.com
@@ -23,8 +36,10 @@ services:
       WA_DISPLAY_NUMBER: "527201346482"   # +52 720 134 6482 (número público del demo)
       # Sin token de Meta: el cotizador envía por el flujo de n8n (credencial "WhatsApp VENEMEX").
       WA_N8N_SEND_URL: "https://n8n.essavant.com/webhook/ford-im/send"
+      SECRETS_DIR: /secrets   # bóveda en el volumen de DigitalOcean: sobrevive a los rebuilds
     volumes:
       - core_data:/data
+      - /mnt/fordim-secrets:/secrets
       - ./core/public/media:/app/public/media:ro   # videos y PDFs del demo
 
 volumes:

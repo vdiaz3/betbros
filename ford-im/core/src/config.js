@@ -6,9 +6,10 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const env = process.env;
 
-// Credenciales guardadas desde la página /admin/secrets (DATA_DIR/secrets.env). Tienen prioridad
-// sobre .env y sobreviven a reinicios y actualizaciones del contenedor.
-export const SECRETS_FILE = path.join(env.DATA_DIR || path.resolve(here, '../../.data'), 'secrets.env');
+// Credenciales guardadas desde la página /admin/secrets (SECRETS_DIR o DATA_DIR/secrets.env). Tienen
+// prioridad sobre .env y sobreviven a reinicios del contenedor; en el demo SECRETS_DIR es un volumen
+// de DigitalOcean, así que también sobreviven a los rebuilds del droplet.
+export const SECRETS_FILE = path.join(env.SECRETS_DIR || env.DATA_DIR || path.resolve(here, '../../.data'), 'secrets.env');
 try {
   for (const line of fs.readFileSync(SECRETS_FILE, 'utf8').split('\n')) {
     const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
