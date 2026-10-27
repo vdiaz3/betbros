@@ -61,7 +61,7 @@ function renderVehicle() {
   img.style.backgroundImage = '';
   const probe = new Image();
   probe.onload = () => { img.style.backgroundImage = `url("${v.hero_image}")`; img.classList.remove('empty'); };
-  probe.src = v.hero_image;
+  if (v.hero_image) probe.src = v.hero_image;
   // El video de marca del kiosco (si existe) tiene prioridad sobre el del modelo.
   playLoop(state.bgVideo || v.loop_video);
   $('picker').querySelectorAll('button').forEach((b, i) => {

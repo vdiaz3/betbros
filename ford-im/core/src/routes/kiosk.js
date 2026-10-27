@@ -11,6 +11,8 @@ import { mediaUrl } from '../config.js';
 import { logEvent } from '../db.js';
 
 const pub = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public/kiosk');
+// Sólo se manda la foto del modelo si existe (si no, el kiosco usa el video y no pide un 404).
+const heroImage = (p) => (p && fs.existsSync(path.join(pub, p.replace(/^kiosk\//, ''))) ? p : null);
 const r = express.Router();
 
 r.use('/kiosk', express.static(pub, { maxAge: '1h' }));
@@ -26,7 +28,7 @@ r.get('/api/config', requireKiosk, (req, res) => {
     // Video de marca a pantalla completa (sin sonido, en loop) para todo el kiosco.
     background_video: kiosk?.background_video ? mediaUrl(kiosk.background_video) : null,
     // kiosk.vehicles (opcional) fija qué modelos muestra la pantalla y en qué orden.
-    vehicles: (kiosk?.vehicles?.length ? kiosk.vehicles.map(getVehicle).filter(Boolean) : vehicles).map(({ id, name, tagline, hero_image, loop_video, price_from_mxn, accent }) => ({ id, name, tagline, hero_image, loop_video: mediaUrl(loop_video), price_from_mxn, accent })),
+    vehicles: (kiosk?.vehicles?.length ? kiosk.vehicles.map(getVehicle).filter(Boolean) : vehicles).map(({ id, name, tagline, hero_image, loop_video, price_from_mxn, accent }) => ({ id, name, tagline, hero_image: heroImage(hero_image), loop_video: mediaUrl(loop_video), price_from_mxn, accent })),
   });
 });
 
