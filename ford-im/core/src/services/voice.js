@@ -66,6 +66,7 @@ export async function kioskAgentSignedUrl() {
   });
   const json = await res.json().catch(() => ({}));
   // 424 y no 502 en los errores de servicios externos: Cloudflare reemplaza el cuerpo de los 502.
-  if (!res.ok) throw Object.assign(new Error(`elevenlabs_error ${res.status}: ${JSON.stringify(json)}`), { status: 424 });
+  // Sólo el código de error: la respuesta completa repite el agent_id y llega al navegador del kiosco.
+  if (!res.ok) throw Object.assign(new Error(`elevenlabs_error ${res.status}: ${json.detail?.code || json.detail?.status || 'unknown'}`), { status: 424 });
   return json.signed_url;
 }
