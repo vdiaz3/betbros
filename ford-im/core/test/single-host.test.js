@@ -16,6 +16,8 @@ test('portada y sitios por ruta', async () => {
   assert.doesNotMatch(home, /\{\{\w+\}\}/);
   assert.equal((await req(H, '/landing/landing.js')).status, 200);
   assert.match(await (await req(H, '/demo')).text(), /Abrir kiosco/);
+  const cfg = await (await req(H, '/kiosco/api/config', { headers: { 'x-kiosk-id': 'K-DEMO-01', 'x-kiosk-key': 'kiosk-test' } })).json();
+  assert.deepEqual(cfg.vehicles.map((v) => v.id), ['territory']); // el kiosco del demo sólo muestra la Territory
   const kiosk = await (await req(H, '/kiosco/k/K-DEMO-01')).text();
   assert.match(kiosk, /<base href="\/kiosco\/">/);
   assert.equal((await req(H, '/kiosco/kiosk/kiosk.js')).status, 200);

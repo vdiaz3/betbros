@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { requireKiosk } from '../lib/auth.js';
 import { issueQrToken, renderQrSvg } from '../services/qr.js';
 import { kioskAgentSignedUrl } from '../services/voice.js';
-import { vehicles, getKiosk, getDealer } from '../data/catalog.js';
+import { vehicles, getVehicle, getKiosk, getDealer } from '../data/catalog.js';
 import { mediaUrl } from '../config.js';
 import { logEvent } from '../db.js';
 
@@ -25,7 +25,8 @@ r.get('/api/config', requireKiosk, (req, res) => {
     dealer: getDealer(kiosk?.dealer_id),
     // Video de marca a pantalla completa (sin sonido, en loop) para todo el kiosco.
     background_video: kiosk?.background_video ? mediaUrl(kiosk.background_video) : null,
-    vehicles: vehicles.map(({ id, name, tagline, hero_image, loop_video, price_from_mxn, accent }) => ({ id, name, tagline, hero_image, loop_video: mediaUrl(loop_video), price_from_mxn, accent })),
+    // kiosk.vehicles (opcional) fija qué modelos muestra la pantalla y en qué orden.
+    vehicles: (kiosk?.vehicles?.length ? kiosk.vehicles.map(getVehicle).filter(Boolean) : vehicles).map(({ id, name, tagline, hero_image, loop_video, price_from_mxn, accent }) => ({ id, name, tagline, hero_image, loop_video: mediaUrl(loop_video), price_from_mxn, accent })),
   });
 });
 
