@@ -29,7 +29,7 @@ async function auth() {
     body: new URLSearchParams({ grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer', assertion: jwtAssertion() }),
   });
   const json = await res.json();
-  if (!res.ok) throw Object.assign(new Error(`docusign_auth: ${JSON.stringify(json)} (¿consentimiento del usuario otorgado?)`), { status: 502 });
+  if (!res.ok) throw Object.assign(new Error(`docusign_auth: ${JSON.stringify(json)} (¿consentimiento del usuario otorgado?)`), { status: 424 });
   if (!cached.baseUri) {
     const info = await (await fetch(`https://${ds().authServer}/oauth/userinfo`, { headers: { Authorization: `Bearer ${json.access_token}` } })).json();
     const acct = info.accounts?.find((a) => a.account_id === ds().accountId) || info.accounts?.find((a) => a.is_default);
@@ -46,7 +46,7 @@ async function api(method, p, body, { raw = false } = {}) {
     headers: { Authorization: `Bearer ${token}`, ...(body ? { 'Content-Type': 'application/json' } : {}) },
     body: body ? JSON.stringify(body) : undefined,
   });
-  if (!res.ok) throw Object.assign(new Error(`docusign ${res.status}: ${await res.text()}`), { status: 502 });
+  if (!res.ok) throw Object.assign(new Error(`docusign ${res.status}: ${await res.text()}`), { status: 424 });
   return raw ? Buffer.from(await res.arrayBuffer()) : res.json();
 }
 

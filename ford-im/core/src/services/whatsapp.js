@@ -35,7 +35,7 @@ async function call(body, author = 'system', summary = null) {
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(20000),
     });
-    if (!res.ok) throw Object.assign(new Error(`whatsapp_n8n_error: HTTP ${res.status} ${(await res.text()).slice(0, 200)}`), { status: 502 });
+    if (!res.ok) throw Object.assign(new Error(`whatsapp_n8n_error: HTTP ${res.status} ${(await res.text()).slice(0, 200)}`), { status: 424 });
     return { via: 'n8n' };
   }
   if (!enabled()) {
@@ -48,7 +48,7 @@ async function call(body, author = 'system', summary = null) {
     body: JSON.stringify({ messaging_product: 'whatsapp', ...body }),
   });
   const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw Object.assign(new Error(`whatsapp_error: ${JSON.stringify(json.error || json)}`), { status: 502 });
+  if (!res.ok) throw Object.assign(new Error(`whatsapp_error: ${JSON.stringify(json.error || json)}`), { status: 424 });
   return json;
 }
 
@@ -83,7 +83,7 @@ export async function uploadMedia(buffer, mime, filename) {
     body: form,
   });
   const json = await res.json();
-  if (!res.ok) throw Object.assign(new Error(`whatsapp_upload_error: ${JSON.stringify(json.error || json)}`), { status: 502 });
+  if (!res.ok) throw Object.assign(new Error(`whatsapp_upload_error: ${JSON.stringify(json.error || json)}`), { status: 424 });
   return json;
 }
 
@@ -94,6 +94,6 @@ export async function downloadMedia(mediaId) {
   const meta = await (await fetch(graph(mediaId), { headers: auth })).json();
   if (!meta.url) throw Object.assign(new Error('media_not_found'), { status: 404 });
   const res = await fetch(meta.url, { headers: auth });
-  if (!res.ok) throw Object.assign(new Error(`media_download_${res.status}`), { status: 502 });
+  if (!res.ok) throw Object.assign(new Error(`media_download_${res.status}`), { status: 424 });
   return { buffer: Buffer.from(await res.arrayBuffer()), mime: meta.mime_type, size: meta.file_size };
 }

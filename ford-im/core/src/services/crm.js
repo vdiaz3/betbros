@@ -15,7 +15,7 @@ async function rest(method, p, body) {
     body: body ? JSON.stringify(body) : undefined,
   });
   const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw Object.assign(new Error(`crm_error ${res.status}: ${JSON.stringify(json)}`), { status: 502 });
+  if (!res.ok) throw Object.assign(new Error(`crm_error ${res.status}: ${JSON.stringify(json)}`), { status: 424 });
   return json;
 }
 

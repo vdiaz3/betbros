@@ -17,7 +17,7 @@ export async function transcribe(buffer, mime = 'audio/ogg') {
     body: form,
   });
   const json = await res.json();
-  if (!res.ok) throw Object.assign(new Error(`stt_error: ${JSON.stringify(json)}`), { status: 502 });
+  if (!res.ok) throw Object.assign(new Error(`stt_error: ${JSON.stringify(json)}`), { status: 424 });
   return { text: json.text, lang: json.language_code?.startsWith('en') ? 'en' : 'es' };
 }
 
@@ -40,7 +40,7 @@ export async function synthesize(text, lang = 'es') {
     headers: { 'xi-api-key': config.elevenlabs.apiKey, 'Content-Type': 'application/json' },
     body: JSON.stringify({ text, model_id: config.elevenlabs.ttsModel, language_code: normLang(lang) }),
   });
-  if (!res.ok) throw Object.assign(new Error(`tts_error: ${await res.text()}`), { status: 502 });
+  if (!res.ok) throw Object.assign(new Error(`tts_error: ${await res.text()}`), { status: 424 });
   return mp3ToOggOpus(Buffer.from(await res.arrayBuffer()));
 }
 
@@ -64,7 +64,8 @@ export async function kioskAgentSignedUrl() {
   const res = await fetch(`${EL}/convai/conversation/get-signed-url?agent_id=${encodeURIComponent(kioskAgentId)}`, {
     headers: { 'xi-api-key': apiKey },
   });
-  const json = await res.json();
-  if (!res.ok) throw Object.assign(new Error(`elevenlabs_error: ${JSON.stringify(json)}`), { status: 502 });
+  const json = await res.json().catch(() => ({}));
+  // 424 y no 502 en los errores de servicios externos: Cloudflare reemplaza el cuerpo de los 502.
+  if (!res.ok) throw Object.assign(new Error(`elevenlabs_error ${res.status}: ${JSON.stringify(json)}`), { status: 424 });
   return json.signed_url;
 }
