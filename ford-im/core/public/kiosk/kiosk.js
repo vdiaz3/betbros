@@ -154,8 +154,7 @@ async function openVoiceRing() {
     state.voiceRing ??= voiceRingLib.mountVoiceRing(el, {
       size: Math.round(Math.min(innerHeight * 0.38, innerWidth * 0.6)),
       state: 'processing', theme: 'dark', 'aria-label': tr('talk'),
-      // El volumen se lee en cada cuadro: el del asesor mientras habla, el del cliente mientras escucha.
-      level: voiceLevel,
+      sensitivity: 1, threshold: 0.02,
     });
     state.voiceRing.update({ state: 'processing' });
   } catch (err) {
@@ -165,16 +164,31 @@ async function openVoiceRing() {
   }
 }
 
+// El anillo se mueve con la señal de audio real: el analizador de la voz del asesor mientras habla
+// y el del micrófono mientras escucha (el SDK de ElevenLabs los guarda en conv.output / conv.input).
+// Si no hay analizador, se usa el volumen escalar amplificado: el del SDK rara vez pasa de 0.2.
+function voiceAnalyser(mode) {
+  try { return (mode === 'speaking' ? state.conv?.output : state.conv?.input)?.getAnalyser?.() || null; } catch { return null; }
+}
+
 function voiceLevel() {
   const c = state.conv;
   if (!c) return 0;
-  try { return state.mode === 'speaking' ? c.getOutputVolume() : c.getInputVolume(); } catch { return 0; }
+  try {
+    const v = state.mode === 'speaking' ? c.getOutputVolume() : c.getInputVolume();
+    return Math.min(1, Math.sqrt(Math.max(0, v)) * 1.8);
+  } catch { return 0; }
 }
 
 function setVoiceMode(mode) {
   state.mode = mode;
   $('orb').className = `orb ${mode === 'speaking' ? 'speaking' : 'listening'}`;
-  state.voiceRing?.update({ state: mode === 'speaking' ? 'speaking' : 'listening' });
+  const analyser = voiceAnalyser(mode);
+  state.voiceRing?.update({
+    state: mode === 'speaking' ? 'speaking' : 'listening',
+    analyser: analyser || undefined,
+    level: analyser ? undefined : voiceLevel,
+  });
 }
 
 function line(text, who) {
@@ -217,6 +231,7 @@ async function startVoice() {
       onDisconnect: () => endVoice(),
       onError: (e) => { console.warn('voice', e); $('voiceStatus').textContent = tr('error'); },
     });
+    setVoiceMode(state.mode); // onModeChange pudo llegar antes de tener state.conv: se conecta el audio ya
     state.voiceTimer = setTimeout(endVoice, VOICE_MAX_MS);
   } catch (err) {
     console.warn('voice', err);
@@ -234,7 +249,7 @@ async function endVoice() {
   $('voice').hidden = true;
   $('orb').className = 'orb';
   state.mode = 'listening';
-  state.voiceRing?.update({ state: 'idle' });
+  state.voiceRing?.update({ state: 'idle', analyser: undefined, level: undefined });
 }
 
 // --- Arranque ----------------------------------------------------------------------------
