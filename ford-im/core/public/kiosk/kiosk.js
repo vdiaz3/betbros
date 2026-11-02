@@ -35,7 +35,7 @@ if (params.get('key')) {
   history.replaceState(null, '', `k/${kioskId}`); // relativo a <base>
 }
 
-const state = { lang: 'es', vehicles: [], idx: 0, lastTouch: Date.now(), qrTimer: null, ringAnim: null, conv: null, voiceTimer: null, qrSvg: '' };
+const state = { lang: 'es', vehicles: [], idx: 0, lastTouch: Date.now(), qrTimer: null, ringAnim: null, conv: null, voiceTimer: null, qrSvg: '', mode: 'listening', voiceRing: null };
 
 const api = (p, opts = {}) =>
   fetch(p, { ...opts, headers: { 'x-kiosk-id': kioskId, 'x-kiosk-key': kioskKey, 'Content-Type': 'application/json', ...(opts.headers || {}) } })
@@ -142,6 +142,41 @@ function onQrCycle() {
 }
 
 // --- Agente de voz (ElevenLabs Conversational AI) ----------------------------------------
+// Anillo de voz (voice-ring, empaquetado en vendor/ por scripts/voice-ring/build.sh). Si no carga,
+// queda el orbe de CSS de respaldo.
+let voiceRingLib = null;
+async function openVoiceRing() {
+  try {
+    voiceRingLib ??= await import('./vendor/voice-ring.js');
+    const el = $('ring');
+    el.hidden = false;
+    $('orb').hidden = true;
+    state.voiceRing ??= voiceRingLib.mountVoiceRing(el, {
+      size: Math.round(Math.min(innerHeight * 0.38, innerWidth * 0.6)),
+      state: 'processing', theme: 'dark', 'aria-label': tr('talk'),
+      // El volumen se lee en cada cuadro: el del asesor mientras habla, el del cliente mientras escucha.
+      level: voiceLevel,
+    });
+    state.voiceRing.update({ state: 'processing' });
+  } catch (err) {
+    console.warn('voice-ring', err);
+    $('ring').hidden = true;
+    $('orb').hidden = false;
+  }
+}
+
+function voiceLevel() {
+  const c = state.conv;
+  if (!c) return 0;
+  try { return state.mode === 'speaking' ? c.getOutputVolume() : c.getInputVolume(); } catch { return 0; }
+}
+
+function setVoiceMode(mode) {
+  state.mode = mode;
+  $('orb').className = `orb ${mode === 'speaking' ? 'speaking' : 'listening'}`;
+  state.voiceRing?.update({ state: mode === 'speaking' ? 'speaking' : 'listening' });
+}
+
 function line(text, who) {
   const p = document.createElement('p');
   p.className = who;
@@ -155,11 +190,13 @@ async function startVoice() {
   $('voice').hidden = false;
   $('transcript').innerHTML = '';
   $('voiceStatus').textContent = tr('connecting');
+  openVoiceRing();
   const v = state.vehicles[state.idx];
   try {
     await navigator.mediaDevices.getUserMedia({ audio: true });
   } catch {
     $('voiceStatus').textContent = tr('micDenied');
+    state.voiceRing?.update({ state: 'idle' });
     return;
   }
   try {
@@ -173,7 +210,7 @@ async function startVoice() {
       dynamicVariables: { vehicle: loc(v.name), vehicle_id: v.id, lang: state.lang, dealer: $('dealerName').textContent, kiosk_id: kioskId },
       overrides: { agent: { language: state.lang } },
       onModeChange: ({ mode }) => {
-        $('orb').className = `orb ${mode === 'speaking' ? 'speaking' : 'listening'}`;
+        setVoiceMode(mode);
         $('voiceStatus').textContent = tr(mode === 'speaking' ? 'speaking' : 'listening');
       },
       onMessage: ({ message, source }) => line(message, source === 'user' ? 'user' : 'ai'),
@@ -184,6 +221,7 @@ async function startVoice() {
   } catch (err) {
     console.warn('voice', err);
     $('voiceStatus').textContent = tr('error');
+    state.voiceRing?.update({ state: 'idle' });
     state.conv = null;
   }
 }
@@ -195,6 +233,8 @@ async function endVoice() {
   try { await c?.endSession(); } catch { /* ya cerrada */ }
   $('voice').hidden = true;
   $('orb').className = 'orb';
+  state.mode = 'listening';
+  state.voiceRing?.update({ state: 'idle' });
 }
 
 // --- Arranque ----------------------------------------------------------------------------

@@ -77,6 +77,9 @@ h1 { font-size: clamp(40px, 6vw, 120px); margin: 0.05em 0; line-height: 1; font-
 .voice { position: fixed; inset: 0; z-index: 10; background: rgb(3 6 20 / 0.82); backdrop-filter: blur(18px); display: grid; place-items: center; }
 .voice[hidden] { display: none; }
 .voice-card { width: min(720px, 88vw); text-align: center; }
+/* Anillo de voz (voice-ring): reacciona al volumen del micrófono y de la voz del asesor. */
+.ring { width: min(38vh, 60vw); aspect-ratio: 1; margin: 0 auto 3vh; display: grid; place-items: center; }
+.ring[hidden], .orb[hidden] { display: none; }
 .orb { position: relative; width: min(34vh, 60vw); aspect-ratio: 1; margin: 0 auto 3vh; }
 .orb span { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #6b7bff, var(--ford-bright) 45%, var(--ford) 80%); opacity: 0.85; animation: orb 4s ease-in-out infinite; }
 .orb span:nth-child(2) { inset: 10%; opacity: 0.6; animation-delay: -1.3s; }

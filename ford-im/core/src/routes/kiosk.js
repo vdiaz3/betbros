@@ -1,5 +1,6 @@
 // fordim.menteia.com: app del panel táctil. /k/<kioskId>?key=… abre el kiosco.
 import express from 'express';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -17,7 +18,11 @@ const r = express.Router();
 
 r.use('/kiosk', express.static(pub, { maxAge: '1h' }));
 // <base href> = ruta donde está montado el kiosco (raíz de su subdominio o /kiosco).
-const indexHtml = fs.readFileSync(path.join(pub, 'index.html'), 'utf8');
+// La versión (hash de los archivos) va en las URLs para que Cloudflare no sirva CSS/JS viejos.
+const version = crypto.createHash('sha1').update(['kiosk.css', 'kiosk.js'].map((f) => fs.readFileSync(path.join(pub, f))).join('')).digest('hex').slice(0, 10);
+const indexHtml = fs.readFileSync(path.join(pub, 'index.html'), 'utf8')
+  .replace('kiosk/kiosk.css"', `kiosk/kiosk.css?v=${version}"`)
+  .replace('kiosk/kiosk.js"', `kiosk/kiosk.js?v=${version}"`);
 r.get(['/', '/k/:kioskId'], (req, res) => res.type('html').send(indexHtml.replace('__BASE__', `${req.baseUrl}/`)));
 
 r.get('/api/config', requireKiosk, (req, res) => {
