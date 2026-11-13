@@ -5,7 +5,7 @@ import express from 'express';
 import { requireN8n, requireAdmin } from '../lib/auth.js';
 import { config } from '../config.js';
 import { detectLangSwitch, normLang, loc } from '../lib/i18n.js';
-import { banks, getBank, getVehicle, getDealer, vehicles } from '../data/catalog.js';
+import { banks, getBank, getVehicle, getDealer, vehicles, getKiosk } from '../data/catalog.js';
 import { logEvent } from '../db.js';
 import * as sessions from '../services/sessions.js';
 import * as credit from '../services/credit.js';
@@ -15,7 +15,7 @@ import { transcribe } from '../services/voice.js';
 import { downloadMedia } from '../services/whatsapp.js';
 import { syncSession } from '../services/crm.js';
 import { latestKyc, setKycResult } from '../services/kyc.js';
-import { latestPld, pldSummary } from '../services/pld.js';
+import { latestPld, pldSummary, thresholds as pldThresholds } from '../services/pld.js';
 import { logMessage } from '../services/messages.js';
 import * as testdrive from '../services/testdrive.js';
 import { dealers } from '../data/catalog.js';
@@ -93,6 +93,7 @@ r.post('/v1/inbound', wrap(async (req, res) => {
   const td = testdrive.activeTestDrive(s.id);
   const vehicle = getVehicle(s.vehicle_id);
   const dealer = getDealer(s.dealer_id);
+  const station = getKiosk(s.kiosk_id);
   const openCredit = credit.latestCreditForSession(s.id);
 
   res.json({
@@ -118,6 +119,7 @@ r.post('/v1/inbound', wrap(async (req, res) => {
       pld,
       test_drive: td ? testdrive.describe(td, s.lang) : null,
       assigned_to: s.assigned_to,
+      station: station ? { type: station.type || 'kiosk', seller_name: station.seller_name || null } : null,
       available_vehicles: vehicles.map((v) => ({ id: v.id, name: loc(v.name, s.lang) })),
     },
   });
@@ -178,6 +180,11 @@ r.post('/v1/sessions/:id/kyc', wrap(async (req, res) => {
 r.get('/v1/sessions/:id/kyc', (req, res) => {
   const k = latestKyc(mustSession(req.params.id).id);
   res.json(k ? { id: k.id, status: k.status, doc_type: k.doc_type, updated_at: k.updated_at } : { status: 'not_started' });
+});
+r.get('/v1/sessions/:id/pld', (req, res) => {
+  const p = latestPld(mustSession(req.params.id).id);
+  const th = pldThresholds();
+  res.json(p ? { ...pldSummary(p), cash_limit_mxn: th.cash_limit_mxn } : { status: 'not_started', cash_limit_mxn: th.cash_limit_mxn });
 });
 r.post('/v1/sessions/:id/credit', (req, res) => {
   const c = flow.openCredit(mustSession(req.params.id).id, req.body.bank_id);

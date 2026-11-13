@@ -64,6 +64,13 @@ test('Estación de escritorio: el QR asigna al vendedor y arranca identidad + PL
   const detail = await (await req(H, `/crm/api/conversations/${inbound.session_id}?k=ver-demo`)).json();
   assert.equal(detail.pld.risk, 'alto');
   assert.ok(detail.pld.flags.includes('pep'));
+
+  // Lo que ve el agente de n8n: origen en estación y estado PLD sin datos personales.
+  assert.equal(inbound.context.station.type, 'desk');
+  const pld = await (await req(H, `/api/v1/sessions/${inbound.session_id}/pld`, { headers: n8n })).json();
+  assert.equal(pld.status, 'review');
+  assert.ok(pld.cash_limit_mxn > 0);
+  assert.equal(pld.answers, undefined);
 });
 
 test('PLD: el cuestionario es obligatorio para enviar la identificación', async () => {

@@ -92,10 +92,11 @@ tool("simulate", "Simulación informativa de mensualidad.", "POST", "/v1/simulat
 tool("update_session", "Guarda vehículo de interés (vehicle_id), idioma (lang es|en), nombre o email del cliente.", "PATCH", "/v1/sessions/" + SID,
      fa('patch', 'objeto JSON con vehicle_id, lang, name y/o email', 'json'), x=3)
 tool("send_credit_privacy_notice", "Envía el aviso de privacidad para crédito y pide ACEPTO. Usar antes de pedir datos financieros.", "POST", "/v1/sessions/" + SID + "/credit-privacy", "{}", x=4)
-tool("start_credit", "Abre la solicitud de crédito con el banco elegido (requiere KYC aprobado). Devuelve id, campos y documentos faltantes.", "POST", "/v1/sessions/" + SID + "/credit",
+tool("start_credit", "Abre la solicitud de crédito con el banco elegido (requiere KYC aprobado y PLD no bloqueado). Devuelve id, campos y documentos faltantes.", "POST", "/v1/sessions/" + SID + "/credit",
      "{ bank_id: " + fa('bank_id', 'id del banco elegido') + " }", x=5)
-tool("send_kyc_link", "Envía la liga de verificación de identidad (INE o pasaporte + prueba de vida + CURP). Requiere aviso de crédito aceptado.", "POST", "/v1/sessions/" + SID + "/kyc", "{}", x=6)
+tool("send_kyc_link", "Envía la liga de verificación de identidad (INE o pasaporte + prueba de vida + CURP) con el cuestionario de Ley Antilavado (PLD). Requiere aviso de crédito aceptado.", "POST", "/v1/sessions/" + SID + "/kyc", "{}", x=6)
 tool("get_kyc_status", "Estado de la verificación de identidad: pending, approved o rejected.", "GET", "/v1/sessions/" + SID + "/kyc", x=12)
+tool("get_pld_status", "Resultado de la debida diligencia de Ley Antilavado (uso interno, no se comparte con el cliente): status clear|review|blocked|not_started, risk, flags (cash_over_limit, third_party, pep, list_hit...), cash_limit_mxn. Revisarlo antes de start_credit.", "GET", "/v1/sessions/" + SID + "/pld", x=16)
 tool("get_test_drive_slots", "Horarios disponibles para prueba de manejo. Opcional: fecha YYYY-MM-DD.", "GET",
      "/v1/sessions/" + SID + "/test-drive/slots?limit=6&date={{ " + fa('date', 'fecha YYYY-MM-DD o vacío para los próximos días') + " }}", x=13)
 tool("book_test_drive", "Agenda (o reprograma) la prueba de manejo en el horario elegido.", "POST", "/v1/sessions/" + SID + "/test-drive",
