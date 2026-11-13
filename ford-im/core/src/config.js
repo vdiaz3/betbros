@@ -120,6 +120,16 @@ export const config = {
     linkTtlHours: Number(env.KYC_LINK_TTL_HOURS || 24),
   },
 
+  // PLD (LFPIORPI art. 17 fr. VIII, comercialización de vehículos). Umbrales en UMA; el valor de la
+  // UMA cambia cada febrero (2026: $117.31). Confirmar con el oficial de cumplimiento de la agencia.
+  pld: {
+    umaMxn: Number(env.PLD_UMA_MXN || 117.31),
+    identificationUma: Number(env.PLD_IDENTIFICATION_UMA || 3210),
+    noticeUma: Number(env.PLD_NOTICE_UMA || 6420),
+    cashLimitUma: Number(env.PLD_CASH_LIMIT_UMA || 3210),
+    screening: env.PLD_SCREENING || (env.DEMO_MODE === 'true' ? 'simulated' : 'manual'), // simulated | manual
+  },
+
   docusign: {
     authServer: env.DOCUSIGN_AUTH_SERVER || 'account-d.docusign.com', // prod: account.docusign.com
     integrationKey: env.DOCUSIGN_INTEGRATION_KEY || '',

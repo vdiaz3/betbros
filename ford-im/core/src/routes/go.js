@@ -4,7 +4,7 @@ import express from 'express';
 import { config } from '../config.js';
 import { redeemQrToken } from '../services/qr.js';
 import { createSessionFromQr } from '../services/sessions.js';
-import { getVehicle } from '../data/catalog.js';
+import { getVehicle, getKiosk } from '../data/catalog.js';
 import { t, loc, normLang } from '../lib/i18n.js';
 import { page, esc } from '../lib/html.js';
 import { rateLimit } from '../lib/auth.js';
@@ -25,7 +25,10 @@ r.get('/q/:token', rateLimit({ windowMs: 60_000, max: 30 }), (req, res) => {
   }
   const session = createSessionFromQr(qr);
   const vehicle = getVehicle(qr.vehicle_id);
-  const text = t(qr.lang, 'prefill', { vehicle: loc(vehicle.name, qr.lang), ref: session.ref });
+  const station = getKiosk(qr.kiosk_id);
+  const text = station?.type === 'desk'
+    ? t(qr.lang, 'prefillDesk', { seller: station.seller_name || station.seller, ref: session.ref })
+    : t(qr.lang, 'prefill', { vehicle: loc(vehicle.name, qr.lang), ref: session.ref });
   const wa = `https://wa.me/${config.whatsapp.displayNumber}?text=${encodeURIComponent(text)}`;
   res.set('Cache-Control', 'no-store');
   // Redirección inmediata + botón de respaldo (algunos lectores de QR abren un navegador interno).

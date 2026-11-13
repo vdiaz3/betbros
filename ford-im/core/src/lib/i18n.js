@@ -2,6 +2,11 @@
 const messages = {
   es: {
     prefill: ({ vehicle, ref }) => `Hola 👋 Quiero información del ${vehicle}. (ref: ${ref})`,
+    prefillDesk: ({ seller, ref }) => `Hola 👋 Quiero iniciar mi trámite con ${seller}. (ref: ${ref})`,
+    welcomeDesk: ({ name, seller, dealer, privacyUrl }) =>
+      `¡Hola${name ? ` ${name}` : ''}! Soy el asistente de ${dealer}. Te atiende *${seller}* en su escritorio 🤝\n\n` +
+      `🔒 Aviso de Privacidad (Ley Federal de Protección de Datos Personales en Posesión de los Particulares): ${privacyUrl}\n\n` +
+      `Para iniciar tu trámite de forma segura verificamos tu identidad y, como lo pide la Ley Antilavado para la compra de vehículos, unos datos de la operación. Toma unos 3 minutos 👇`,
     welcome: ({ name, vehicle, dealer, privacyUrl }) =>
       `¡Hola${name ? ` ${name}` : ''}! Soy el asistente virtual de ${dealer} 🚙\n` +
       `Te comparto un video del *${vehicle}*.\n\n` +
@@ -33,6 +38,11 @@ const messages = {
   },
   en: {
     prefill: ({ vehicle, ref }) => `Hi 👋 I'd like information about the ${vehicle}. (ref: ${ref})`,
+    prefillDesk: ({ seller, ref }) => `Hi 👋 I'd like to start my paperwork with ${seller}. (ref: ${ref})`,
+    welcomeDesk: ({ name, seller, dealer, privacyUrl }) =>
+      `Hi${name ? ` ${name}` : ''}! I'm ${dealer}'s assistant. *${seller}* is helping you at their desk 🤝\n\n` +
+      `🔒 Privacy Notice (Mexican personal data protection law): ${privacyUrl}\n\n` +
+      `To start your paperwork securely we verify your identity and, as Mexico's anti-money-laundering law requires for vehicle purchases, a few details about the purchase. It takes about 3 minutes 👇`,
     welcome: ({ name, vehicle, dealer, privacyUrl }) =>
       `Hi${name ? ` ${name}` : ''}! I'm ${dealer}'s virtual assistant 🚙\n` +
       `Here's a video of the *${vehicle}*.\n\n` +

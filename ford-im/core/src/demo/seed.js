@@ -3,6 +3,7 @@
 // (al arrancar, si la base está vacía) o con `npm run seed:demo`.
 import { getDb, uid, shortCode } from '../db.js';
 import { vehicles, kiosks, banks } from '../data/catalog.js';
+import { evaluate as evaluatePld } from '../services/pld.js';
 
 const FIRST = ['Ana', 'Luis', 'María', 'Jorge', 'Fernanda', 'Carlos', 'Daniela', 'Ricardo', 'Sofía', 'Miguel', 'Valeria', 'Alejandro', 'Paola', 'Diego', 'Gabriela', 'Héctor', 'Lucía', 'Andrés', 'Mariana', 'Roberto'];
 const LAST = ['García', 'Hernández', 'Martínez', 'López', 'González', 'Pérez', 'Rodríguez', 'Sánchez', 'Ramírez', 'Torres', 'Flores', 'Rivera', 'Gómez', 'Díaz', 'Cruz', 'Morales'];
@@ -112,6 +113,20 @@ export function seedDemo({ force = false } = {}) {
         db.prepare('INSERT INTO kyc_checks (id, session_id, status, curp, doc_type, result_json, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?)')
           .run(uid('kyc_'), id, 'approved', 'HEGG560427MVZRRL04', i % 6 === 0 ? 'pasaporte' : 'ine', JSON.stringify({ analysis: { provider: 'simulated' } }), t(1.2), t(1.3));
         ev.run(id, null, 'kyc_approved', null, t(1.3));
+        // Debida diligencia PLD con casos variados: sin observaciones, PEP, tercero y efectivo alto.
+        const answers = {
+          ocupacion: pick(['Ingeniero', 'Comerciante', 'Médica', 'Contador', 'Empresaria']),
+          origen_recursos: pick(['salario', 'negocio', 'ahorro']),
+          forma_pago: i % 9 === 0 ? 'mixto' : 'credito',
+          efectivo_mxn: i % 9 === 0 ? 400_000 : 0,
+          cuenta_propia: i % 5 !== 1,
+          beneficiario: i % 5 === 1 ? `${pick(FIRST)} ${pick(LAST)}` : '',
+          pep: i % 7 === 3,
+        };
+        const pld = evaluatePld({ answers, amountMxn: v.price_from_mxn || 0, curp: 'HEGG560427MVZRRL04', name });
+        db.prepare('INSERT INTO pld_checks (id, session_id, kyc_id, status, risk, answers_json, result_json, created_at) VALUES (?,?,?,?,?,?,?,?)')
+          .run(uid('pld_'), id, null, pld.status, pld.risk, JSON.stringify(answers), JSON.stringify(pld), t(1.3));
+        ev.run(id, null, 'pld_assessed', JSON.stringify({ status: pld.status, risk: pld.risk }), t(1.3));
         msg.run(id, wa, 'out', 'system', 'text', '✅ Identidad verificada. Sigamos con tu solicitud de crédito.', t(1.3));
       }
       const price = 650_000 + Math.floor(rand() * 8) * 50_000;

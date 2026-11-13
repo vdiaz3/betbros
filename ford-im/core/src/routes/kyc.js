@@ -1,6 +1,8 @@
 // kyc.menteia.com/k/<token>: verificación de identidad desde el celular (cámara en vivo).
 // La página es una app ligera (public/kyc/) que captura el documento, hace la prueba de vida y
 // envía todo en un solo POST.
+import crypto from 'node:crypto';
+import fs from 'node:fs';
 import express from 'express';
 import multer from 'multer';
 import path from 'node:path';
@@ -10,11 +12,14 @@ import { page } from '../lib/html.js';
 import { rateLimit } from '../lib/auth.js';
 import { getKyc, submitKyc, pickChallenges } from '../services/kyc.js';
 import { getSession } from '../services/sessions.js';
+import { normalizeAnswers, validateAnswers, assessPld, thresholds, ORIGENES, PAGOS } from '../services/pld.js';
 import { config, publicUrl } from '../config.js';
 import { normLang } from '../lib/i18n.js';
 import * as wa from '../services/whatsapp.js';
 
 const pub = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public/kyc');
+// Cambia con cada versión de la app para que Cloudflare y el celular no usen una copia vieja.
+const version = crypto.createHash('sha1').update(['kyc.css', 'kyc.js'].map((f) => fs.readFileSync(path.join(pub, f))).join('')).digest('hex').slice(0, 10);
 const FILES = ['doc_frente', 'doc_reverso', 'selfie', 'liveness_0', 'liveness_1', 'liveness_2'];
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024, files: FILES.length } });
 const r = express.Router();
@@ -42,14 +47,15 @@ r.get('/k/:token', (req, res) => {
     privacyUrl: publicUrl('legal', `/privacidad-credito?lang=${ctx.lang}`),
     whatsappUrl: `https://wa.me/${config.whatsapp.displayNumber}`,
     demo: config.kyc.provider === 'simulated',
+    pld: { origenes: ORIGENES, pagos: PAGOS, cashLimitMxn: thresholds().cash_limit_mxn },
   };
   res.set('Cache-Control', 'no-store').send(page({
     title: ctx.lang === 'en' ? 'Identity verification' : 'Verificación de identidad',
     lang: ctx.lang,
-    head: `<link rel="stylesheet" href="${req.baseUrl}/kyc-app/kyc.css">`,
+    head: `<link rel="stylesheet" href="${req.baseUrl}/kyc-app/kyc.css?v=${version}">`,
     body: `<div id="kyc" class="card"></div>
 <script id="boot" type="application/json">${JSON.stringify(boot).replace(/</g, '\\u003c')}</script>
-<script type="module" src="${req.baseUrl}/kyc-app/kyc.js"></script>`,
+<script type="module" src="${req.baseUrl}/kyc-app/kyc.js?v=${version}"></script>`,
   }));
 });
 
@@ -60,18 +66,23 @@ r.post('/k/:token', rateLimit({ windowMs: 10 * 60_000, max: 10 }), upload.fields
     const ch = verifyToken(req.body.challenge_token, 'kyc_ch');
     if (!ch || ch.k !== ctx.kyc.id) return res.status(400).json({ error: 'invalid_challenge_token' });
     const files = Object.fromEntries(Object.entries(req.files || {}).map(([k, v]) => [k, v[0]]));
+    // Cuestionario PLD (Ley Antilavado): se valida antes de guardar la identificación.
+    const pldAnswers = normalizeAnswers(Object.fromEntries(Object.entries(req.body).filter(([k]) => k.startsWith('pld_')).map(([k, v]) => [k.slice(4), v])));
+    const pldErrors = validateAnswers(pldAnswers);
+    if (pldErrors.length) return res.status(422).json({ errors: pldErrors });
     const out = await submitKyc(ctx.kyc.id, {
       docType: req.body.doc_type, curp: req.body.curp, files, consent: req.body.consent === '1',
       challenges: ch.c, userAgent: req.get('user-agent'), ip: req.ip,
     });
     if (!out.ok) return res.status(422).json({ errors: out.errors });
+    const pld = assessPld({ sessionId: ctx.kyc.session_id, kycId: ctx.kyc.id, answers: pldAnswers, curp: out.kyc.curp });
     const s = getSession(ctx.kyc.session_id);
     const approved = out.kyc.status === 'approved';
     const msg = ctx.lang === 'en'
       ? (approved ? '✅ Identity verified. Let\'s continue with your financing application.' : '✅ We received your ID; an advisor will review it shortly.')
       : (approved ? '✅ Identidad verificada. Sigamos con tu solicitud de crédito.' : '✅ Recibimos tu identificación; un asesor la revisará en breve.');
     if (s.wa_id) wa.sendText(s.wa_id, msg).catch(() => {}); // las sesiones de prueba de la landing no tienen WhatsApp
-    res.json({ status: out.kyc.status, analysis: out.analysis });
+    res.json({ status: out.kyc.status, analysis: out.analysis, pld: { status: pld.status, risk: pld.risk, flags: pld.flags, screening: { lists: pld.screening.lists, hit: pld.screening.hit } } });
   } catch (err) { next(err); }
 });
 

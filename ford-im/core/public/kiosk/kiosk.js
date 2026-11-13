@@ -12,6 +12,8 @@ const I18N = {
     end: 'Terminar', micNote: 'Usamos el micrófono sólo durante esta conversación. No se graba video.',
     voiceHint: '¿Prefieres seguir en tu celular? Escanea el código:', micDenied: 'No pudimos acceder al micrófono.',
     from: 'Desde', error: 'El asesor no está disponible. Intenta de nuevo.',
+    deskScan: 'Escanea para iniciar tu trámite', deskSub: '{seller} te atiende. Desde tu celular, seguro y en unos 3 minutos.',
+    deskStep1: 'Identidad (INE o pasaporte)', deskStep2: 'Ley Antilavado (PLD)', deskStep3: 'Crédito y firma', deskOf: 'Escritorio de',
   },
   en: {
     discover: 'Discover', scan: 'Scan and drive home a Ford',
@@ -21,6 +23,8 @@ const I18N = {
     end: 'End', micNote: 'The microphone is only used during this conversation. No video is recorded.',
     voiceHint: 'Prefer to continue on your phone? Scan the code:', micDenied: 'We could not access the microphone.',
     from: 'From', error: 'The advisor is unavailable. Please try again.',
+    deskScan: 'Scan to start your paperwork', deskSub: '{seller} is helping you. From your phone, secure, in about 3 minutes.',
+    deskStep1: 'Identity (ID or passport)', deskStep2: 'Anti-money-laundering (AML)', deskStep3: 'Financing and e-signature', deskOf: 'Desk of',
   },
 };
 
@@ -47,6 +51,12 @@ const loc = (v) => (v && typeof v === 'object' ? v[state.lang] ?? v.es : v);
 function applyI18n() {
   document.documentElement.lang = state.lang;
   document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = tr(el.dataset.i18n); });
+  if (state.desk) {
+    // Estación de escritorio: el QR inicia el onboarding con el vendedor de ese escritorio.
+    document.querySelector('[data-i18n="scan"]').textContent = tr('deskScan');
+    document.querySelector('[data-i18n="scanSub"]').textContent = tr('deskSub').replace('{seller}', state.desk.seller);
+    $('dealerName').textContent = `${state.desk.dealer} · ${tr('deskOf')} ${state.desk.seller}`;
+  }
   document.querySelectorAll('.lang button').forEach((b) => b.classList.toggle('on', b.dataset.lang === state.lang));
 }
 
@@ -63,7 +73,7 @@ function renderVehicle() {
   probe.onload = () => { img.style.backgroundImage = `url("${v.hero_image}")`; img.classList.remove('empty'); };
   if (v.hero_image) probe.src = v.hero_image;
   // El video de marca del kiosco (si existe) tiene prioridad sobre el del modelo.
-  playLoop(state.bgVideo || v.loop_video);
+  playLoop(state.desk ? null : state.bgVideo || v.loop_video); // la estación de escritorio no lleva video
   $('picker').querySelectorAll('button').forEach((b, i) => {
     b.classList.toggle('on', i === state.idx);
     if (i === state.idx) b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
@@ -276,6 +286,11 @@ async function boot() {
       state.vehicles = cfg.vehicles;
       state.bgVideo = cfg.background_video || null;
       $('dealerName').textContent = cfg.dealer?.name ?? 'Ford';
+      if (cfg.kiosk?.type === 'desk') {
+        state.desk = { seller: cfg.kiosk.seller_name || cfg.kiosk.seller, dealer: cfg.dealer?.name ?? '' };
+        state.bgVideo = null;
+        document.body.classList.add('desk');
+      }
       break;
     } catch (err) {
       $('qrWrap').classList.add('offline');

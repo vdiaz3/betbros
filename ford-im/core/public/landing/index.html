@@ -26,6 +26,7 @@
     <nav class="links" aria-label="Secciones">
       <a href="#como" data-i18n="nav.how">Cómo funciona</a>
       <a href="#features" data-i18n="nav.features">Funciones</a>
+      <a href="#pld" data-i18n="nav.pld">Ley Antilavado</a>
       <a href="#equipo" data-i18n="nav.hardware">Equipo</a>
       <a href="#precio" data-i18n="nav.pricing">Precio</a>
       <a href="#demo" data-i18n="nav.demo">Demo</a>
@@ -57,6 +58,7 @@
       <ul class="hero-points">
         <li data-i18n="hero.p1">Desde <b>$5,999 MXN</b>/mes con equipo incluido</li>
         <li data-i18n="hero.p2">Integración con tu DMS <b>sin costo</b></li>
+        <li data-i18n="hero.p4">Debida diligencia de <b>Ley Antilavado (PLD)</b> incluida</li>
         <li data-i18n="hero.p3">Despliegue inmediato a nivel nacional</li>
       </ul>
     </div>
@@ -107,7 +109,7 @@
       <li>
         <span class="num">3</span>
         <h3 data-i18n="how.s3t">Maneja y financia</h3>
-        <p data-i18n="how.s3d">Agenda la prueba de manejo, verifica su identidad (INE o pasaporte + prueba de vida) y la solicitud del banco se llena sola para firmar desde el celular.</p>
+        <p data-i18n="how.s3d">Agenda la prueba de manejo, verifica su identidad (INE o pasaporte + prueba de vida), responde el cuestionario de Ley Antilavado y la solicitud del banco se llena sola para firmar desde el celular.</p>
       </li>
       <li>
         <span class="num">4</span>
@@ -133,6 +135,34 @@
       <article class="card"><span class="ico">✍️</span><h3 data-i18n="feat.f7t">Firma electrónica</h3><p data-i18n="feat.f7d">Firma con DocuSign desde el celular, sin imprimir ni escanear. El banco registra su dictamen en un portal y el cliente recibe aviso por WhatsApp.</p></article>
       <article class="card"><span class="ico">📊</span><h3 data-i18n="feat.f8t">CRM y funnel en vivo</h3><p data-i18n="feat.f8d">Bandeja del vendedor, pipeline por etapa, agenda de pruebas y conversión de QR a crédito aprobado por agencia y por kiosco.</p></article>
       <article class="card"><span class="ico">🔒</span><h3 data-i18n="feat.f9t">Privacidad desde el diseño</h3><p data-i18n="feat.f9d">Avisos de privacidad y consentimiento expreso para crédito conforme a la LFPDPPP, con registro de cada aceptación.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- PLD -->
+<section class="section" id="pld">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow" data-i18n="pld.eyebrow">Cumplimiento</p>
+      <h2 data-i18n="pld.title">La Ley Antilavado ya viene incluida.</h2>
+      <p class="lead" data-i18n="pld.lead">En México, vender vehículos es una actividad vulnerable: la agencia debe identificar a su cliente y avisar al SAT cuando la operación pasa ciertos montos. Vamo hace la debida diligencia en el mismo recorrido del cliente, sin papeles ni pasos extra para tu vendedor.</p>
+      <ul class="checks">
+        <li data-i18n="pld.c1">Expediente de identificación: INE o pasaporte, prueba de vida y CURP</li>
+        <li data-i18n="pld.c2">Cuestionario de conocimiento del cliente: ocupación, origen de los recursos y forma de pago</li>
+        <li data-i18n="pld.c3">Beneficiario controlador y personas políticamente expuestas (PEP)</li>
+        <li data-i18n="pld.c4">Cotejo contra listas de personas bloqueadas y sanciones internacionales</li>
+        <li data-i18n="pld.c5">Nivel de riesgo y alertas: umbral de aviso al SAT y límite legal de efectivo</li>
+        <li data-i18n="pld.c6">Todo queda en el CRM, listo para tu oficial de cumplimiento</li>
+      </ul>
+    </div>
+    <div class="pld-card">
+      <p class="from" data-i18n="pld.cardTitle">Umbrales para venta de vehículos (2026)</p>
+      <dl>
+        <dt data-i18n="pld.t1">Identificación del cliente</dt><dd>3,210 UMA <b>≈ {{PLD_ID}}</b></dd>
+        <dt data-i18n="pld.t2">Aviso al SAT</dt><dd>6,420 UMA <b>≈ {{PLD_NOTICE}}</b></dd>
+        <dt data-i18n="pld.t3">Efectivo prohibido desde</dt><dd>3,210 UMA <b>≈ {{PLD_CASH}}</b></dd>
+      </dl>
+      <p class="fine" data-i18n="pld.fine">Ley Federal para la Prevención e Identificación de Operaciones con Recursos de Procedencia Ilícita (LFPIORPI). UMA 2026: $117.31. Vamo integra el expediente y las alertas; la agencia sigue siendo el sujeto obligado y presenta sus avisos en el portal del SAT.</p>
     </div>
   </div>
 </section>
@@ -170,10 +200,11 @@
     <p class="eyebrow" data-i18n="hw.eyebrow">Equipo incluido</p>
     <h2 data-i18n="hw.title">Pantallas y kioscos inteligentes, listos para tu piso de ventas.</h2>
     <p class="lead narrow" data-i18n="hw.lead">Rentamos el equipo, lo instalamos y lo monitoreamos de forma remota. Si una pantalla se desconecta, lo sabemos antes que tú.</p>
-    <div class="grid three">
+    <div class="grid four">
       <article class="card hw"><div class="hw-shape totem"></div><h3 data-i18n="hw.h1t">Tótem vertical táctil</h3><p data-i18n="hw.h1d">Para la entrada o junto al auto en exhibición. Video del modelo, QR y asesor de voz.</p></article>
       <article class="card hw"><div class="hw-shape wide"></div><h3 data-i18n="hw.h2t">Pantalla horizontal</h3><p data-i18n="hw.h2d">Para muro o sala de espera. Modo cine a pantalla completa con QR flotante.</p></article>
       <article class="card hw"><div class="hw-shape desk"></div><h3 data-i18n="hw.h3t">Kiosco de mostrador</h3><p data-i18n="hw.h3d">Para recepción, servicio o eventos. Compacto y con el mismo recorrido completo.</p></article>
+      <article class="card hw"><div class="hw-shape station"></div><h3 data-i18n="hw.h4t">Mini estación QR de escritorio</h3><p data-i18n="hw.h4d">Una en cada escritorio de vendedor. El cliente escanea y arranca su onboarding seguro y estándar: identidad y Ley Antilavado, ya asignado a ese vendedor.</p></article>
     </div>
   </div>
 </section>
@@ -194,7 +225,7 @@
       <ul class="checks">
         <li data-i18n="price.i1">Pantalla o kiosco inteligente, instalación y soporte</li>
         <li data-i18n="price.i2">Asesor con IA en WhatsApp y en el kiosco</li>
-        <li data-i18n="price.i3">Pruebas de manejo, KYC, crédito y firma electrónica</li>
+        <li data-i18n="price.i3">Pruebas de manejo, KYC, Ley Antilavado (PLD), crédito y firma electrónica</li>
         <li data-i18n="price.i4">CRM con funnel, bandeja del vendedor y reportes</li>
         <li data-i18n="price.i5">Integración con tu DMS sin costo</li>
       </ul>
@@ -226,7 +257,11 @@
       </a>
       <a class="demo-card" href="{{KYC_URL}}" target="_blank" rel="noopener">
         <div class="kyc-art" aria-hidden="true"><span class="id"></span><span class="face"></span></div>
-        <div><h3 data-i18n="demo.y">🪪 KYC con prueba de vida</h3><p data-i18n="demo.yd">Ábrelo en tu celular: captura de INE o pasaporte, selfie y retos de movimiento.</p><span class="go" data-i18n="demo.open">Abrir →</span></div>
+        <div><h3 data-i18n="demo.y">🪪 KYC con prueba de vida</h3><p data-i18n="demo.yd">Ábrelo en tu celular: INE o pasaporte, selfie, retos de movimiento y cuestionario de Ley Antilavado.</p><span class="go" data-i18n="demo.open">Abrir →</span></div>
+      </a>
+      <a class="demo-card" href="{{DESK_URL}}" target="_blank" rel="noopener">
+        <div class="station-art" aria-hidden="true"><span></span></div>
+        <div><h3 data-i18n="demo.s">🧾 Estación de escritorio</h3><p data-i18n="demo.sd">La mini pantalla del vendedor: el QR asigna al cliente y le envía su onboarding con identidad y Ley Antilavado.</p><span class="go" data-i18n="demo.open">Abrir →</span></div>
       </a>
       <a class="demo-card" href="{{CREDIT_FILLED}}" target="_blank" rel="noopener">
         <img src="{{BASE}}landing/img/credit-form.jpg" alt="Solicitud de crédito llenada" loading="lazy" width="900" height="1165" class="top">
@@ -250,6 +285,7 @@
     <details><summary data-i18n="faq.q2">¿Qué pasa si el cliente quiere hablar con una persona?</summary><p data-i18n="faq.a2">El asesor con IA pasa la conversación a un vendedor en la bandeja, con todo el contexto. El vendedor puede tomarla o devolverla al bot.</p></details>
     <details><summary data-i18n="faq.q3">¿Funciona con cualquier banco?</summary><p data-i18n="faq.a3">Sí. Cargamos la planilla de cada banco o financiera con la que trabajas; el demo usa una solicitud de ejemplo de BBVA.</p></details>
     <details><summary data-i18n="faq.q4">¿Cuánto tarda la instalación?</summary><p data-i18n="faq.a4">El despliegue es inmediato a nivel nacional: llevamos el equipo, lo instalamos y configuramos tu catálogo y tus agencias.</p></details>
+    <details><summary data-i18n="faq.q6">¿Cómo ayuda Vamo con la Ley Antilavado?</summary><p data-i18n="faq.a6">Cada cliente pasa por identificación, cuestionario de conocimiento del cliente y cotejo en listas antes de su solicitud. Vamo calcula si la venta requiere aviso al SAT, avisa si el efectivo rebasa el límite legal y deja el expediente en el CRM. Si el cliente aparece en listas, la solicitud de crédito se detiene.</p></details>
     <details><summary data-i18n="faq.q5">¿Sirve para otras marcas?</summary><p data-i18n="faq.a5">Sí. Vamo funciona con cualquier marca y grupo automotriz: cargamos tu catálogo, tus agencias y tus bancos.</p></details>
   </div>
 </section>

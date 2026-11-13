@@ -108,10 +108,28 @@ sistema. Ver `core/public/media/videos/LEEME.txt`. Las fichas técnicas de refer
 
 ![Funnel](img/crm-funnel.png)
 
+## Ley Antilavado (PLD) y estación de escritorio
+
+- **PLD:** la verificación de identidad incluye el cuestionario de la Ley Antilavado (LFPIORPI,
+  venta de vehículos): ocupación, origen de los recursos, forma de pago, beneficiario controlador
+  y PEP. El servidor coteja listas, calcula si la venta pasa los umbrales de identificación
+  (3,210 UMA) y de aviso al SAT (6,420 UMA) y si el efectivo rebasa el límite legal (3,210 UMA),
+  y asigna riesgo. El resultado aparece en el CRM. Si el cliente coincide con una lista, la
+  solicitud de crédito se detiene. Los umbrales se ajustan con `PLD_UMA_MXN`,
+  `PLD_IDENTIFICATION_UMA`, `PLD_NOTICE_UMA` y `PLD_CASH_LIMIT_UMA`.
+- **Estación de escritorio:** `/kiosco/k/E-DEMO-ANA?key=…` (la liga está en la landing) es la mini
+  pantalla del escritorio de Ana. El QR asigna el lead a Ana y envía por WhatsApp el onboarding
+  (identidad + PLD) sin pasar por el asesor de catálogo. Para agregar estaciones, se suma una
+  entrada `"type": "desk"` con su `seller` en `core/src/data/dealers.json`; su llave se deriva
+  del secreto del servidor.
+
 ## Qué es simulado
 
 - **KYC:** los puntajes de documento, prueba de vida y coincidencia facial son simulados
   (`KYC_PROVIDER=simulated`). Para producción: Truora, MetaMap o Incode con `KYC_PROVIDER=webhook`.
+- **PLD:** el cotejo en listas es simulado (`PLD_SCREENING=simulated`); sólo coincide la CURP de
+  prueba `XEXX010101HNEXXXA4`. Para producción se conecta un proveedor de listas y el oficial de
+  cumplimiento de la agencia presenta los avisos en el portal del SAT.
 - **CRM:** los 64 leads de ejemplo son ficticios (`DEMO_SEED=true`). Los leads reales del demo
   aparecen junto a ellos.
 - **Banco:** el correo llega a tu dirección de prueba y el dictamen se registra a mano en

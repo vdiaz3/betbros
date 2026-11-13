@@ -92,9 +92,25 @@ async function refreshConv() {
     <h3>Privacidad</h3><dl><dt>Aviso general</dt><dd>${d.consents.includes('privacy_notice_delivered') ? '✓ entregado' : '—'}</dd>
       <dt>Aviso crédito</dt><dd>${d.consents.includes('credit_privacy') ? '✓ ACEPTO' : '—'}</dd></dl>
     <h3>KYC</h3>${d.kyc ? `<dl><dt>Estado</dt><dd>${esc(KYC[d.kyc.status] || d.kyc.status)}</dd><dt>Documento</dt><dd>${esc(DOC[d.kyc.doc_type] || '—')}</dd></dl>` : '<p class="sub">No iniciado</p>'}
+    <h3>Ley Antilavado (PLD)</h3>${pldPanel(d.pld)}
     <h3>Crédito</h3>${c ? `<dl><dt>Folio</dt><dd>${esc(c.folio)}</dd><dt>Banco</dt><dd>${esc(c.bank)}</dd><dt>Estado</dt><dd>${esc(CREDIT[c.status] || c.status)}</dd>
       <dt>Mensualidad</dt><dd>${money(c.monthly)}</dd><dt>Faltantes</dt><dd>${c.missing}</dd></dl>` : '<p class="sub">Sin solicitud</p>'}
     ${state.me?.crm_url && s.crm_opportunity_id ? `<p><a target="_blank" href="${esc(state.me.crm_url)}/object/opportunity/${esc(s.crm_opportunity_id)}">Abrir en CRM ↗</a></p>` : ''}`;
+}
+
+const PLD_STATUS = { clear: '✓ Sin observaciones', review: '⚠️ Revisión de cumplimiento', blocked: '⛔ Coincidencia en listas' };
+const PLD_FLAG = { list_hit: 'Coincide en listas', cash_over_limit: 'Efectivo arriba del límite legal', pep: 'Persona políticamente expuesta', third_party: 'Compra por cuenta de un tercero', origin_other: 'Origen de recursos: otro' };
+const PLD_OBL = { identification: 'Integrar expediente de identificación', sat_notice: 'Presentar aviso al SAT (a más tardar el día 17 del mes siguiente)', beneficial_owner: 'Identificar al beneficiario controlador' };
+const PLD_ORIGEN = { salario: 'Sueldo', negocio: 'Negocio propio', ahorro: 'Ahorro', venta_bien: 'Venta de un bien', herencia: 'Herencia o donación', otro: 'Otro' };
+const PLD_PAGO = { credito: 'Crédito', transferencia: 'Transferencia', cheque: 'Cheque', efectivo: 'Efectivo', mixto: 'Mixto' };
+function pldPanel(p) {
+  if (!p) return '<p class="sub">Pendiente (se llena con la verificación de identidad)</p>';
+  return `<dl><dt>Resultado</dt><dd>${esc(PLD_STATUS[p.status] || p.status)}</dd><dt>Riesgo</dt><dd>${esc(p.risk)}</dd>
+    <dt>Listas</dt><dd>${esc(p.lists.length)} cotejadas${p.screening === 'simulated' ? ' (demo)' : ''}</dd>
+    <dt>Ocupación</dt><dd>${esc(p.ocupacion)}</dd><dt>Origen</dt><dd>${esc(PLD_ORIGEN[p.origen] || p.origen)}</dd><dt>Pago</dt><dd>${esc(PLD_PAGO[p.pago] || p.pago)}${p.cash_mxn ? ` · efectivo ${money(p.cash_mxn)}` : ''}</dd>
+    ${p.beneficiario ? `<dt>Beneficiario</dt><dd>${esc(p.beneficiario)}</dd>` : ''}</dl>
+    ${p.flags.length ? `<p class="sub">⚠️ ${p.flags.map((f) => esc(PLD_FLAG[f] || f)).join(' · ')}</p>` : ''}
+    ${p.obligations.length ? `<ul class="sub">${p.obligations.map((o) => `<li>${esc(PLD_OBL[o] || o)}</li>`).join('')}</ul>` : ''}`;
 }
 
 document.querySelectorAll('.chips button').forEach((b) => (b.onclick = () => {

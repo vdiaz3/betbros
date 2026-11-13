@@ -98,6 +98,19 @@ h1 { font-size: clamp(40px, 6vw, 120px); margin: 0.05em 0; line-height: 1; font-
 .qr.mini { width: min(18vh, 30vw); height: min(18vh, 30vw); margin: 0 auto; }
 
 
+/* Estación de escritorio del vendedor: pantalla chica (7–10") sólo con el QR de onboarding. */
+.desk-steps { display: none; }
+body.desk .bg video, body.desk .bg .hero-img, body.desk .caption, body.desk .picker, body.desk .voice-btn { display: none !important; }
+body.desk .bg { background: radial-gradient(90% 80% at 50% 30%, color-mix(in srgb, var(--accent) 45%, #071029), #02040f); }
+body.desk { --qr-size: min(62vw, 48vh); }
+body.desk .app { grid-template-rows: auto 1fr auto; }
+body.desk .qr-float { position: static; margin: 0 auto; align-self: center; width: min(92vw, calc(var(--qr-size) + 8vw)); animation: none; }
+body.desk .qr-title { font-size: clamp(20px, 4.2vw, 38px); }
+body.desk .qr-sub { font-size: clamp(13px, 2.4vw, 20px); }
+body.desk .desk-steps { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; list-style: none; padding: 0; margin: 1.6vh 0 0; }
+body.desk .desk-steps li { padding: 6px 12px; border-radius: 999px; background: rgb(255 255 255 / 0.14); font-size: clamp(11px, 2vw, 16px); font-weight: 600; }
+body.desk .dock { grid-template-columns: 1fr; justify-items: center; }
+
 /* Pantallas verticales (tótem 1080×1920) */
 @media (orientation: portrait) {
   :root { --qr-size: min(42vw, 26vh); }

@@ -1,5 +1,6 @@
 // KYC desde el celular: 1) consentimiento y tipo de documento, 2) foto del documento,
-// 3) prueba de vida con 3 retos, 4) CURP y envío, 5) resultado del análisis.
+// 3) prueba de vida con 3 retos, 4) cuestionario PLD (Ley Antilavado), 5) CURP y envío,
+// 6) resultado del análisis.
 const boot = JSON.parse(document.getElementById('boot').textContent);
 const L = boot.lang === 'en' ? 'en' : 'es';
 const root = document.getElementById('kyc');
@@ -21,6 +22,14 @@ const T = {
     analyzing: 'Analizando…', approved: '¡Identidad verificada!', submitted: 'Recibimos tu identificación', back: 'Regresa a WhatsApp para continuar con tu crédito.',
     openWa: 'Volver a WhatsApp', errors: 'Revisa lo siguiente:', noCam: 'No pudimos usar la cámara. Sube una foto desde tu galería.',
     already: 'Esta verificación ya fue enviada.', next: 'Continuar',
+    pld: 'Ley Antilavado (PLD)', pldIntro: 'Por ley, en la compra de un vehículo la agencia debe conocer a su cliente (Ley Federal para la Prevención e Identificación de Operaciones con Recursos de Procedencia Ilícita).',
+    ocupacion: 'Ocupación o actividad', origen: 'Origen de los recursos', pago: 'Forma de pago prevista', efectivo: 'Monto en efectivo (MXN)',
+    cashNote: 'Por ley no se puede pagar en efectivo un monto igual o mayor a', cuentaPropia: 'Compro por mi cuenta (soy el dueño de los recursos)',
+    beneficiario: 'Nombre de quien aporta los recursos (beneficiario controlador)', pep: 'Soy, o soy familiar cercano de, una persona políticamente expuesta (servidor público de alto nivel)',
+    origenes: { salario: 'Sueldo o salario', negocio: 'Negocio propio o actividad profesional', ahorro: 'Ahorro', venta_bien: 'Venta de un bien', herencia: 'Herencia o donación', otro: 'Otro' },
+    pagos: { credito: 'Crédito bancario', transferencia: 'Transferencia', cheque: 'Cheque', efectivo: 'Efectivo', mixto: 'Mixto (incluye efectivo)' },
+    pldErr: { pld_ocupacion: 'ocupación', pld_origen: 'origen de los recursos', pld_pago: 'forma de pago', pld_beneficiario: 'beneficiario controlador' },
+    pldOk: 'Ley Antilavado: listas y perfil revisados', pldReview: 'Ley Antilavado: un asesor revisará tu perfil', pldBlocked: 'Ley Antilavado: no podemos continuar en línea; un asesor te contactará',
   },
   en: {
     title: 'Identity verification', intro: 'Before your financing application we verify your identity. It takes about 2 minutes.',
@@ -38,13 +47,21 @@ const T = {
     analyzing: 'Analyzing…', approved: 'Identity verified!', submitted: 'We received your ID', back: 'Go back to WhatsApp to continue your application.',
     openWa: 'Back to WhatsApp', errors: 'Please check:', noCam: 'We couldn\'t use the camera. Upload a photo from your gallery.',
     already: 'This verification was already submitted.', next: 'Continue',
+    pld: 'Anti-money-laundering (AML)', pldIntro: 'By Mexican law, when you buy a vehicle the dealership must know its customer (anti-money-laundering law, LFPIORPI).',
+    ocupacion: 'Occupation or business', origen: 'Source of funds', pago: 'Planned payment method', efectivo: 'Cash amount (MXN)',
+    cashNote: 'By law, cash payments equal to or above this amount are not allowed:', cuentaPropia: 'I am buying for myself (the funds are mine)',
+    beneficiario: 'Name of the person providing the funds (beneficial owner)', pep: 'I am, or am a close relative of, a politically exposed person (senior public official)',
+    origenes: { salario: 'Salary', negocio: 'Own business or profession', ahorro: 'Savings', venta_bien: 'Sale of an asset', herencia: 'Inheritance or gift', otro: 'Other' },
+    pagos: { credito: 'Bank financing', transferencia: 'Bank transfer', cheque: 'Check', efectivo: 'Cash', mixto: 'Mixed (includes cash)' },
+    pldErr: { pld_ocupacion: 'occupation', pld_origen: 'source of funds', pld_pago: 'payment method', pld_beneficiario: 'beneficial owner' },
+    pldOk: 'AML: watchlists and profile checked', pldReview: 'AML: an advisor will review your profile', pldBlocked: 'AML: we can\'t continue online; an advisor will contact you',
   },
 }[L];
 
 const state = { docType: null, files: {}, stream: null, step: 0 };
 const h = (html) => { root.innerHTML = html; };
 const $ = (sel) => root.querySelector(sel);
-const steps = (n) => `<div class="steps">${[0, 1, 2, 3].map((i) => `<span class="${i <= n ? 'on' : ''}"></span>`).join('')}</div>`;
+const steps = (n) => `<div class="steps">${[0, 1, 2, 3, 4].map((i) => `<span class="${i <= n ? 'on' : ''}"></span>`).join('')}</div>`;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
@@ -153,7 +170,7 @@ async function liveness() {
     await sleep(500);
   }
   stopCam();
-  stepCurp();
+  stepPld();
 }
 
 function livenessFallback() {
@@ -166,12 +183,44 @@ function livenessFallback() {
     state.files[inp.dataset.k] = inp.files[0];
     $('#next').disabled = !keys.every((k) => state.files[k]);
   }));
-  $('#next').onclick = stepCurp;
+  $('#next').onclick = () => stepPld();
 }
 
-// --- Paso 4: CURP y envío ----------------------------------------------------------------
+// --- Paso 4: cuestionario PLD (Ley Antilavado) ------------------------------------------
+const mxn = (n) => `$${Math.round(n).toLocaleString('es-MX')} MXN`;
+function stepPld(errors = []) {
+  const a = state.pld || { cuenta_propia: true };
+  const opt = (list, labels, v) => `<option value="">—</option>${list.map((k) => `<option value="${k}"${k === v ? ' selected' : ''}>${labels[k]}</option>`).join('')}`;
+  h(`${steps(3)}<h1>⚖️ ${T.pld}</h1><p class="hint">${T.pldIntro}</p>
+    ${errors.length ? `<p class="error">${T.errors} ${errors.map((e) => esc(T.pldErr[e] || e)).join(', ')}</p>` : ''}
+    <label>${T.ocupacion}<input id="ocupacion" maxlength="120" value="${esc(a.ocupacion || '')}"></label>
+    <label>${T.origen}<select id="origen">${opt(boot.pld.origenes, T.origenes, a.origen_recursos)}</select></label>
+    <label>${T.pago}<select id="pago">${opt(boot.pld.pagos, T.pagos, a.forma_pago)}</select></label>
+    <label id="efWrap" hidden>${T.efectivo}<input id="efectivo" inputmode="numeric" value="${esc(a.efectivo_mxn || '')}">
+      <small class="hint">${T.cashNote} ${mxn(boot.pld.cashLimitMxn)}</small></label>
+    <label class="check"><input type="checkbox" id="propia"${a.cuenta_propia ? ' checked' : ''}> ${T.cuentaPropia}</label>
+    <label id="benWrap" hidden>${T.beneficiario}<input id="beneficiario" maxlength="160" value="${esc(a.beneficiario || '')}"></label>
+    <label class="check"><input type="checkbox" id="pep"${a.pep ? ' checked' : ''}> ${T.pep}</label>
+    <button class="btn" id="next">${T.next}</button>`);
+  const sync = () => {
+    $('#efWrap').hidden = !['efectivo', 'mixto'].includes($('#pago').value);
+    $('#benWrap').hidden = $('#propia').checked;
+  };
+  $('#pago').onchange = sync;
+  $('#propia').onchange = sync;
+  sync();
+  $('#next').onclick = () => {
+    state.pld = {
+      ocupacion: $('#ocupacion').value.trim(), origen_recursos: $('#origen').value, forma_pago: $('#pago').value,
+      efectivo_mxn: $('#efectivo').value, cuenta_propia: $('#propia').checked, beneficiario: $('#beneficiario').value.trim(), pep: $('#pep').checked,
+    };
+    stepCurp();
+  };
+}
+
+// --- Paso 5: CURP y envío ----------------------------------------------------------------
 function stepCurp(errors = []) {
-  h(`${steps(3)}<h1>${T.curp}</h1>
+  h(`${steps(4)}<h1>${T.curp}</h1>
     ${errors.length ? `<p class="error">${T.errors} ${errors.map(esc).join(', ')}</p>` : ''}
     <label>${T.curp}<input id="curp" maxlength="18" autocapitalize="characters" autocomplete="off" placeholder="XXXX000000XXXXXX00" value="${esc(state.curp || '')}"></label>
     <p class="hint">${T.curpHint}</p>
@@ -186,6 +235,7 @@ async function submit() {
   form.append('curp', state.curp);
   form.append('consent', '1');
   form.append('challenge_token', boot.challengeToken);
+  for (const [k, v] of Object.entries(state.pld || {})) form.append(`pld_${k}`, typeof v === 'boolean' ? (v ? '1' : '0') : v);
   for (const [k, blob] of Object.entries(state.files)) form.append(k, blob, `${k}.jpg`);
 
   const checks = [];
@@ -197,13 +247,24 @@ async function submit() {
     return stepCurp(['network']);
   }
   const json = await res.json().catch(() => ({}));
-  if (res.status === 422) return stepCurp(json.errors || []);
+  if (res.status === 422) {
+    const errs = json.errors || [];
+    return errs.some((e) => String(e).startsWith('pld_')) ? stepPld(errs) : stepCurp(errs);
+  }
   if (!res.ok) return h(`<p class="error">${esc(json.error || res.status)}</p>`);
 
   // Muestra el resultado del análisis paso a paso.
   for (const c of json.analysis?.checks || checks) {
     const li = document.createElement('li');
     li.innerHTML = `<span>${esc(c.label[L])}</span><b>${c.ok ? '✓' : '✗'}${c.score ? ` ${(c.score * 100).toFixed(1)}%` : ''}</b>`;
+    $('#checks').append(li);
+    await sleep(450);
+    li.classList.add('done');
+  }
+  if (json.pld) {
+    const li = document.createElement('li');
+    const txt = { clear: T.pldOk, review: T.pldReview, blocked: T.pldBlocked }[json.pld.status] || T.pldReview;
+    li.innerHTML = `<span>⚖️ ${esc(txt)}</span><b>${json.pld.status === 'clear' ? '✓' : '!'}</b>`;
     $('#checks').append(li);
     await sleep(450);
     li.classList.add('done');

@@ -51,7 +51,10 @@ export async function multipart(fd) {
 }
 
 // Completa el KYC simulado desde la liga que recibe el cliente.
-export async function completeKyc(req, kycUrl, { docType = 'ine', curp = 'HEGG560427MVZRRL04' } = {}) {
+// Respuestas PLD por defecto: comprador por cuenta propia, sin efectivo ni PEP (riesgo bajo).
+export const PLD_OK = { ocupacion: 'Ingeniera', origen_recursos: 'salario', forma_pago: 'credito', cuenta_propia: '1', pep: '0' };
+
+export async function completeKyc(req, kycUrl, { docType = 'ine', curp = 'HEGG560427MVZRRL04', pld = PLD_OK } = {}) {
   const u = new URL(kycUrl);
   const html = await (await req(u.host, u.pathname)).text();
   const boot = JSON.parse(html.match(/<script id="boot" type="application\/json">(.*?)<\/script>/s)[1]);
@@ -60,6 +63,7 @@ export async function completeKyc(req, kycUrl, { docType = 'ine', curp = 'HEGG56
   fd.append('curp', curp);
   fd.append('consent', '1');
   fd.append('challenge_token', boot.challengeToken);
+  for (const [k, v] of Object.entries(pld || {})) fd.append(`pld_${k}`, v);
   const img = () => new Blob([Buffer.alloc(12_000, 7)], { type: 'image/jpeg' });
   const files = [...(docType === 'ine' ? ['doc_frente', 'doc_reverso'] : ['doc_frente']), 'selfie', 'liveness_0', 'liveness_1', 'liveness_2'];
   for (const k of files) fd.append(k, img(), `${k}.jpg`);

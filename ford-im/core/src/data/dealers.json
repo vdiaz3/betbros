@@ -35,7 +35,20 @@
       "dealer_id": "dealer-demo",
       "location": "Showroom – entrada",
       "background_video": "videos/ford-brand-loop.mp4",
-      "vehicles": ["territory"]
+      "vehicles": [
+        "territory"
+      ]
+    },
+    {
+      "id": "E-DEMO-ANA",
+      "dealer_id": "dealer-demo",
+      "type": "desk",
+      "seller": "ana",
+      "seller_name": "Ana Torres",
+      "location": "Escritorio de ventas 1",
+      "vehicles": [
+        "territory"
+      ]
     }
   ]
 }

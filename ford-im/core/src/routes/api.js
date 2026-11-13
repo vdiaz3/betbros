@@ -15,6 +15,7 @@ import { transcribe } from '../services/voice.js';
 import { downloadMedia } from '../services/whatsapp.js';
 import { syncSession } from '../services/crm.js';
 import { latestKyc, setKycResult } from '../services/kyc.js';
+import { latestPld, pldSummary } from '../services/pld.js';
 import { logMessage } from '../services/messages.js';
 import * as testdrive from '../services/testdrive.js';
 import { dealers } from '../data/catalog.js';
@@ -88,6 +89,7 @@ r.post('/v1/inbound', wrap(async (req, res) => {
     body: inputWasAudio ? `🎙️ ${text}` : text || (media_id ? `📎 ${type}` : ''),
   });
   const kyc = latestKyc(s.id);
+  const pld = pldSummary(latestPld(s.id));
   const td = testdrive.activeTestDrive(s.id);
   const vehicle = getVehicle(s.vehicle_id);
   const dealer = getDealer(s.dealer_id);
@@ -113,6 +115,7 @@ r.post('/v1/inbound', wrap(async (req, res) => {
       credit: openCredit ? { id: openCredit.id, folio: openCredit.folio, bank_id: openCredit.bank_id, status: openCredit.status } : null,
       consents: sessions.listConsents(s.id).map((c) => c.type),
       kyc: kyc ? { status: kyc.status, doc_type: kyc.doc_type } : null,
+      pld,
       test_drive: td ? testdrive.describe(td, s.lang) : null,
       assigned_to: s.assigned_to,
       available_vehicles: vehicles.map((v) => ({ id: v.id, name: loc(v.name, s.lang) })),

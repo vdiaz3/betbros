@@ -90,6 +90,19 @@ CREATE TABLE IF NOT EXISTS kyc_checks (
   updated_at INTEGER NOT NULL
 );
 
+-- Debida diligencia de Prevención de Lavado de Dinero (LFPIORPI, venta de vehículos).
+CREATE TABLE IF NOT EXISTS pld_checks (
+  id TEXT PRIMARY KEY,
+  session_id TEXT NOT NULL,
+  kyc_id TEXT,
+  status TEXT NOT NULL,
+  risk TEXT NOT NULL,
+  answers_json TEXT NOT NULL,
+  result_json TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS pld_session ON pld_checks(session_id, created_at);
+
 CREATE TABLE IF NOT EXISTS messages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   session_id TEXT,

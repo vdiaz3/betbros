@@ -6,13 +6,14 @@ import { config, publicUrl } from '../config.js';
 import { vehicles, kiosks } from '../data/catalog.js';
 import { loc } from '../lib/i18n.js';
 import { page, esc } from '../lib/html.js';
+import { kioskKey } from '../lib/auth.js';
 
 const media = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public/media');
 const ls = (dir) => { try { return fs.readdirSync(path.join(media, dir)).filter((f) => !f.startsWith('.') && !f.endsWith('.txt')); } catch { return []; } };
 
 export default function demoHome(req, res) {
   const kiosk = kiosks[0];
-  const key = config.kioskKeys[kiosk?.id];
+  const key = kioskKey(kiosk?.id);
   const card = (title, desc, href, cta) => `<div class="card" style="margin-bottom:12px"><h2 style="margin:0 0 4px;font-size:1.1rem">${title}</h2><p style="margin:0 0 6px">${desc}</p><a class="btn" href="${esc(href)}">${cta}</a></div>`;
   const videos = ls('videos');
   const pdfs = ls('pdf');

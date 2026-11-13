@@ -1,5 +1,15 @@
+import crypto from 'node:crypto';
 import { config } from '../config.js';
+import { getKiosk } from '../data/catalog.js';
 import { safeEqual } from './token.js';
+
+// Llave de una pantalla (kiosco o estación de escritorio): la de KIOSK_KEYS o, si no tiene, una
+// derivada del secreto del servidor para las pantallas del catálogo.
+export function kioskKey(id) {
+  if (config.kioskKeys[id]) return config.kioskKeys[id];
+  if (!id || !getKiosk(id)) return null;
+  return crypto.createHmac('sha256', config.secret).update(`kiosk:${id}`).digest('base64url').slice(0, 24);
+}
 
 function bearer(req) {
   const h = req.get('authorization') || '';
@@ -15,7 +25,7 @@ export const requireAdmin = (req, res, next) =>
 export function requireKiosk(req, res, next) {
   const kioskId = req.get('x-kiosk-id') || req.query.kiosk;
   const key = req.get('x-kiosk-key') || req.query.key;
-  const expected = config.kioskKeys[kioskId];
+  const expected = kioskKey(kioskId);
   if (!expected || !safeEqual(key, expected)) return res.status(401).json({ error: 'kiosk_unauthorized' });
   req.kioskId = kioskId;
   next();

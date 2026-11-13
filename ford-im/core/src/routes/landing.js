@@ -7,10 +7,13 @@ import express from 'express';
 import { config, publicUrl } from '../config.js';
 import { kiosks, vehicles } from '../data/catalog.js';
 import { signToken } from '../lib/token.js';
-import { rateLimit } from '../lib/auth.js';
+import { rateLimit, kioskKey } from '../lib/auth.js';
 import { normLang } from '../lib/i18n.js';
 import { createWebDemoSession } from '../services/sessions.js';
 import { startKyc } from '../services/kyc.js';
+import { thresholds } from '../services/pld.js';
+
+const mxn = (n) => `$${Math.round(n).toLocaleString('en-US')} MXN`;
 
 const pub = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public/landing');
 const template = fs.readFileSync(path.join(pub, 'index.html'), 'utf8');
@@ -24,8 +27,10 @@ let html = null;
 export function home(req, res) {
   // Se arma una sola vez: las ligas sólo dependen de la configuración.
   html ??= (() => {
-    const kiosk = kiosks[0];
-    const key = config.kioskKeys[kiosk?.id];
+    const kiosk = kiosks.find((k) => k.type !== 'desk');
+    const desk = kiosks.find((k) => k.type === 'desk');
+    const th = thresholds();
+    const key = kioskKey(kiosk?.id);
     const view = config.crmViewKey ? `?k=${encodeURIComponent(config.crmViewKey)}` : '';
     const vars = {
       BASE: '/',
@@ -40,6 +45,9 @@ export function home(req, res) {
       TERMS_URL: publicUrl('legal', '/terminos?lang=es'),
       PRIVACY_URL: publicUrl('legal', '/privacidad?lang=es'),
       CONTACT_URL: process.env.SALES_CONTACT_URL || '#demo',
+      DESK_URL: desk ? publicUrl('kiosk', `/k/${desk.id}?key=${encodeURIComponent(kioskKey(desk.id))}`) : '#demo',
+      // Umbrales PLD calculados con la UMA configurada (los mismos que usa el producto).
+      PLD_ID: mxn(th.identification_mxn), PLD_NOTICE: mxn(th.notice_mxn), PLD_CASH: mxn(th.cash_limit_mxn),
     };
     return template.replace(/\{\{(\w+)\}\}/g, (m, k) => (k in vars ? attr(vars[k]) : m));
   })();

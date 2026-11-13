@@ -109,6 +109,7 @@ p { margin: 0 0 12px; }
 .chip-hi { background: var(--grad); color: #04111a; border: 0; font-weight: 800; }
 
 .three { grid-template-columns: repeat(3, 1fr); }
+.four { grid-template-columns: repeat(4, 1fr); }
 .hw { text-align: center; }
 .hw-shape { height: 150px; margin: 0 auto 20px; position: relative; display: grid; place-items: end center; }
 .hw-shape::before { content: ""; border-radius: 12px; border: 6px solid #2a3654; background: linear-gradient(160deg, #1b3a7a, #0c6b52); box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.06), 0 18px 40px rgb(0 0 0 / 0.4); }
@@ -119,6 +120,17 @@ p { margin: 0 0 12px; }
 .wide::after { width: 12px; height: 22px; }
 .desk::before { width: 120px; height: 86px; margin-bottom: 30px; transform: perspective(300px) rotateX(14deg); }
 .desk::after { width: 60px; height: 32px; border-radius: 6px 6px 2px 2px; }
+.station::before { width: 78px; height: 96px; margin-bottom: 14px; border-width: 5px; transform: perspective(300px) rotateX(10deg);
+  background: radial-gradient(circle at 50% 45%, #fff 0 26%, transparent 27%), linear-gradient(160deg, #1b3a7a, #0c6b52); }
+.station::after { width: 44px; height: 14px; }
+/* Ley Antilavado */
+.pld-card { padding: 30px; border-radius: 28px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 30px 80px rgb(0 0 0 / 0.35); }
+.pld-card dl { display: grid; grid-template-columns: 1fr auto; gap: 14px 18px; margin: 16px 0 6px; }
+.pld-card dt { color: var(--muted); }
+.pld-card dd { margin: 0; text-align: right; font-weight: 600; }
+.pld-card dd b { display: block; font: 800 20px/1.2 var(--head); background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.station-art { aspect-ratio: 16 / 9; display: grid; place-items: center; background: radial-gradient(60% 80% at 50% 50%, rgb(76 125 255 / 0.18), transparent), var(--surface-2); border-bottom: 1px solid var(--line); }
+.station-art span { width: 96px; height: 120px; border-radius: 14px; border: 6px solid #2a3654; background: radial-gradient(circle at 50% 42%, #fff 0 30%, transparent 31%), linear-gradient(160deg, #1b3a7a, #0c6b52); box-shadow: 0 16px 34px rgb(0 0 0 / 0.45); }
 
 /* Precio */
 .price-in { display: grid; grid-template-columns: 1fr 440px; gap: 56px; align-items: center; }
@@ -175,7 +187,7 @@ details p { color: var(--muted); margin: 12px 0 0; }
   .nav-right { margin-left: auto; }
   .hero-in, .split, .price-in { grid-template-columns: 1fr; }
   .hero-visual { margin-top: 10px; }
-  .steps, .grid, .three { grid-template-columns: repeat(2, 1fr); }
+  .steps, .grid, .three, .four { grid-template-columns: repeat(2, 1fr); }
   .stats-in { grid-template-columns: repeat(2, 1fr); }
   .stat:nth-child(3) { border-left: 0; }
   .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
@@ -188,7 +200,7 @@ details p { color: var(--muted); margin: 12px 0 0; }
   .hero-visual { padding: 0; }
   .screen { transform: none; }
   .phone { position: relative; left: auto; bottom: auto; margin: -60px 0 0 auto; width: 220px; }
-  .steps, .grid, .three { grid-template-columns: 1fr; }
+  .steps, .grid, .three, .four { grid-template-columns: 1fr; }
   .section, .final { padding: 64px 0; }
   .demo-card, .demo-card.big { grid-column: 1 / -1; }
   .price-card { padding: 26px; }

@@ -1,5 +1,6 @@
 // vendedor.menteia.com: bandeja del vendedor (conversaciones de WhatsApp en vivo, tomar/devolver
 // al bot, responder), funnel de venta y agenda de pruebas de manejo.
+import crypto from 'node:crypto';
 import express from 'express';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -15,6 +16,7 @@ import { getSession, updateSession, listConsents, STAGES } from '../services/ses
 import { listMessages } from '../services/messages.js';
 import { latestCreditForSession, creditStatus } from '../services/credit.js';
 import { latestKyc } from '../services/kyc.js';
+import { latestPld } from '../services/pld.js';
 import * as testdrive from '../services/testdrive.js';
 import * as wa from '../services/whatsapp.js';
 import { syncSession } from '../services/crm.js';
@@ -85,7 +87,10 @@ r.post('/login', rateLimit({ windowMs: 15 * 60_000, max: 20 }), express.urlencod
 r.get('/logout', (req, res) => res.set('Set-Cookie', `${COOKIE}=; Path=/; Max-Age=0`).redirect(302, `${req.baseUrl}/login`));
 
 r.use('/app', auth, express.static(pub, { maxAge: '5m' }));
-const indexHtml = fs.readFileSync(path.join(pub, 'index.html'), 'utf8');
+const version = crypto.createHash('sha1').update(['app.css', 'app.js'].map((f) => fs.readFileSync(path.join(pub, f))).join('')).digest('hex').slice(0, 10);
+const indexHtml = fs.readFileSync(path.join(pub, 'index.html'), 'utf8')
+  .replace('href="app/app.css"', `href="app/app.css?v=${version}"`)
+  .replace('src="app/app.js"', `src="app/app.js?v=${version}"`);
 r.get(['/', '/funnel', '/agenda'], auth, (req, res) => res.type('html').send(indexHtml.replace('__BASE__', `${req.baseUrl}/`)));
 
 // --- API de la bandeja -------------------------------------------------------------------
@@ -116,6 +121,7 @@ api.get('/conversations', (req, res) => {
 function details(s) {
   const credit = latestCreditForSession(s.id);
   const kyc = latestKyc(s.id);
+  const pld = latestPld(s.id);
   const td = testdrive.latestTestDrive(s.id);
   const dealer = getDealer(s.dealer_id);
   return {
@@ -124,6 +130,9 @@ function details(s) {
     dealer: dealer?.name ?? null,
     consents: listConsents(s.id).map((c) => c.type),
     kyc: kyc ? { status: kyc.status, doc_type: kyc.doc_type } : null,
+    pld: pld ? { status: pld.status, risk: pld.risk, flags: pld.flags, obligations: pld.obligations, amount_mxn: pld.amount_mxn, cash_mxn: pld.cash_mxn,
+      origen: pld.answers.origen_recursos, pago: pld.answers.forma_pago, ocupacion: pld.answers.ocupacion, beneficiario: pld.answers.cuenta_propia ? null : pld.answers.beneficiario,
+      lists: pld.screening.lists, screening: pld.screening.provider } : null,
     credit: credit ? (({ id, folio, bank, status, ready, simulation, missing_fields, missing_documents }) =>
       ({ id, folio, bank: bank.name, status, ready, monthly: simulation?.monthly_payment, missing: missing_fields.length + missing_documents.length }))(creditStatus(credit.id)) : null,
     test_drive: td ? testdrive.describe(td, 'es') : null,

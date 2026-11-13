@@ -1,7 +1,7 @@
 // Orquestación de los pasos "deterministas" del recorrido (los que no decide la IA):
 // bienvenida + aviso + video, avisos de privacidad, firma, envío al banco y dictamen.
 import { config, publicUrl, mediaUrl } from '../config.js';
-import { getVehicle, getDealer, getBank } from '../data/catalog.js';
+import { getVehicle, getDealer, getBank, getKiosk } from '../data/catalog.js';
 import { t, loc } from '../lib/i18n.js';
 import { signToken } from '../lib/token.js';
 import { logEvent } from '../db.js';
@@ -14,6 +14,7 @@ import { sendToBank } from './mailer.js';
 import { syncSession } from './crm.js';
 import { startKyc, isKycApproved, attachKycDocsToCredit, latestKyc } from './kyc.js';
 import { bookTestDrive, describe as describeTestDrive } from './testdrive.js';
+import { latestPld } from './pld.js';
 import { synthesize, splitForVoice } from './voice.js';
 
 const legalUrl = (doc, lang) => publicUrl('legal', `/${doc}?lang=${lang}`);
@@ -25,6 +26,8 @@ const crmSafe = (session, note) =>
 onStageChange((s) => crmSafe(s));
 
 export async function startConversation(sessionId) {
+  const station = getKiosk(getSession(sessionId)?.kiosk_id);
+  if (station?.type === 'desk') return startDeskOnboarding(sessionId, station);
   const s = getSession(sessionId);
   const vehicle = getVehicle(s.vehicle_id);
   const dealer = getDealer(s.dealer_id);
@@ -41,6 +44,17 @@ export async function startConversation(sessionId) {
   logEvent('greeting_sent', { sessionId, data: { privacy_version: config.legal.privacyVersion } });
   crmSafe(s, { title: 'Lead desde kiosco', body: `Escaneó el QR del ${vars.vehicle} en ${dealer?.name ?? '-'} (kiosco ${s.kiosk_id ?? '-'}).` });
   return { sent: ['welcome', vehicle?.video_url ? 'video' : null, vehicle?.review ? 'review' : null].filter(Boolean) };
+}
+
+async function startDeskOnboarding(sessionId, station) {
+  const seller = station.seller_name || station.seller;
+  const s = updateSession(sessionId, { assigned_to: station.seller || null });
+  const dealer = getDealer(s.dealer_id);
+  await wa.sendText(s.wa_id, t(s.lang, 'welcomeDesk', { name: s.name?.split(' ')[0], seller, dealer: dealer?.name ?? 'la agencia', privacyUrl: legalUrl('privacidad', s.lang) }));
+  const { url } = await sendKycLink(sessionId);
+  logEvent('desk_onboarding_started', { sessionId, kioskId: station.id, data: { seller: station.seller } });
+  crmSafe(getSession(sessionId), { title: `Onboarding en escritorio de ${seller}`, body: `Escaneó la estación ${station.id} (${station.location ?? '-'}).` });
+  return { sent: ['welcome_desk', 'kyc_link'], kyc_url: url };
 }
 
 // Respuesta del agente: en texto o como nota de voz (si el cliente habló por audio).
@@ -176,6 +190,8 @@ export async function confirmTestDrive(sessionId, startsAt) {
 export function openCredit(sessionId, bankId) {
   if (!hasConsent(sessionId, 'credit_privacy')) throw Object.assign(new Error('credit_privacy_consent_missing'), { status: 409 });
   if (!isKycApproved(sessionId)) throw Object.assign(new Error('kyc_required'), { status: 409, details: { kyc: latestKyc(sessionId)?.status ?? 'not_started' } });
+  // Ley Antilavado: si el cliente aparece en listas, la operación se detiene y la atiende cumplimiento.
+  if (latestPld(sessionId)?.status === 'blocked') throw Object.assign(new Error('pld_blocked'), { status: 409 });
   const c = startCredit(sessionId, bankId);
   attachKycDocsToCredit(sessionId, c.id);
   const kyc = latestKyc(sessionId);
