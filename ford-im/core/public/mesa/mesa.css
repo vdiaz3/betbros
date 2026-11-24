@@ -76,6 +76,28 @@ body.landing { background: #0d0d0b; color: #f3f1ec; --surface: #191915; --surfac
 .l-mock .row { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
 .l-mock .row:last-child { border: 0; }
 
+/* --- Hero con video a pantalla completa --- */
+.l-video { position: relative; min-height: 100vh; min-height: 100svh; display: flex; align-items: flex-end; padding: 120px 0 110px; overflow: hidden; }
+.l-video::before, .l-video::after { display: none; }
+.l-bgvid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; background: #0d0d0b; }
+.l-shade { position: absolute; inset: 0; z-index: 1; background:
+  linear-gradient(180deg, rgb(13 13 11 / 0.55) 0%, transparent 22%, transparent 45%, rgb(13 13 11 / 0.92) 100%),
+  linear-gradient(90deg, rgb(13 13 11 / 0.75) 0%, rgb(13 13 11 / 0.15) 60%, transparent 100%); }
+.l-hero-copy { position: relative; z-index: 2; display: block !important; }
+.l-hero-copy h1 { max-width: 820px; text-shadow: 0 4px 30px rgb(0 0 0 / 0.5); }
+.l-hero-copy .l-lead { max-width: 640px; color: #e6e2d9; text-shadow: 0 2px 16px rgb(0 0 0 / 0.6); }
+.l-vidctl { position: absolute; z-index: 3; right: 24px; bottom: 28px; display: flex; gap: 10px; }
+.l-vidctl button { border: 1px solid rgb(255 255 255 / 0.28); background: rgb(13 13 11 / 0.55); color: #fff; border-radius: 999px; padding: 10px 16px; font-weight: 700;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.l-vidctl button[aria-pressed="true"] { background: #2dd4bf; color: #062a26; border-color: #2dd4bf; }
+.l-vidctl button:hover { border-color: #2dd4bf; }
+.l-scroll { position: absolute; z-index: 3; left: 50%; bottom: 26px; transform: translateX(-50%); color: #fff; text-decoration: none; font-size: 24px; opacity: 0.7; animation: nudge 2s ease-in-out infinite; }
+@keyframes nudge { 50% { transform: translate(-50%, 6px); } }
+.l-deck { position: relative; aspect-ratio: 16 / 9; margin-top: 20px; border-radius: 20px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 80px rgb(0 0 0 / 0.5); background: #0e0e10; }
+.l-deck iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+@media (max-width: 640px) { .l-shade { background: linear-gradient(180deg, rgb(13 13 11 / 0.55), rgb(13 13 11 / 0.7) 40%, rgb(13 13 11 / 0.92)); } .l-video { padding-bottom: 96px; } .l-vidctl { right: 12px; bottom: 16px; } .l-scroll { display: none; } }
+@media (prefers-reduced-motion: reduce) { .l-scroll { animation: none; } }
+
 /* --- Portal del empleado --- */
 body.portal main { width: min(980px, 100% - 28px); margin: 20px auto 120px; }
 .days { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }

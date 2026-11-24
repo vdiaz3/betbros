@@ -1,30 +1,27 @@
-<header class="topbar" style="background:transparent;border:0;position:absolute;left:0;right:0">
+<header class="topbar" style="background:transparent;border:0;position:absolute;left:0;right:0;z-index:5">
   <a class="brand" href="./"><img src="assets/mesa-mark.svg" alt="" width="32" height="32"><span>vamo mesa<br><small>by Vamo</small></span></a>
   <div class="spacer"></div>
   <a class="btn sm ghost" href="#demo">Ver demo</a>
 </header>
 
-<section class="l-hero">
-  <div class="wrap">
-    <div>
-      <p class="l-family">Familia Vamo · <a href="/">Vamo Autos</a> · <b>Vamo Mesa</b></p>
-      <p class="l-eyebrow">Comedores corporativos</p>
-      <h1>El comedor de tu empresa, sin filas ni desperdicio.</h1>
-      <p class="l-lead">Vamo Mesa conecta a los colaboradores, la cocina y la administración: menú del día o de la semana, precompra con el beneficio de comedor, kiosco táctil, tablero de pase sin papel, inventarios, encuestas de satisfacción e indicadores en tiempo real.</p>
-      <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><a class="btn" href="#demo">Probar la demo</a><a class="btn ghost" href="#como">Cómo funciona</a><a class="btn ghost" href="#equipo">Equipo</a></p>
-    </div>
-    <div class="l-kiosk">
-    <img src="assets/img/summit-pago.png" alt="Kiosco Touch Dynamic Summit con pantalla de pago" width="760" height="760">
-    <div class="l-mock" aria-hidden="true">
-      <p class="muted small" style="margin:0 0 6px">Hoy en el comedor</p>
-      <div class="row"><span>🍗 Menú del día · pollo en mole</span><b>62 / 90</b></div>
-      <div class="row"><span>🍣 Premium · salmón a la parrilla</span><b>18 / 25</b></div>
-      <div class="row"><span>🥗 Grab &amp; go · ensalada César</span><b>31 / 40</b></div>
-      <div class="row"><span>⏱️ Tiempo promedio de preparación</span><b>9.4 min</b></div>
-      <div class="row"><span>⭐ Satisfacción</span><b>4.4 / 5</b></div>
-    </div>
-    </div>
+<section class="l-hero l-video" aria-label="Vamo Mesa en video">
+  <video id="heroVid" class="l-bgvid" autoplay muted loop playsinline preload="metadata" poster="assets/video/vamo-mesa-poster.jpg" aria-label="Video: cómo funciona Vamo Mesa en un comedor corporativo">
+    <source src="assets/video/vamo-mesa.mp4" type="video/mp4">
+    <source src="assets/video/vamo-mesa.webm" type="video/webm">
+  </video>
+  <div class="l-shade" aria-hidden="true"></div>
+  <div class="wrap l-hero-copy">
+    <p class="l-family">Familia Vamo · <a href="/">Vamo Autos</a> · <b>Vamo Mesa</b></p>
+    <p class="l-eyebrow">Comedores corporativos</p>
+    <h1>El comedor de tu empresa, sin filas ni desperdicio.</h1>
+    <p class="l-lead">Menú del día o de la semana, precompra con el beneficio de comedor, kiosco táctil, pase sin papel, inventarios, encuestas de satisfacción e indicadores en tiempo real.</p>
+    <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:24px"><a class="btn" href="#demo">Probar la demo</a><a class="btn ghost" href="#presentacion">Ver la presentación</a><a class="btn ghost" href="#como">Cómo funciona</a></p>
   </div>
+  <div class="l-vidctl">
+    <button type="button" id="vidSound" aria-pressed="false"><span aria-hidden="true">🔇</span> Activar sonido</button>
+    <button type="button" id="vidPlay" aria-label="Pausar video"><span aria-hidden="true">⏸</span></button>
+  </div>
+  <a class="l-scroll" href="#equipo" aria-label="Seguir bajando">↓</a>
 </section>
 
 <section class="l-section" id="equipo">
@@ -62,6 +59,19 @@
       <article class="l-feat"><div class="ico">⏱️</div><h3>Tiempos de servicio</h3><p>Tiempo de preparación y tiempo en piso (del pedido listo a la entrega) por pedido, por día y por hora.</p></article>
       <article class="l-feat"><div class="ico">📥</div><h3>Reportes exportables</h3><p>Platillos, tiempos, satisfacción e inventario por rango de fechas, en pantalla o en CSV para tu ERP o nómina.</p></article>
     </div>
+  </div>
+</section>
+
+<section class="l-section" id="presentacion">
+  <div class="wrap">
+    <p class="l-eyebrow">Presentación</p>
+    <h2>La propuesta, lámina por lámina.</h2>
+    <p class="muted">Haz clic en la presentación o usa las flechas para avanzar; cada lámina se anima sola.</p>
+    <div class="l-deck"><iframe src="/ponencias/vm-newrest-6f3a91c2/?nointro" title="Presentación de Vamo Mesa" loading="lazy" allow="fullscreen"></iframe></div>
+    <p style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <a class="btn" href="/ponencias/vm-newrest-6f3a91c2/" target="_blank" rel="noopener">Ver en pantalla completa ↗</a>
+      <a class="btn ghost" href="/ponencias/newrest-vamo-mesa/vamo-mesa-newrest.pdf" target="_blank" rel="noopener">Descargar PDF</a>
+    </p>
   </div>
 </section>
 
