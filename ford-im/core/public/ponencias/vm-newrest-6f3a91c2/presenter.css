@@ -1,0 +1,16 @@
+#presenter { position: fixed; inset: 0; background: #111114; color: #eee; font: 18px/1.5 'IBM Plex Sans', sans-serif; padding: 18px 22px; overflow: auto; cursor: default; }
+#presenter[hidden] { display: none; }
+#presenter header { display: flex; justify-content: space-between; align-items: center; gap: 20px; border-bottom: 1px solid #2b2b33; padding-bottom: 12px; margin-bottom: 16px; }
+#presenter #p-title { font: 600 28px 'Oswald', sans-serif; margin: 0 10px; }
+#presenter #p-num { font: 500 20px 'IBM Plex Mono'; color: #2bb39a; }
+#presenter .clocks b { font: 700 34px 'Oswald', sans-serif; margin-right: 18px; font-variant-numeric: tabular-nums; }
+#presenter .dim { color: #8a8a93; font-size: 16px; }
+#presenter .cols { display: grid; grid-template-columns: 1.15fr 1fr; gap: 26px; }
+#presenter iframe { width: 100%; aspect-ratio: 16 / 9; border: 1px solid #2b2b33; border-radius: 10px; background: #000; display: block; }
+#presenter #p-nextframe { width: 70%; opacity: .85; }
+#presenter .anim { height: 10px; background: #26262c; border-radius: 6px; margin-top: 12px; overflow: hidden; }
+#presenter #p-anim { height: 100%; width: 0; background: #2bb39a; transition: width .25s linear; }
+#presenter #p-notes { font-size: 24px; line-height: 1.5; background: #19191d; border-radius: 12px; padding: 18px 22px; max-height: 52vh; overflow: auto; margin-bottom: 14px; }
+#presenter .btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+#presenter button { background: #23232a; color: #eee; border: 1px solid #3a3a44; border-radius: 10px; padding: 12px 18px; font: 600 17px 'IBM Plex Sans'; cursor: pointer; }
+#presenter #p-next { background: #2bb39a; color: #06110f; border-color: #2bb39a; flex: 1; font-size: 20px; }
