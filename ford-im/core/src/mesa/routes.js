@@ -41,13 +41,13 @@ function employee(req, res, next) {
 // Páginas: plantilla con versión en las URLs (Cloudflare no sirve CSS/JS viejos).
 const version = crypto.createHash('sha1').update(fs.readdirSync(pub).filter((f) => /\.(js|css)$/.test(f)).sort().map((f) => fs.readFileSync(path.join(pub, f))).join('')).digest('hex').slice(0, 10);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-function page(title, body, { script = null, bodyClass = '' } = {}) {
+function page(title, body, { script = null, bodyClass = '', head = '', googleFonts = true } = {}) {
   return `<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex"><title>${esc(title)}</title><base href="${publicUrl('mesa', '/')}">
 <link rel="icon" href="assets/mesa-mark.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap">
-<link rel="stylesheet" href="assets/mesa.css?v=${version}"></head>
+${googleFonts ? `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap">` : '<link rel="preload" href="assets/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin>'}
+${head}<link rel="stylesheet" href="assets/mesa.css?v=${version}"></head>
 <body class="${bodyClass}">${body}${script ? `<script type="module" src="assets/${script}?v=${version}"></script>` : ''}</body></html>`;
 }
 const file = (f) => fs.readFileSync(path.join(pub, f), 'utf8');
@@ -59,7 +59,17 @@ r.use(express.json({ limit: '200kb' }));
 r.get('/', (req, res) => {
   const k = encodeURIComponent(staffKey());
   const links = { APP: 'app', KIOSK: `kiosco?k=${k}`, KITCHEN: `cocina?k=${k}`, PASS: `pase?k=${k}`, PICKUP: `pase?modo=salida&k=${k}` };
-  res.set('Cache-Control', 'no-cache').send(page('Vamo Mesa · Comedores corporativos', file('landing.html').replace(/\{\{(\w+)\}\}/g, (m, key) => esc(links[key] ?? m)), { script: 'landing.js', bodyClass: 'landing' }));
+  // Vista previa al compartir (WhatsApp, X, LinkedIn): descripción e imagen 1200×630.
+  const desc = 'El comedor de tu empresa sin filas ni desperdicio: precompra con el beneficio de comedor, kiosco táctil, pase sin papel, inventarios, encuestas e indicadores en tiempo real.';
+  const og = publicUrl('mesa', '/assets/img/og-vamo-mesa.jpg');
+  const head = `<meta name="description" content="${esc(desc)}">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Vamo Mesa"><meta property="og:locale" content="es_MX">
+<meta property="og:title" content="Vamo Mesa · Comedores corporativos sin filas"><meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${esc(publicUrl('mesa', '/'))}"><meta property="og:image" content="${esc(og)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Kiosco de Vamo Mesa en un comedor corporativo">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Vamo Mesa · Comedores corporativos sin filas"><meta name="twitter:description" content="${esc(desc)}"><meta name="twitter:image" content="${esc(og)}">
+`;
+  res.set('Cache-Control', 'no-cache').send(page('Vamo Mesa · Comedores corporativos', file('landing.html').replace(/\{\{(\w+)\}\}/g, (m, key) => esc(links[key] ?? m)), { script: 'landing.js', bodyClass: 'landing', head, googleFonts: false }));
 });
 r.get('/app', (req, res) => res.send(page('Vamo Mesa · Mi comedor', '<div id="app"></div>', { script: 'app.js', bodyClass: 'portal' })));
 r.get('/kiosco', staff, (req, res) => res.send(page('Vamo Mesa · Kiosco', '<div id="app"></div>', { script: 'kiosk.js', bodyClass: 'kiosk' })));

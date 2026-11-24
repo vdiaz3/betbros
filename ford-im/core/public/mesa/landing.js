@@ -14,8 +14,7 @@ const playBtn = document.getElementById('vidPlay');
 if (vid && soundBtn && playBtn) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const setPlayIcon = () => {
-    playBtn.innerHTML = vid.paused ? '<span aria-hidden="true">▶</span>' : '<span aria-hidden="true">⏸</span>';
-    playBtn.setAttribute('aria-label', vid.paused ? 'Reproducir video' : 'Pausar video');
+    playBtn.textContent = vid.paused ? 'Reproducir' : 'Pausa';
   };
   if (reduce) vid.pause();
   vid.addEventListener('play', setPlayIcon);
@@ -26,7 +25,7 @@ if (vid && soundBtn && playBtn) {
     vid.muted = !on;
     if (on) { vid.currentTime = 0; vid.play().catch(() => {}); }
     soundBtn.setAttribute('aria-pressed', String(on));
-    soundBtn.innerHTML = on ? '<span aria-hidden="true">🔊</span> Sonido activado' : '<span aria-hidden="true">🔇</span> Activar sonido';
+    soundBtn.textContent = on ? 'Silenciar' : 'Activar sonido';
   });
   playBtn.addEventListener('click', () => (vid.paused ? vid.play().catch(() => {}) : vid.pause()));
   let pausedByScroll = false;
