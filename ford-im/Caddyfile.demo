@@ -14,3 +14,16 @@ cotizador.menteia.com {
 	}
 	reverse_proxy core:3000
 }
+
+# Presentaciones. Responde por HTTP y por HTTPS (certificado interno) para funcionar con el proxy de
+# Cloudflare tanto en modo SSL "Flexible" como "Full". Registro DNS A ponencias → IP del servidor.
+http://ponencias.menteia.com {
+	encode zstd gzip
+	reverse_proxy core:3000
+}
+
+https://ponencias.menteia.com {
+	tls internal
+	encode zstd gzip
+	reverse_proxy core:3000
+}

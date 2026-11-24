@@ -44,6 +44,8 @@ export function createApp() {
     api: express.Router().use(api).use('/admin', admin),
     go, kiosk, kyc, firma, bancos, legal, vendedor, mesa,
     media: express.static(path.resolve(here, '../public/media'), { maxAge: '1h' }),
+    // Presentaciones (ponencias.menteia.com y /ponencias en el demo).
+    ponencias: express.static(path.resolve(here, '../public/ponencias'), { maxAge: '10m' }),
   };
 
   // Modo demo: un solo subdominio (SINGLE_HOST=cotizador.menteia.com), cada sitio en su ruta.

@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Vamo Mesa × Newrest México</title>
+<link rel="icon" href="img/mesa-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap">
+<style>
+:root { --bg: #0d0d0b; --s1: #181815; --s2: #22221d; --ink: #f3f1ec; --muted: #a8a399; --line: rgb(243 241 236 / 0.12);
+  --teal: #2dd4bf; --amber: #fbbf24; --grad: linear-gradient(120deg, #fbbf24, #2dd4bf); --head: "Sora", "Inter", system-ui, sans-serif; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #050504; color: var(--ink); font: 400 20px/1.45 "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+.deck { position: fixed; inset: 0; display: grid; place-items: center; }
+.slide { position: absolute; width: 1280px; height: 720px; padding: 64px 76px; background: var(--bg); overflow: hidden; display: none; flex-direction: column;
+  transform-origin: center; box-shadow: 0 30px 90px rgb(0 0 0 / 0.6); }
+.slide.on { display: flex; }
+.slide::before { content: ""; position: absolute; width: 520px; height: 520px; right: -200px; top: -240px; border-radius: 50%; background: #f59e0b; filter: blur(120px); opacity: 0.16; pointer-events: none; }
+h1, h2, h3 { font-family: var(--head); letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 18px; }
+h1 { font-size: 64px; } h2 { font-size: 42px; } h3 { font-size: 22px; margin-bottom: 8px; }
+p { margin: 0 0 12px; } .muted { color: var(--muted); } .small { font-size: 15px; }
+.eyebrow { font: 700 14px/1 "Inter", sans-serif; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber); margin-bottom: 16px; }
+.grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.cols { display: grid; gap: 22px; } .c2 { grid-template-columns: 1fr 1fr; } .c3 { grid-template-columns: repeat(3, 1fr); } .c4 { grid-template-columns: repeat(4, 1fr); }
+.card { background: var(--s1); border: 1px solid var(--line); border-radius: 18px; padding: 20px 22px; }
+.card p { color: var(--muted); font-size: 16px; margin: 0; } .card .ico { font-size: 30px; margin-bottom: 8px; }
+.stat b { display: block; font: 800 44px/1 var(--head); } .stat span { color: var(--muted); font-size: 15px; }
+ul.ticks { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; font-size: 19px; }
+ul.ticks li { padding-left: 32px; position: relative; } ul.ticks li::before { content: "✓"; position: absolute; left: 0; color: var(--teal); font-weight: 800; }
+.shot { border-radius: 14px; border: 1px solid var(--line); box-shadow: 0 20px 50px rgb(0 0 0 / 0.5); width: 100%; display: block; }
+.foot { position: absolute; left: 76px; right: 76px; bottom: 26px; display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+.brand { display: inline-flex; align-items: center; gap: 10px; font: 800 18px/1 var(--head); }
+.compact .card { padding: 12px 14px; } .compact .card h3 { font-size: 18px; margin-bottom: 4px; } .compact .card p { font-size: 14px; }
+.flow .card { padding: 12px 18px; }
+.flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 10px; }
+.flow .card { position: relative; } .flow .n { font: 800 15px/1 var(--head); color: var(--bg); background: var(--grad); width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; margin-bottom: 10px; }
+table.cmp { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 16px; }
+table.cmp th, table.cmp td { padding: 11px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+table.cmp th { font: 700 15px/1.2 "Inter", sans-serif; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+table.cmp td:first-child { color: var(--muted); width: 26%; } table.cmp .lease { background: rgb(45 212 191 / 0.08); }
+table.cmp th.lease { color: var(--teal); border-top: 2px solid var(--teal); border-radius: 10px 10px 0 0; }
+.badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; background: rgb(45 212 191 / 0.15); color: var(--teal); }
+.phase { border-top: 3px solid var(--teal); } .phase:nth-child(2) { border-color: var(--amber); } .phase:nth-child(3) { border-color: #a78bfa; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; } .chips span { padding: 9px 14px; border-radius: 12px; background: var(--s2); border: 1px solid var(--line); font-size: 16px; font-weight: 600; }
+.nav { position: fixed; bottom: 14px; right: 18px; display: flex; gap: 8px; align-items: center; font-size: 14px; color: var(--muted); z-index: 5; }
+.nav button, .nav a { background: var(--s2); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px; font: inherit; cursor: pointer; text-decoration: none; }
+@media print {
+  @page { size: 1280px 720px; margin: 0; }
+  html, body { overflow: visible; height: auto; background: var(--bg); }
+  .deck { position: static; display: block; } .nav { display: none; }
+  .slide { display: flex !important; position: relative; transform: none !important; box-shadow: none; page-break-after: always; break-after: page; }
+}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- 1. Portada -->
+<section class="slide">
+  <img src="img/summit-pago.png" alt="" style="position:absolute;right:30px;top:40px;height:600px;width:auto;filter:drop-shadow(0 40px 60px rgb(0 0 0 / .6))">
+  <div style="margin-top:auto;max-width:820px;position:relative">
+    <p class="eyebrow">Propuesta de solución · Newrest México</p>
+    <h1 style="font-size:70px">Comedores corporativos<br><span class="grad">sin filas ni desperdicio.</span></h1>
+    <p class="muted" style="font-size:23px;max-width:740px">Vamo Mesa para la operación de Newrest en las oficinas corporativas de Nike: menú, precompra con beneficio, cocina, inventarios, satisfacción e indicadores en una sola plataforma.</p>
+  </div>
+  <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:end;position:relative">
+    <span class="brand"><img src="img/mesa-mark.svg" width="40" height="40" alt="">vamo mesa <span class="muted small" style="font-weight:500">· familia Vamo</span></span>
+    <span class="muted small">Noviembre 2026 · Documento sin propuesta económica</span>
+  </div>
+</section>
+
+<!-- 2. Newrest -->
+<section class="slide">
+  <p class="eyebrow">Para quién lo diseñamos</p>
+  <h2>Newrest México: escala para servir bien todos los días</h2>
+  <div class="cols c4" style="margin:18px 0 26px">
+    <div class="card stat"><b class="grad">113,000</b><span>alimentos servidos diariamente</span></div>
+    <div class="card stat"><b>+150</b><span>sitios</span></div>
+    <div class="card stat"><b>19</b><span>estados donde opera</span></div>
+    <div class="card stat"><b>3,800</b><span>colaboradores</span></div>
+  </div>
+  <div class="cols c2">
+    <div><h3>Business &amp; Industry desde 2025</h3><p class="muted">Restauración colectiva y Facility Management que se suman a su operación de catering aéreo en México desde 1998. Comedores corporativos como el de Nike exigen experiencia de cliente al nivel de la marca.</p></div>
+    <div><h3>Lo que ya los distingue</h3><div class="chips"><span>ISO 9001</span><span>Distintivo H</span><span>ESR</span><span>EcoVadis</span><span>Catering Unlimited</span></div>
+    <p class="muted small" style="margin-top:12px">Vamo Mesa suma datos a esa promesa: cada plato, tiempo y opinión, medido.</p></div>
+  </div>
+  <div class="foot"><span>Fuente: newrest.eu/es/nuestra-red/mexico</span><span>2</span></div>
+</section>
+
+<!-- 3. Reto -->
+<section class="slide">
+  <p class="eyebrow">El reto</p>
+  <h2>Un comedor corporativo pierde dinero y confianza en cinco lugares</h2>
+  <div class="cols c3" style="margin-top:14px">
+    <div class="card"><div class="ico">⏳</div><h3>Filas en hora pico</h3><p>Todos llegan entre 13:00 y 14:30. Cada minuto en fila es tiempo de trabajo y una mala experiencia.</p></div>
+    <div class="card"><div class="ico">🗑️</div><h3>Producción a ciegas</h3><p>Sin saber cuántos van a comer qué, se cocina de más (merma) o de menos (agotados).</p></div>
+    <div class="card"><div class="ico">💳</div><h3>Cobro del beneficio manual</h3><p>Vales, listas o conciliaciones en hojas: lento de operar y difícil de auditar para el cliente.</p></div>
+    <div class="card"><div class="ico">📦</div><h3>Inventario desconectado</h3><p>Las existencias no bajan con lo que se vende; los faltantes se descubren tarde.</p></div>
+    <div class="card"><div class="ico">🤷</div><h3>Satisfacción sin datos</h3><p>Se entera la cuenta cuando el colaborador ya se quejó con su área de recursos humanos.</p></div>
+    <div class="card" style="border-color:var(--teal)"><div class="ico">💡</div><h3>Lo que pide el cliente</h3><p>Reportes claros de consumo, tiempos y satisfacción para su comité de beneficios.</p></div>
+  </div>
+  <div class="foot"><span>Vamo Mesa · Newrest México</span><span>3</span></div>
+</section>
+
+<!-- 4. Solución -->
+<section class="slide">
+  <p class="eyebrow">La solución</p>
+  <h2>Vamo Mesa conecta al colaborador, la cocina y la administración</h2>
+  <div class="cols c3" style="margin-top:14px">
+    <div class="card"><div class="ico">🗓️</div><h3>Portal de menú</h3><p>Menú del día o de la semana, porciones por platillo, menú premium y grab &amp; go. Carga por formulario o CSV.</p></div>
+    <div class="card"><div class="ico">📱</div><h3>Precompra del colaborador</h3><p>Desde el celular o la computadora aparta su comida y paga con su beneficio de comedor.</p></div>
+    <div class="card"><div class="ico">🖐️</div><h3>Kiosco táctil</h3><p>Quien no apartó compra en sitio con su número de empleado (beneficio) o con tarjeta.</p></div>
+    <div class="card"><div class="ico">👩‍🍳</div><h3>Manager de cocina</h3><p>Pedidos en vivo, inventario con recetas, entradas, mermas y alertas de stock.</p></div>
+    <div class="card"><div class="ico">🧾</div><h3>Pase con o sin papel</h3><p>Ticket térmico de 80 mm o tablero táctil, con pantalla de salida para los comensales.</p></div>
+    <div class="card"><div class="ico">📊</div><h3>Satisfacción e indicadores</h3><p>Encuesta por correo después de comer, KPIs de gestión y reportes exportables.</p></div>
+  </div>
+  <div class="foot"><span>Vamo Mesa · Newrest México</span><span>4</span></div>
+</section>
+
+<!-- 5. Experiencia del colaborador -->
+<section class="slide">
+  <p class="eyebrow">Experiencia del colaborador</p>
+  <h2>Del menú a la mesa en cinco pasos</h2>
+  <div class="cols" style="grid-template-columns:1.25fr 0.75fr;align-items:center">
+    <div class="flow" style="grid-template-columns:1fr;gap:8px;margin-top:0">
+      <div class="card" style="display:flex;gap:14px;align-items:center"><span class="n">1</span><div><h3 style="margin:0">Ve el menú de la semana</h3><p>Con porciones disponibles, kcal y precio; premium y grab &amp; go separados.</p></div></div>
+      <div class="card" style="display:flex;gap:14px;align-items:center"><span class="n">2</span><div><h3 style="margin:0">Aparta y paga con su beneficio</h3><p>El saldo se descuenta al instante; lo premium o el excedente, con tarjeta.</p></div></div>
+      <div class="card" style="display:flex;gap:14px;align-items:center"><span class="n">3</span><div><h3 style="margin:0">Recibe su código</h3><p>La cocina ve el pedido en el pase en ese momento.</p></div></div>
+      <div class="card" style="display:flex;gap:14px;align-items:center"><span class="n">4</span><div><h3 style="margin:0">Recoge cuando está listo</h3><p>La pantalla de salida muestra su código: sin fila ni espera en el mostrador.</p></div></div>
+      <div class="card" style="display:flex;gap:14px;align-items:center"><span class="n">5</span><div><h3 style="margin:0">Califica su comida</h3><p>Un correo con encuesta de 30 segundos: qué le gustó, qué no y qué mejorar.</p></div></div>
+    </div>
+    <img class="shot" src="img/phone.jpg" alt="Portal del colaborador en el celular" style="max-height:450px;width:auto;justify-self:center">
+  </div>
+  <div class="foot"><span>Vamo Mesa · Newrest México</span><span>5</span></div>
+</section>
+
+<!-- 6. Portal y kiosco -->
+<section class="slide">
+  <p class="eyebrow">Precompra y kiosco</p>
+  <h2>Dos canales, un solo inventario</h2>
+  <div class="cols c2" style="margin-top:6px">
+    <div><img class="shot" src="img/app.jpg" alt="Portal de precompra"><p class="muted small" style="margin-top:10px"><b style="color:var(--ink)">Portal web:</b> menú de la semana, precompra y pago con beneficio.</p></div>
+    <div><img class="shot" src="img/kiosk.jpg" alt="Kiosco táctil"><p class="muted small" style="margin-top:10px"><b style="color:var(--ink)">Kiosco táctil:</b> número de empleado + NIP para usar el beneficio, o tarjeta.</p></div>
+  </div>
+  <div class="foot"><span>Capturas del demo en vivo</span><span>6</span></div>
+</section>
+
+<!-- 7. Cocina -->
+<section class="slide">
+  <p class="eyebrow">Cocina y operación</p>
+  <h2>Todo lo que se pide y se pidió, en vivo</h2>
+  <div class="cols" style="grid-template-columns:1.2fr 0.8fr;align-items:start">
+    <img class="shot" src="img/pase.jpg" alt="Pase sin papel">
+    <ul class="ticks">
+      <li>Tablero táctil de pase: nuevos, preparando y listos, con alerta de pedidos demorados</li>
+      <li>Ticket de 80 mm para impresora térmica, con impresión automática opcional</li>
+      <li>Menú por formulario o CSV: porciones del día, premium y grab &amp; go</li>
+      <li>Inventario con recetas: cada pedido descuenta insumos; entradas, mermas y alertas de mínimo</li>
+      <li>Cancelaciones que regresan beneficio e inventario automáticamente</li>
+    </ul>
+  </div>
+  <div class="foot"><span>Capturas del demo en vivo</span><span>7</span></div>
+</section>
+
+<!-- 8. Indicadores -->
+<section class="slide">
+  <p class="eyebrow">Indicadores de gestión</p>
+  <h2>Decisiones con datos, por comedor y por día</h2>
+  <div class="cols" style="grid-template-columns:1.15fr 0.85fr;align-items:start">
+    <img class="shot" src="img/kpis.jpg" alt="Indicadores de gestión">
+    <div class="cols compact" style="grid-template-columns:1fr 1fr;gap:10px">
+      <div class="card"><h3>Aprovechamiento</h3><p>Porciones vendidas vs. planeadas, sobrantes y su costo estimado.</p></div>
+      <div class="card"><h3>Tiempos</h3><p>Preparación y tiempo en piso (de listo a entregado) por pedido y por hora.</p></div>
+      <div class="card"><h3>Beneficio</h3><p>Uso del beneficio vs. pago con tarjeta, ticket promedio y precompra.</p></div>
+      <div class="card"><h3>Satisfacción</h3><p>Calificación, % de satisfechos y tasa de respuesta de encuestas.</p></div>
+      <div class="card"><h3>Demanda</h3><p>Platillos más pedidos y horas pico para planear personal.</p></div>
+      <div class="card"><h3>Reportes</h3><p>Platillos, tiempos, satisfacción e inventario en CSV para ERP o nómina.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Capturas del demo en vivo</span><span>8</span></div>
+</section>
+
+<!-- 9. Satisfacción -->
+<section class="slide">
+  <p class="eyebrow">Voz del comensal</p>
+  <h2>Cada comida termina con una pregunta</h2>
+  <div class="cols c3" style="margin-top:10px">
+    <div class="card"><div class="ico">📧</div><h3>Encuesta por correo</h3><p>Al entregar el pedido, el colaborador recibe un correo para calificar lo que comió ese día.</p></div>
+    <div class="card"><div class="ico">⭐</div><h3>30 segundos</h3><p>Estrellas, qué le gustó (sabor, porción, temperatura, presentación, rapidez), qué no y qué mejorar.</p></div>
+    <div class="card"><div class="ico">🔁</div><h3>Directo a la cocina</h3><p>Las respuestas llegan al manager por platillo y por área, y alimentan los indicadores.</p></div>
+  </div>
+  <p class="muted" style="margin-top:26px;font-size:22px">Para Newrest: evidencia objetiva de calidad ante el cliente y alertas tempranas antes de que una queja escale.</p>
+  <div class="foot"><span>Vamo Mesa · Newrest México</span><span>9</span></div>
+</section>
+
+<!-- 10. Equipo -->
+<section class="slide">
+  <p class="eyebrow">Equipo en sitio</p>
+  <h2>Kiosco Summit y pantallas de servicio</h2>
+  <div class="cols" style="grid-template-columns:0.8fr 1.2fr;gap:28px;align-items:center;margin-bottom:14px">
+    <div style="display:flex;gap:12px;align-items:end"><img src="img/summit-nfc.png" alt="Kiosco Summit con terminal NFC" style="height:250px;width:auto"><img src="img/summit-cafe.jpg" alt="Kiosco Summit en sitio" style="height:180px;width:auto;border-radius:14px"></div>
+    <ul class="ticks" style="font-size:18px"><li>Pago cashless: tarjeta, celular o reloj por NFC, además del beneficio</li><li>Lector de QR para recoger la precompra o identificarse</li><li>Fila rápida: quien apartó en el celular sólo recoge</li><li>Aliado de hardware: Touch Dynamic</li></ul>
+  </div>
+  <div class="cols c4 compact" style="margin-top:0">
+    <div class="card"><div class="ico">🖐️</div><h3>Kiosco Summit</h3><p>Autoservicio con beneficio, tarjeta o NFC.</p></div>
+    <div class="card"><div class="ico">🧾</div><h3>Pantalla de pase</h3><p>Tablero táctil sin papel para cocina y entrega.</p></div>
+    <div class="card"><div class="ico">📺</div><h3>Pantalla de salida</h3><p>Códigos en preparación y listos, a la vista del comensal.</p></div>
+    <div class="card"><div class="ico">🖨️</div><h3>Impresora térmica</h3><p>Tickets de 80 mm donde el administrador prefiera papel.</p></div>
+  </div>
+  <p class="muted small" style="margin-top:12px">Instalación, configuración, capacitación y monitoreo remoto. Imágenes del kiosco Summit cortesía de Touch Dynamic.</p>
+  <div class="foot"><span>Vamo Mesa · Newrest México</span><span>10</span></div>
+</section>
+
+<!-- 11. Modalidades -->
+<section class="slide">
+  <p class="eyebrow">Modalidades de adquisición</p>
+  <h2>Compra total o leasing por equipo</h2>
+  <table class="cmp">
+    <thead><tr><th></th><th>Compra total</th><th class="lease">Leasing por equipo <span class="badge">Recomendado</span></th></tr></thead>
+    <tbody>
+      <tr><td>Inversión inicial</td><td>Desembolso completo al inicio (CAPEX)</td><td class="lease">Sin inversión inicial: renta mensual por equipo (OPEX)</td></tr>
+      <tr><td>Escalamiento</td><td>Cada sitio nuevo es una nueva compra</td><td class="lease">Se agregan o retiran equipos por comedor según la operación</td></tr>
+      <tr><td>Mantenimiento y soporte</td><td>Garantía del fabricante; después, a cargo de Newrest</td><td class="lease">Mantenimiento, reemplazo y soporte incluidos durante el contrato</td></tr>
+      <tr><td>Renovación tecnológica</td><td>El equipo envejece en el balance</td><td class="lease">Renovación al término del plazo, sin obsolescencia</td></tr>
+      <tr><td>Alineación con contratos</td><td>El activo sobrevive al contrato del cliente</td><td class="lease">El plazo puede empatar con el contrato del comedor</td></tr>
+      <tr><td>Tratamiento contable</td><td>Activo propio que se deprecia</td><td class="lease">La renta suele registrarse como gasto operativo (validar con su área fiscal)</td></tr>
+      <tr><td>Cuándo conviene</td><td>Sitios estables de muy largo plazo</td><td class="lease">Despliegue en varios comedores y contratos con cliente final</td></tr>
+    </tbody>
+  </table>
+  <div class="foot"><span>La propuesta económica se presenta en una siguiente etapa</span><span>11</span></div>
+</section>
+
+<!-- 12. Seguridad y nube -->
+<section class="slide">
+  <p class="eyebrow">Seguridad, privacidad y nube</p>
+  <h2>Desplegado con cumplimiento total, en la nube del cliente</h2>
+  <div class="cols c2" style="margin-top:6px">
+    <div class="card"><h3>🔒 Privacidad de datos</h3><ul class="ticks" style="font-size:17px">
+      <li>Cumplimiento de la Ley Federal de Protección de Datos Personales en Posesión de los Particulares: aviso de privacidad y consentimiento</li>
+      <li>Minimización: número de empleado, área y correo; sin datos sensibles</li>
+      <li>Cifrado en tránsito y en reposo, acceso por roles y bitácora de operaciones</li>
+      <li>Políticas de retención y eliminación acordadas con el cliente</li>
+      <li>Pagos con tarjeta a través de un procesador certificado PCI DSS</li></ul></div>
+    <div class="card"><h3>☁️ Integrado a la nube del cliente</h3><ul class="ticks" style="font-size:17px">
+      <li>Despliegue en la nube y los servicios del cliente (Azure, AWS o Google Cloud) o en la de Newrest</li>
+      <li>Inicio de sesión único con el directorio corporativo (por ejemplo Microsoft Entra ID u Okta)</li>
+      <li>Integración del beneficio de comedor con nómina o proveedor de vales</li>
+      <li>Reportes hacia ERP y herramientas de BI vía API y CSV</li>
+      <li>Los datos se quedan en la infraestructura que el cliente controla</li></ul></div>
+  </div>
+  <div class="foot"><span>Vamo Mesa · Newrest México</span><span>12</span></div>
+</section>
+
+<!-- 13. Despliegue -->
+<section class="slide">
+  <p class="eyebrow">Cómo lo desplegamos</p>
+  <h2>Empezamos en un comedor, escalamos a la red</h2>
+  <div class="cols c3" style="margin-top:10px">
+    <div class="card phase"><h3>1 · Diagnóstico y configuración</h3><p>Visita al comedor corporativo de Nike, flujo actual, menú, recetas e inventario base, reglas del beneficio e integraciones con la nube del cliente.</p></div>
+    <div class="card phase"><h3>2 · Piloto</h3><p>Instalación del equipo, capacitación a cocina, lanzamiento con los colaboradores y medición de línea base: filas, mermas, tiempos y satisfacción.</p></div>
+    <div class="card phase"><h3>3 · Escalamiento</h3><p>Réplica en otros comedores de la red Newrest con la misma configuración, tablero comparativo por sitio y mejora continua.</p></div>
+  </div>
+  <p class="muted" style="margin-top:26px">Equipo de implementación de Vamo durante todo el proceso; soporte y monitoreo remoto después del arranque.</p>
+  <div class="foot"><span>Vamo Mesa · Newrest México</span><span>13</span></div>
+</section>
+
+<!-- 14. Demo -->
+<section class="slide">
+  <p class="eyebrow">Demo en vivo</p>
+  <h2>Pruébalo hoy</h2>
+  <div class="cols" style="grid-template-columns:auto 1fr;gap:40px;align-items:center;margin-top:10px">
+    <img src="img/qr-demo.svg" alt="QR al demo" width="260" height="260" style="border-radius:18px;background:#fff;padding:10px">
+    <div><p style="font:800 34px/1.2 var(--head)">cotizador.menteia.com/mesa</p>
+      <ul class="ticks"><li>Portal del colaborador (número 10021 a 10028, NIP 1234)</li><li>Kiosco táctil</li><li>Manager de cocina con indicadores y reportes</li><li>Pase sin papel y pantalla de salida</li></ul>
+      <p class="muted small" style="margin-top:14px">Comedor de ejemplo con datos ficticios.</p></div>
+  </div>
+  <div class="foot"><span>Vamo Mesa · Newrest México</span><span>14</span></div>
+</section>
+
+<!-- 15. Próximos pasos -->
+<section class="slide">
+  <p class="eyebrow">Próximos pasos</p>
+  <h2>Hagamos el piloto en el comedor de Nike</h2>
+  <div class="cols c2" style="margin-top:10px;align-items:start">
+    <ul class="ticks">
+      <li>Visita técnica al comedor corporativo</li>
+      <li>Definir la modalidad de adquisición (recomendamos leasing por equipo)</li>
+      <li>Alcance de integraciones: nube, inicio de sesión, beneficio y ERP</li>
+      <li>Propuesta económica y calendario del piloto</li>
+    </ul>
+    <div class="card" style="text-align:center;padding:36px"><img src="img/mesa-mark.svg" width="70" height="70" alt="">
+      <p style="font:800 30px/1.2 var(--head);margin:14px 0 6px">Gracias</p><p class="muted">Vamo Mesa · familia Vamo</p></div>
+  </div>
+  <div class="foot"><span>Vamo Mesa · Newrest México</span><span>15</span></div>
+</section>
+
+</div>
+<div class="nav"><span id="count"></span><button id="prev" aria-label="Anterior">←</button><button id="next" aria-label="Siguiente">→</button><a href="vamo-mesa-newrest.pdf" download>PDF</a></div>
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+let i = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+function fit() {
+  const s = Math.min(innerWidth / 1280, innerHeight / 720);
+  slides.forEach((el) => { el.style.transform = `scale(${s})`; });
+}
+function show(n) {
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach((el, k) => el.classList.toggle('on', k === i));
+  document.getElementById('count').textContent = `${i + 1} / ${slides.length}`;
+  history.replaceState(null, '', `#${i + 1}`);
+}
+addEventListener('keydown', (e) => {
+  if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(i + 1); }
+  if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(i - 1); }
+  if (e.key === 'Home') show(0);
+  if (e.key === 'End') show(slides.length - 1);
+});
+let x0 = null;
+addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+addEventListener('touchend', (e) => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) show(i + (dx < 0 ? 1 : -1)); x0 = null; });
+document.getElementById('prev').onclick = () => show(i - 1);
+document.getElementById('next').onclick = () => show(i + 1);
+addEventListener('resize', fit);
+fit(); show(i);
+</script>
+</body>
+</html>
