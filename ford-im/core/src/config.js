@@ -44,6 +44,7 @@ export const config = {
     legal: env.HOST_LEGAL || 'legal.menteia.com',
     vendedor: env.HOST_VENDEDOR || 'vendedor.menteia.com',
     media: env.HOST_MEDIA || 'media.menteia.com',
+    mesa: env.HOST_MESA || 'mesa.menteia.com', // Vamo Mesa (comedores corporativos)
   },
   publicScheme: env.PUBLIC_SCHEME || 'https',
   // Modo demo en UN solo subdominio: todo cuelga de cotizador.menteia.com por ruta.
@@ -164,7 +165,7 @@ export const config = {
 // Ruta de cada sitio cuando todo vive en un solo subdominio (SINGLE_HOST).
 export const PREFIX = {
   kiosk: '/kiosco', go: '/go', api: '/api', kyc: '/kyc', firma: '/firma',
-  bancos: '/bancos', legal: '/legal', vendedor: '/crm', media: '/media',
+  bancos: '/bancos', legal: '/legal', vendedor: '/crm', media: '/media', mesa: '/mesa',
 };
 
 export function publicUrl(hostKey, p = '/') {

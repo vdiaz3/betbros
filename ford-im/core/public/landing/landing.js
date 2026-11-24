@@ -1,6 +1,6 @@
 // Landing de Vamo: el español va en el HTML; aquí sólo vive la traducción al inglés.
 const EN = {
-  'nav.how': 'How it works', 'nav.features': 'Features', 'nav.pld': 'AML compliance', 'nav.hardware': 'Hardware', 'nav.pricing': 'Pricing', 'nav.demo': 'Demo',
+  'nav.how': 'How it works', 'nav.features': 'Features', 'nav.pld': 'AML compliance', 'nav.hardware': 'Hardware', 'nav.pricing': 'Pricing', 'nav.demo': 'Demo', 'nav.mesa': 'Vamo Mesa',
   'cta.demo': 'See the live demo', 'cta.contact': 'Get Vamo for my dealership', 'cta.quote': 'Request a quote', 'cta.kiosk': 'Open the demo kiosk',
   'hero.pill': 'For car dealerships in Mexico, LATAM and the US',
   'hero.title': 'No customer waits at your dealership again.',
@@ -83,6 +83,7 @@ const EN = {
   'final.title': 'Every minute a customer waits is a sale for the competition.',
   'foot.sources': '¹ Harvard Business Review, “The Short Life of Online Sales Leads” (2011). ² AMDA, first half of 2025. ³ Statista / Asociación de Internet MX.',
   'foot.privacy': 'Privacy notice',
+  'foot.family': 'The Vamo family: <b>Vamo Autos</b> (car dealerships) · <a href="/mesa/">Vamo Mesa</a> (corporate dining)',
 };
 
 const nodes = [...document.querySelectorAll('[data-i18n]')];

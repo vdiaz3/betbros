@@ -18,6 +18,8 @@ import { sendDueReminders } from './services/testdrive.js';
 import demoHome from './routes/demo-home.js';
 import * as landing from './routes/landing.js';
 import { seedDemo } from './demo/seed.js';
+import mesa from './mesa/routes.js';
+import { seedMesa, topUpMesa } from './mesa/seed.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 
@@ -40,7 +42,7 @@ export function createApp() {
 
   const routers = {
     api: express.Router().use(api).use('/admin', admin),
-    go, kiosk, kyc, firma, bancos, legal, vendedor,
+    go, kiosk, kyc, firma, bancos, legal, vendedor, mesa,
     media: express.static(path.resolve(here, '../public/media'), { maxAge: '1h' }),
   };
 
@@ -67,7 +69,9 @@ export function createApp() {
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  if (config.demoSeed) console.log('[demo] datos de ejemplo:', JSON.stringify(seedDemo()));
+  if (config.demoSeed) console.log('[demo] datos de ejemplo:', JSON.stringify(seedDemo()), JSON.stringify(seedMesa()));
+  // Vamo Mesa: el demo se mantiene vivo (menú de la semana, historial y pedidos recientes).
+  if (config.demoSeed) setInterval(() => { try { topUpMesa(); } catch (err) { console.warn('[mesa] demo', err.message); } }, 3_600_000).unref();
   // Recordatorios de pruebas de manejo (revisión cada 5 min).
   setInterval(() => sendDueReminders().catch((err) => console.warn('[reminders]', err.message)), 5 * 60_000).unref();
   createApp().listen(config.port, () => {
